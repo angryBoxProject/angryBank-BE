@@ -33,4 +33,4 @@ curl -u admin:javatomcat http://3.38.88.242:8080/host-manager/text/start'''
             }
         }
     }
-}
+} 
