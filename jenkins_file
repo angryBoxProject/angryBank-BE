@@ -28,8 +28,8 @@ pipeline {
         
         stage('Restart') {
             steps {
-                sh '''curl -u admin:javatomcat http://3.38.88.242/admin,manager/text/stop
-curl -u admin:javatomcat http://3.38.88.242/admin,manager/text/start'''
+                sh '''curl -u admin:javatomcat http://3.38.88.242:8080/host-manager/text/stop
+curl -u admin:javatomcat http://3.38.88.242:8080/host-manager/text/start'''
             }
         }
     }
