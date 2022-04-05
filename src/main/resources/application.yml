@@ -4,7 +4,7 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/mini
+    url: jdbc:mysql://184.72.42.251:3306/angrybox
     username: root
     password: mymysql
     hikari:
@@ -15,15 +15,6 @@ spring:
       minimum-idle: 10
       idle-timeout: 600000
       max-lifetime: 1800000
-#maximum-pool-size: ?? pool size (defailt 10)
-#connection-timeout: (? ???)
-#connection-init-sql: SELECT 1
-#validation-timeout: 2000
-#minimum-idle: ?? ??? HikariCP? ?? ???? ?? ?? ?? ?
-#idle-timeout: ????? ?? ?? ??
-#max-lifetime: ?? ? pool ??? connection? ?? ?? (ms)???.
-#auto-commit: auto commit ?? (default true)
-# hibernate? ???? SQL? ?? ???.
 
 #logging:
 #  level:

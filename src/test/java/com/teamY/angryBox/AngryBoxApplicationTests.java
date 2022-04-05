@@ -16,7 +16,7 @@ class AngryBoxApplicationTests {
 
 	@Test
 	void contextLoads() {
-		System.out.println("테스트 : " + mapper.test(1));
+		//System.out.println("테스트 : " + mapper.test(1));
 	}
 
 }
