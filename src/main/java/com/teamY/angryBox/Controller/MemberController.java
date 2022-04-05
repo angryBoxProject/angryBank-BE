@@ -8,6 +8,6 @@ public class MemberController {
 
     @GetMapping("hello")
     public String helloDayea(){
-        return "hello dayea";
+        return "hello Yang Dayea";
     }
 }
