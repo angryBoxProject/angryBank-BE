@@ -22,14 +22,14 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                deploy adapters: [tomcat9(credentialsId: 'jekins_access_token', path: '', url: 'http://angrybox.link')], contextPath: '/', onFailure: false, war: '**/*.war'
+                deploy adapters: [tomcat9(credentialsId: 'jekins_access_token', path: '', url: 'https://angrybox.link')], contextPath: '/', onFailure: false, war: '**/*.war'
 			} 
         }
         
         stage('Restart') {
             steps {
-                sh '''curl -u admin:javatomcat http://angrybox.link/host-manager/text/stop
-curl -u admin:javatomcat http://angrybox.link/host-manager/text/start'''
+                sh '''curl -u admin:javatomcat https://angrybox.link/host-manager/text/stop
+curl -u admin:javatomcat https://angrybox.link/host-manager/text/start'''
             }
         }
     }
