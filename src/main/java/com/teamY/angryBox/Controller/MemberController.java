@@ -8,7 +8,7 @@ public class MemberController {
 
     @GetMapping("/")
     public String helloworld(){
-        return "this is angrybox.link!!!";
+        return "service!!!";
     }
     @GetMapping("hello")
     public String helloDayea(){
