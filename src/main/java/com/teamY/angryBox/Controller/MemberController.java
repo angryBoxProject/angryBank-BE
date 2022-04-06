@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     @GetMapping("/")
-    public String helloDayea(){
+    public String helloworld(){
         return "this is angrybox.link!!!";
     }
     @GetMapping("hello")
