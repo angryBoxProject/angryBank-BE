@@ -6,8 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MemberController {
 
+    @GetMapping("/")
+    public String helloworld(){
+        return "service!!!";
+    }
     @GetMapping("hello")
     public String helloDayea(){
-        return "hello dayea";
+        return "hello Yang Dayea";
     }
 }
