@@ -1,13 +1,16 @@
 spring:
+  profiles:
+    include: oauth
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://184.72.42.251:3306/angrybox
-    username: root
-    password: mymysql
+    type: com.zaxxer.hikari.HikariDataSource
     hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://3.38.88.242:3306/angrybox?serverTimezone=UTC&characterEncoding=UTF-8
+      username: root
+      password: mymysql
       maximum-pool-size: 10
       connection-timeout: 5000
       connection-init-sql: SELECT 1

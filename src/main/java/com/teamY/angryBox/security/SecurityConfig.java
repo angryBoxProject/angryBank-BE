@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    //정적파일은 검사 제외
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
