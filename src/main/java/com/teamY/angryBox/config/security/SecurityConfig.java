@@ -2,10 +2,7 @@ package com.teamY.angryBox.config.security;
 
 import com.teamY.angryBox.config.properties.AppProperties;
 import com.teamY.angryBox.config.properties.CorsProperties;
-import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
-import com.teamY.angryBox.config.security.oauth.JwtAuthenticationEntryPoint;
-import com.teamY.angryBox.config.security.oauth.TokenAuthenticationFilter;
-import com.teamY.angryBox.config.security.oauth.TokenDeniedHandler;
+import com.teamY.angryBox.config.security.oauth.*;
 import com.teamY.angryBox.config.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthTokenProvider authTokenProvider;
     private final CustomUserDetailsService userDetailsService;
     private final TokenDeniedHandler tokenDeniedHandler;
+    private final CustomOAuth2UserService oAuth2UserService;
 
 
     //정적파일은 검사 제외
@@ -88,6 +86,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 exceptionHandling().
                 authenticationEntryPoint(new JwtAuthenticationEntryPoint()).
                 accessDeniedHandler(tokenDeniedHandler);
+
+//        http.
+//                oauth2Login();
+//                .authorizationEndpoint()
+//                .baseUri("/oauth2/authorization")
+//                //.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+//                .and()
+//                .redirectionEndpoint()
+//                .baseUri("/*/oauth2/code/*")
+//                .and()
+//                .userInfoEndpoint()
+//                .userService(oAuth2UserService);
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

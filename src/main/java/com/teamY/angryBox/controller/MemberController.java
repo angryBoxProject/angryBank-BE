@@ -62,7 +62,7 @@ public class MemberController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    @PostMapping("login")
+    @PostMapping("loginasdf")
     public ResponseEntity<ResponseMessage> login(@RequestBody LogInDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
 
