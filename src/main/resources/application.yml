@@ -1,3 +1,4 @@
+
 spring:
   profiles:
     include: oauth
@@ -5,12 +6,11 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://3.38.88.242:3306/angrybox?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: mymysql
     hikari:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://3.38.88.242:3306/angrybox?serverTimezone=UTC&characterEncoding=UTF-8
-      username: root
-      password: mymysql
       maximum-pool-size: 10
       connection-timeout: 5000
       connection-init-sql: SELECT 1
@@ -18,8 +18,46 @@ spring:
       minimum-idle: 10
       idle-timeout: 600000
       max-lifetime: 1800000
+#      logging:
+#        level:
+#          org.hibernate.SQL: debug
+#          org.hibernate.type: trace
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+#    hikari:
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      jdbc-url: jdbc:mysql://3.38.88.242:3306/angrybox?serverTimezone=UTC&characterEncoding=UTF-8
+#      username: root
+#      password: mymysql
+#      maximum-pool-size: 10
+#      connection-timeout: 5000
+#      connection-init-sql: SELECT 1
+#      validation-timeout: 2000
+#      minimum-idle: 10
+#      idle-timeout: 600000
+#      max-lifetime: 1800000
+#    logging:
+#      level:
+#        org.hibernate.SQL: debug
+#        org.hibernate.type: trace
+    profiles:
+      include : oauth
 
-#logging:
-#  level:
-#    org.hibernate.SQL: debug
-#    org.hibernate.type: trace
+jwt:
+  secret: 'dGVhbVllYV9hbmdyeUJveF9CRQ=='
+
+# 토큰 관련 secret Key 및 RedirectUri 설정
+app:
+    auth:
+      tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+      tokenExpiry: 600000
+    refreshTokenExpiry: 60000
+#  oauth2:
+#    authorizedRedirectUris:
+#      - http://localhost:3000/oauth/redirect
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.teamY.angryBox.vo
+  mapper-locations: mybatis-mapper/*.xml

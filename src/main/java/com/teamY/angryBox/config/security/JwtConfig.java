@@ -1,15 +1,18 @@
 package com.teamY.angryBox.config.security;
 
-import lombok.Value;
+import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JwtConfig {
-    //@Value("${jwt.secret}")
+    @Value("${jwt.secret}")
     private String secret;
 
-//    @Bean
-//    public
+    @Bean
+    public AuthTokenProvider jwtProvider() {
+        return new AuthTokenProvider(secret);
+    }
 }
 

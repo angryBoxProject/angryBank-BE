@@ -8,5 +8,6 @@ import java.lang.reflect.Member;
 
 @Mapper
 public interface MemberMapper {
-    public MemberVO selectByEmail(String email);
+    MemberVO selectByEmail(String email);
+    void insertMember(MemberVO member);
 }
