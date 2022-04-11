@@ -5,6 +5,8 @@ import com.teamY.angryBox.mapper.MemberMapper;
 import com.teamY.angryBox.mapper.TestMapper;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.vo.MemberVO;
+import com.teamY.angryBox.vo.oauth.KakaoURL;
+import com.teamY.angryBox.vo.oauth.OAuthURL;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.junit.jupiter.api.Disabled;
@@ -39,6 +41,8 @@ class AngryBoxApplicationTests {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	@Autowired
+	private KakaoURL kakaoURL;
 	@Disabled
 	@Test
 	void contextLoads() {
@@ -65,6 +69,7 @@ class AngryBoxApplicationTests {
 			this.role = role;
 		}
 	}
+	@Disabled
 	@Test
 	void streamtest(){
 		//String role = "ROLE_USER,ROLE_ADMIN";
@@ -74,5 +79,12 @@ class AngryBoxApplicationTests {
 				.collect(Collectors.toList());
 
 		System.out.println(authorities);
+	}
+
+	@Test
+	void oauthTest(){
+		//OAuthURL url = new KakaoURL();
+
+		System.out.println(kakaoURL.getTokenURL("코드이당"));
 	}
 }
