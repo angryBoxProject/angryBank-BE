@@ -1,4 +1,4 @@
-package com.teamY.angryBox.config.security.oauth;
+package com.teamY.angryBox.config.security.oauth.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

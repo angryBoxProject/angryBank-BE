@@ -21,6 +21,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User user = super.loadUser(userRequest);
         log.info("userRequest 에서 정보 꺼내서 가공한 유저 : " + user);
 
-        return null;
+        return user;
     }
 }

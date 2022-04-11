@@ -3,6 +3,11 @@ package com.teamY.angryBox.config.security;
 import com.teamY.angryBox.config.properties.AppProperties;
 import com.teamY.angryBox.config.properties.CorsProperties;
 import com.teamY.angryBox.config.security.oauth.*;
+import com.teamY.angryBox.config.security.oauth.handler.OAuth2AuthenticationFailureHandler;
+import com.teamY.angryBox.config.security.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import com.teamY.angryBox.config.security.oauth.handler.TestHandler;
+import com.teamY.angryBox.config.security.oauth.handler.TokenDeniedHandler;
+import com.teamY.angryBox.config.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.teamY.angryBox.config.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -63,6 +67,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManager();
     }
 
+    /*
+     * 쿠키 기반 인가 Repository
+     * 인가 응답을 연계 하고 검증할 때 사용.
+     * */
+    @Bean
+    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
+        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
+    }
+
+    /*
+     * Oauth 인증 성공 핸들러
+     * */
+    @Bean
+    public TestHandler oAuth2AuthenticationSuccessHandler() {
+//        return new OAuth2AuthenticationSuccessHandler(
+//                authTokenProvider,
+//                appProperties,
+//                /*userRefreshTokenRepository,*/
+//                oAuth2AuthorizationRequestBasedOnCookieRepository()
+//        );
+        return new TestHandler();
+    }
+
+    /*
+     * Oauth 인증 실패 핸들러
+     * */
+    @Bean
+    public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
+        return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -88,17 +123,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 accessDeniedHandler(tokenDeniedHandler);
 
 //        http.
-//                oauth2Login();
+//                oauth2Login()
 //                .authorizationEndpoint()
-//                .baseUri("/oauth2/authorization")
-//                //.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+//                .baseUri("/oauth2/authorize")
+//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
 //                .and()
 //                .redirectionEndpoint()
 //                .baseUri("/*/oauth2/code/*")
 //                .and()
 //                .userInfoEndpoint()
-//                .userService(oAuth2UserService);
-
+//                .userService(oAuth2UserService)
+//                .and()
+//                .successHandler(oAuth2AuthenticationSuccessHandler())
+//                .failureHandler(oAuth2AuthenticationFailureHandler());
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
