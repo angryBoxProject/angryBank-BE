@@ -1,6 +1,10 @@
 package com.teamY.angryBox.config.security;
 
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
+import com.teamY.angryBox.config.security.oauth.TokenAuthenticationFilter;
+import com.teamY.angryBox.repository.MemberRepository;
+import com.teamY.angryBox.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,13 +18,14 @@ import java.nio.charset.Charset;
 import java.time.Duration;
 
 @Configuration
+@RequiredArgsConstructor
 public class JwtConfig {
     @Value("${jwt.secret}")
     private String secret;
 
     @Bean
     public AuthTokenProvider jwtProvider() {
-        return new AuthTokenProvider(secret);
+        return new AuthTokenProvider(secret); //, memberService
     }
 
     @Bean

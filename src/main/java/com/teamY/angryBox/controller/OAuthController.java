@@ -1,9 +1,14 @@
 package com.teamY.angryBox.controller;
 
+import com.teamY.angryBox.dto.LogInDTO;
+import com.teamY.angryBox.dto.ResponseDataMessage;
+import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.enums.OAuthProviderEnum;
+import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.service.OAuthService;
 import com.teamY.angryBox.utils.HeaderUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -20,10 +25,23 @@ import java.util.Map;
 public class OAuthController {
 
     private final OAuthService oAuthService;
+    private final MemberService memberService;
 
+    private LogInDTO makeOAuthLoginDTO(String code){
+        return new LogInDTO(oAuthService.OAuthLogin(OAuthProviderEnum.KAKAO, code), "password");
+    }
     @PostMapping("kakao")
-    public String kakaoLogin(@RequestParam String code) {
-        return oAuthService.OAuthLogin(OAuthProviderEnum.KAKAO, code);
+    public ResponseEntity<ResponseDataMessage> kakaoLogin(@RequestParam String code) {
+
+        LogInDTO logInDTO = makeOAuthLoginDTO(code);
+        log.info("auth logindto : " + logInDTO.toString());
+
+        Map<String, Object> data = memberService.OAuthLogin(logInDTO);
+        log.info("oauth jwt : " + data.get("jwt"));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HeaderUtil.HEADER_AUTHORIZATION, HeaderUtil.TOKEN_PREFIX + data.get("jwt"));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "로그인 성공", "", data), httpHeaders, HttpStatus.OK);
     }
 
     @PostMapping("google")

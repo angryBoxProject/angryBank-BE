@@ -58,8 +58,8 @@ class AngryBoxApplicationTests {
 		//System.out.println("멤버 : " + mapper.selectByEmail("1111@naver.com").getEmail());
 		//System.out.println("멤버 !!! : " + memberRepository.selectByEmail("1111@naver.com").getEmail());
 		String encodedPassword = bCryptPasswordEncoder.encode("1111");
-		MemberVO member = new MemberVO("2222@naver.com", "2222", encodedPassword);
-		memberRepository.insertMember(member);
+		//MemberVO member = new MemberVO("2222@naver.com", "2222", encodedPassword);
+		//memberRepository.insertMember(member);
 	}
 
 	@ToString

@@ -15,13 +15,13 @@
 
 
     <select id="selectByEmail" parameterType="String" resultMap="memberMap" resultType="MemberVO">
-        SELECT id, email, nickname, member.password
+        SELECT id, email, nickname, member.password, register_type
         FROM member
         WHERE email = #{email}
     </select>
 
     <insert id ="insertMember" parameterType="MemberVO">
-        INSERT INTO member(email, password, nickname)
-        VALUES (#{email}, #{password}, #{nickname})
+        INSERT INTO member(email, password, nickname, register_type)
+        VALUES (#{email}, #{password}, #{nickname}, #{registerType})
     </insert>
 </mapper>

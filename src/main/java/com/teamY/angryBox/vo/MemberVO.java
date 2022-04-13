@@ -17,16 +17,19 @@ public class MemberVO {
     private String nickname;
     @JsonIgnore
     private String password;
+    private String registerType;
 
-    public MemberVO(int id, String email, String nickname) {
+    public MemberVO(int id, String email, String nickname, String registerType) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
+        this.registerType = registerType;
     }
 
-    public MemberVO(String email, String nickname, String password) {
+    public MemberVO(String email, String nickname, String password, String registerType) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+        this.registerType = registerType;
     }
 }
