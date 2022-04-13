@@ -18,7 +18,7 @@ public class OAuthTestController {
     @GetMapping("kakao")
     public void getKakaoAuthCode(@RequestParam String code){
         log.info("kakao code : " + code);
-        //oAuthController.kakaoLogin(code);
+        oAuthController.kakaoLogin(code);
     }
 
     @GetMapping("google")

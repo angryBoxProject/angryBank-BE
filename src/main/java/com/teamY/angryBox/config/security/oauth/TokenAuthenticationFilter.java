@@ -1,6 +1,7 @@
 package com.teamY.angryBox.config.security.oauth;
 
 import com.teamY.angryBox.error.ErrorCode;
+import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.utils.HeaderUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,11 @@ import java.io.IOException;
 //Filter, GenericFilterBean : 매 서블릿마다 호출
 //OncePerRequestFilter : 사용자의 요청 당 한 번씩만 실행
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final AuthTokenProvider tokenProvider;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,7 +34,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String key = String.valueOf(token).substring(7);
 
         try {
-            if(memberService.getIsLogout(token.getToken()) != null){
+            if(memberRepository.getIsLogout(token.getToken()) != null){
                 request.setAttribute("error", ErrorCode.TOKEN_IN_BLACKLIST);
                 throw new RuntimeException(ErrorCode.TOKEN_IN_BLACKLIST.getMessage());
             }

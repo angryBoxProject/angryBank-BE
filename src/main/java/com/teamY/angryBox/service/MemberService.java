@@ -1,45 +1,93 @@
 package com.teamY.angryBox.service;
 
+import com.teamY.angryBox.config.properties.AppProperties;
+import com.teamY.angryBox.config.security.oauth.AuthToken;
+import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
+import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
+import com.teamY.angryBox.dto.LogInDTO;
+import com.teamY.angryBox.error.customException.PasswordNotMatchesException;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final StringRedisTemplate stringRedisTemplate;
+    private final AuthenticationManager authenticationManager;
+    private final AuthTokenProvider authTokenProvider;
+    private final AppProperties appProperties;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public Map<String, Object> login(LogInDTO loginDTO){
+
+        String password = memberRepository.findPassword(loginDTO.getEmail());
+
+        if(!bCryptPasswordEncoder.matches(loginDTO.getPassword(), password)) {
+            throw new PasswordNotMatchesException("PasswordNotMatchesException");
+        }
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+
+        if (!((MemberPrincipal) authentication.getPrincipal()).getRegisterType().equals("basic"))
+            throw new BadCredentialsException("BadCredentialsException");
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return createToken(loginDTO);
+    }
+
+    public Map<String, Object> OAuthLogin(LogInDTO loginDTO) {
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return createToken(loginDTO);
+    }
+
+    public Map<String, Object> createToken(LogInDTO loginDTO) {
+        Map<String, Object> data = null;
+
+        MemberVO member = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+        data = new HashMap<>();
+        data.put("nickname", member.getNickname());
+        data.put("email", member.getEmail());
+        data.put("id", member.getId());
+
+        AuthToken authToken = authTokenProvider.createAuthToken(member.getEmail(), new Date(new Date().getTime() + appProperties.getAuth().getTokenExpiry()), data);
+
+        data.put("jwt", authToken.getToken());
+
+
+        return data;
+    }
+
 
     public void registerMember(MemberVO member) {
         memberRepository.insertMember(member);
     }
 
     public void setLogoutToken(String key, long expire) {
-        //key = key.substring(7);
-        stringRedisTemplate.opsForValue().set(key, "logout");
-        stringRedisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
+        memberRepository.setLogoutToken(key, expire);
     }
 
-    public String getIsLogout(String key) {
-        //key = key.substring(7);
-        ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
-
-        if(stringValueOperations.get(key) == null){
-            log.info("Redis key null");
-            return null;
-        }
-
-        log.info("Redis key : {}", key);
-        log.info("Redis value : {}", stringValueOperations.get(key));
-        return stringValueOperations.get(key);
+    public boolean isLogout(String key) {
+        return memberRepository.getIsLogout(key) != null;
     }
+
 
 }

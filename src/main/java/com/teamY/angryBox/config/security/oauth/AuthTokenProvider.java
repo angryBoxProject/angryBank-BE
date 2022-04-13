@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
+//@Component
 public class AuthTokenProvider {
     //private final Key key;
     private static String key;

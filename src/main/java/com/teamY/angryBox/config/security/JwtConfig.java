@@ -1,6 +1,7 @@
 package com.teamY.angryBox.config.security;
 
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
+import com.teamY.angryBox.config.security.oauth.TokenAuthenticationFilter;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,6 @@ import java.time.Duration;
 public class JwtConfig {
     @Value("${jwt.secret}")
     private String secret;
-
-    private final MemberService memberService;
 
     @Bean
     public AuthTokenProvider jwtProvider() {

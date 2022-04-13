@@ -19,20 +19,21 @@ import java.util.Map;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class MemberPrincipal implements OAuth2User, UserDetails, OidcUser {
     private final int memberId;
     private final String nickname;
     private final String memberEmail;
     private final String password;
+    private final String registerType;
 //    private final ProviderType providerType;
 //    private final RoleType roleType;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
+
     public MemberVO getMemberVO() {
-        return new MemberVO(memberId, memberEmail, nickname);
+        return new MemberVO(memberId, memberEmail, nickname, registerType);
     }
     @Override
     public Map<String, Object> getAttributes() {
@@ -95,6 +96,7 @@ public class MemberPrincipal implements OAuth2User, UserDetails, OidcUser {
                 member.getNickname(),
                 member.getEmail(),
                 member.getPassword(),
+                member.getRegisterType(),
                 /*member.getProviderType(),
                 RoleType.USER,
                 Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))*/
