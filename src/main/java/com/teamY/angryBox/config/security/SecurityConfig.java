@@ -9,6 +9,7 @@ import com.teamY.angryBox.config.security.oauth.handler.TestHandler;
 import com.teamY.angryBox.config.security.oauth.handler.TokenDeniedHandler;
 import com.teamY.angryBox.config.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.teamY.angryBox.config.security.service.CustomUserDetailsService;
+import com.teamY.angryBox.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService userDetailsService;
     private final TokenDeniedHandler tokenDeniedHandler;
     private final CustomOAuth2UserService oAuth2UserService;
+    private final MemberService memberService;
 
 
     @Bean
@@ -49,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //토큰 필터 설정
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(authTokenProvider);
+        return new TokenAuthenticationFilter(authTokenProvider, memberService);
     }
 
     //UserDetailsService 설정

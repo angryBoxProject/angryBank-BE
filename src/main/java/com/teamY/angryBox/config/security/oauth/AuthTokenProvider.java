@@ -1,9 +1,12 @@
 package com.teamY.angryBox.config.security.oauth;
 
+import com.teamY.angryBox.repository.MemberRepository;
+import com.teamY.angryBox.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
@@ -23,7 +27,9 @@ public class AuthTokenProvider {
     private static String key;
     private static final String AUTHORITIES_KEY = "role";
 
-    public AuthTokenProvider(String secret) {
+    //private final MemberService memberService;
+
+    public AuthTokenProvider(String secret) { //, MemberService memberService
         // String 으로 전달 된 secret 을 바이트로 변환 후 Key 타입으로 다시 변환해서 넣어줌
         //this.key = Keys.hmacShaKeyFor(secret.getBytes());
         //this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -32,6 +38,8 @@ public class AuthTokenProvider {
         this.key = Base64.getEncoder().encodeToString(secret.getBytes());
         //this.key = secret;
         log.info("key : " + this.key);
+
+        //this.memberService = memberService;
     }
 
     public AuthToken createAuthToken(String id, Date expiry, Map<String, Object> claims) {
@@ -46,35 +54,22 @@ public class AuthTokenProvider {
         return new AuthToken(token, key);
     }
 
-    public Authentication getAuthentication(AuthToken authToken) {
+    public Authentication getAuthentication(AuthToken authToken) throws Exception {
 
-        if(authToken.validate()) {
+        Claims claims = authToken.getTokenClaims();
+        log.info("클레임스 : " + claims.get(AUTHORITIES_KEY).toString());
 
-            Claims claims = authToken.getTokenClaims();
-            log.info("클레임스 : " + claims.get(AUTHORITIES_KEY).toString());
-//            Collection<? extends GrantedAuthority> authorities =
-//                    Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
-//                            .map(SimpleGrantedAuthority::new)
-//                            .collect(Collectors.toList());
-            List<SimpleGrantedAuthority> authorities =
-                    Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
+        List<SimpleGrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-//            Stream<SimpleGrantedAuthority> authorities =
-//                    Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(",")).map(SimpleGrantedAuthority::new);
-//            authorities.forEach(role -> System.out.println("롤롤 : " + role));
+        User principal = new User((String) claims.get("email"), "", authorities);
 
-//            log.debug("claims subject := [{}]", claims.getSubject());
-            User principal = new User((String) claims.get("email"), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
 
-            return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
-
-        } else {
-            //throw new TokenValidFailedException();
-            throw new RuntimeException("Failed to generate Token.");
-        }
     }
+
 
     public long getTokenExpire(String token) {
         //token = token.substring(7);

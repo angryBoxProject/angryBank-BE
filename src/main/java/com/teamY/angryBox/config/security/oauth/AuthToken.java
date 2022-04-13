@@ -1,5 +1,6 @@
 package com.teamY.angryBox.config.security.oauth;
 
+import com.teamY.angryBox.error.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,31 +56,41 @@ public class AuthToken {
                 .compact();
     }
 
-    public boolean validate() {
-        return this.getTokenClaims() != null;
-    }
-
-    public Claims getTokenClaims() {
-
-        try {
-            if(token == null)
-                throw new RuntimeException("토큰이 존재하지 않음");
-
-            return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+    public boolean validate(ServletRequest request) {
+        try{
+            return this.getTokenClaims() != null;
         } catch (SecurityException e) {
             log.info("Invalid JWT signature.");
+            request.setAttribute("error", ErrorCode.TOKEN_MALFORMED_JWT);
         } catch (MalformedJwtException e) {
             log.info("Invalid JWT token.");
+            request.setAttribute("error", ErrorCode.TOKEN_MALFORMED_JWT);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT token.");
+            request.setAttribute("error", ErrorCode.TOKEN_EXPIRED_JWT);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT token.");
+            request.setAttribute("error",ErrorCode.TOKEN_UNSUPPORTED_JWT);
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
-        } catch(Exception e) {
-            log.info("No Token.");
+            request.setAttribute("error", ErrorCode.TOKEN_ILLEGAL_JWT);
+        } catch(RuntimeException e) {
+            log.info("no token");
+            request.setAttribute("error", ErrorCode.TOKEN_NOT_FOUND);
+        } catch (Exception e) {
+           log.info("something wrong with token");
+            request.setAttribute("error", ErrorCode.TOKEN_ILLEGAL_JWT);
         }
-        return null;
+        return false;
+    }
+
+    public Claims getTokenClaims() throws Exception {
+        if (token == null) {
+            throw new RuntimeException("토큰이 존재하지 않음");
+        }
+
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+
     }
 
     public Claims getExpiredTokenClaims() {
