@@ -10,6 +10,7 @@ import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -64,15 +65,15 @@ public class MemberController {
         return "test";
     }
     @PostMapping("users")
-    public ResponseEntity<String> memberRegister(@RequestParam String email, @RequestParam String nickname, @RequestParam String password) {
+    public ResponseEntity<ResponseMessage> memberRegister(@RequestParam String email, @RequestParam String nickname, @RequestParam String password) {
         String encodedPassword = bCryptPasswordEncoder.encode(password);
         MemberVO member = new MemberVO(email, nickname, encodedPassword);
         memberService.registerMember(member);
 
-        return new ResponseEntity<>("success", HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseMessage(true, "회원가입 성공", ""), HttpStatus.OK);
     }
 
-    @PostMapping("jwtlogin")
+    @PostMapping("auth/login")
     public ResponseEntity<ResponseMessage> login(@RequestBody LogInDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
 
@@ -88,8 +89,20 @@ public class MemberController {
 
         data.put("jwt", authToken.getToken());
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HeaderUtil.HEADER_AUTHORIZATION, "Bearer " + authToken.getToken());
+        httpHeaders.add(HeaderUtil.HEADER_AUTHORIZATION, HeaderUtil.TOKEN_PREFIX + authToken.getToken());
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "로그인 성공", "", data), httpHeaders, HttpStatus.OK);
+    }
+
+    @PostMapping("auth/logout")
+    public ResponseEntity<ResponseMessage> logout(@RequestHeader Map<String, Object> requestHeader) {
+        String token = ((String) requestHeader.get(HeaderUtil.HEADER_AUTHORIZATION)).substring(7);
+
+        if(memberService.getIsLogout(token) != null) {
+            return new ResponseEntity<>(new ResponseMessage(false, "이미 로그아웃 된 사용자", "이미 로그아웃 된 사용자"), HttpStatus.BAD_REQUEST);
+        } else {
+            memberService.setLogoutToken(token, authTokenProvider.getTokenExpire(token));
+            return new ResponseEntity<>(new ResponseMessage(true, "로그아웃 성공", ""), HttpStatus.OK);
+        }
     }
 }

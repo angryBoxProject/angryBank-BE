@@ -1,6 +1,7 @@
 package com.teamY.angryBox.config.security.oauth;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -73,5 +74,18 @@ public class AuthTokenProvider {
             //throw new TokenValidFailedException();
             throw new RuntimeException("Failed to generate Token.");
         }
+    }
+
+    public long getTokenExpire(String token) {
+        //token = token.substring(7);
+        Claims claims = Jwts
+                .parser().setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+
+        Date expiration = claims.get("exp", Date.class);
+        Date today = new Date();
+
+        return expiration.getTime() - today.getTime();
     }
 }

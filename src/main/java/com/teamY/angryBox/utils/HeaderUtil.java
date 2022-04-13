@@ -3,7 +3,7 @@ package com.teamY.angryBox.utils;
 import javax.servlet.http.HttpServletRequest;
 
 public class HeaderUtil {
-    public final static String HEADER_AUTHORIZATION = "Authorization";
+    public final static String HEADER_AUTHORIZATION = "authorization";
     public final static String TOKEN_PREFIX = "Bearer ";
 
     public static String getAccessToken(HttpServletRequest request) {

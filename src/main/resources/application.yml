@@ -42,6 +42,15 @@ spring:
 #        org.hibernate.type: trace
     profiles:
       include : oauth
+  redis:
+    host: 184.72.42.251 # 127.0.0.1
+    password: myredis
+    port: 6379
+    lettuce: #jedis : 별도 의존성 필요 / lettuce : 별도 설정 필요 없음, 비동기로 요청을 처리(Netty)
+      pool:
+        max-active: 8 #pool에 할당할 수 있는 커넥션 최대수
+        max-idle: 10 #pool의 "idle" 커넥션 최대 수
+        min-idle: 2 #pool에서 관리하는 idle 커넥션의 최소 수
 
 jwt:
   secret: 'dGVhbVllYV9hbmdyeUJveF9CRQ=='
