@@ -113,8 +113,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/hello").authenticated()
                 .anyRequest().permitAll();
 
-                //.antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-                //.anyRequest().authenticated()
+        //.antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
+        //.anyRequest().authenticated()
 
         http.
                 exceptionHandling().
