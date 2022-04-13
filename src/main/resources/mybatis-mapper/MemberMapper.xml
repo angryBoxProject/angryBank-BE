@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.MemberMapper">
+
+
+    <resultMap id="memberMap" type="MemberVO">
+        <result property = "id" javaType="int" column ="id" jdbcType="INTEGER"/>
+        <result property = "email" javaType="string" column ="email" jdbcType="VARCHAR"/>
+        <result property = "nickname" javaType="string" column ="nickname" jdbcType="VARCHAR"/>
+        <result property = "password" javaType="string" column ="password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectByEmail" parameterType="String" resultMap="memberMap" resultType="MemberVO">
+        SELECT id, email, nickname, member.password
+        FROM member
+        WHERE email = #{email}
+    </select>
+
+    <insert id ="insertMember" parameterType="MemberVO">
+        INSERT INTO member(email, password, nickname)
+        VALUES (#{email}, #{password}, #{nickname})
+    </insert>
+</mapper>

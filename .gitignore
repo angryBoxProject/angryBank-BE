@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### oauth yml ###
+src/main/resources/application-oauth.yml
