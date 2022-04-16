@@ -32,4 +32,10 @@ public class MemberVO {
         this.password = password;
         this.registerType = registerType;
     }
+
+    public MemberVO(int id, String email, String nickname) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+    }
 }

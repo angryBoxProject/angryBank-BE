@@ -20,7 +20,7 @@
         WHERE email = #{email}
     </select>
 
-    <insert id ="insertMember" parameterType="MemberVO">
+    <insert id ="insertMember" parameterType="MemberVO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO member(email, password, nickname, register_type)
         VALUES (#{email}, #{password}, #{nickname}, #{registerType})
     </insert>

@@ -2,6 +2,7 @@ package com.teamY.angryBox.config.security.oauth;
 
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.service.MemberService;
+import com.teamY.angryBox.vo.MemberVO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -65,7 +66,9 @@ public class AuthTokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        User principal = new User((String) claims.get("email"), "", authorities);
+        //User principal = new User((String) claims.get("email"), "", authorities);
+        MemberVO memberVO = new MemberVO((int) claims.get("id"), (String) claims.get("email"), (String)claims.get("nickname"));
+        MemberPrincipal principal = MemberPrincipal.create(memberVO);
 
         return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.FileMapper">
+
+    <select id = "selectById" resultType="FileVO">
+        SELECT *
+        FROM file
+        WHERE id = #{id}
+    </select>
+
+    <insert id = "insertFile" parameterType="FileVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO file(original_file_name, system_file_name, file_size, file_type)
+        VALUES (#{originalFileName}, #{systemFileName}, #{fileSize}, #{fileType});
+    </insert>
+
+</mapper>
