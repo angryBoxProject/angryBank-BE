@@ -2,10 +2,12 @@ package com.teamY.angryBox.controller;
 
 import com.teamY.angryBox.config.properties.AppProperties;
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
+import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.LogInDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.service.MemberService;
+import com.teamY.angryBox.service.ProfileService;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +33,8 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthTokenProvider authTokenProvider;
 
+    private final ProfileService profileService;
+
     //oauth 회원가입한 회원은 비번 변경 불가
 
     @GetMapping("/")
@@ -39,6 +44,7 @@ public class MemberController {
 
     @GetMapping("hello")
     public String helloDayea(){
+        //log.info("프린시폴 : " + ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
         return "hello Yang Dayea";
     }
 
@@ -60,6 +66,9 @@ public class MemberController {
         String encodedPassword = bCryptPasswordEncoder.encode(password);
         MemberVO member = new MemberVO(email, nickname, encodedPassword, "basic");
         memberService.registerMember(member);
+
+        // 프로필 생성
+        profileService.registerProfile(member, 1); // 1은 서버에 올라가있는 기본 프로필 이미지
 
         return new ResponseEntity<>(new ResponseMessage(true, "회원가입 성공", ""), HttpStatus.OK);
     }
@@ -85,4 +94,6 @@ public class MemberController {
             return new ResponseEntity<>(new ResponseMessage(true, "로그아웃 성공", ""), HttpStatus.OK);
         }
     }
+
+
 }

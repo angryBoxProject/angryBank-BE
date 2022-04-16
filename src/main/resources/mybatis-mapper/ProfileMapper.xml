@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.ProfileMapper">
+
+    <insert id = "insertProfile" parameterType="ProfileVO">
+        INSERT INTO profile(member_id, file_id)
+        VALUES (#{memberId}, #{fileId})
+    </insert>
+
+
+
+</mapper>
