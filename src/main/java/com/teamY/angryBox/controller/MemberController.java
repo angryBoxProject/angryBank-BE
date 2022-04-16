@@ -6,6 +6,7 @@ import com.teamY.angryBox.dto.LogInDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.service.MemberService;
+import com.teamY.angryBox.service.ProfileService;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberService memberService;
     private final AuthTokenProvider authTokenProvider;
+
+    private final ProfileService profileService;
 
     //oauth 회원가입한 회원은 비번 변경 불가
 
@@ -61,6 +64,9 @@ public class MemberController {
         MemberVO member = new MemberVO(email, nickname, encodedPassword, "basic");
         memberService.registerMember(member);
 
+        // 프로필 생성
+        profileService.registerProfile(member, 1); // 1은 서버에 올라가있는 기본 프로필 이미지
+
         return new ResponseEntity<>(new ResponseMessage(true, "회원가입 성공", ""), HttpStatus.OK);
     }
 
@@ -85,4 +91,6 @@ public class MemberController {
             return new ResponseEntity<>(new ResponseMessage(true, "로그아웃 성공", ""), HttpStatus.OK);
         }
     }
+
+
 }
