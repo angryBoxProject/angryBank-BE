@@ -2,6 +2,7 @@ package com.teamY.angryBox.controller;
 
 import com.teamY.angryBox.config.properties.AppProperties;
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
+import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.LogInDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +44,7 @@ public class MemberController {
 
     @GetMapping("hello")
     public String helloDayea(){
+        //log.info("프린시폴 : " + ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
         return "hello Yang Dayea";
     }
 
