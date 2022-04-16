@@ -10,4 +10,6 @@ import java.lang.reflect.Member;
 public interface MemberMapper {
     MemberVO selectByEmail(String email);
     void insertMember(MemberVO member);
+    void updateMemberNickname(int id, String nickname);
+    void updateMemberPassword(int id, String password);
 }

@@ -10,6 +10,7 @@ import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.service.ProfileService;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -95,5 +96,14 @@ public class MemberController {
         }
     }
 
+    @PutMapping("users")
+    public ResponseEntity<ResponseMessage> changePassword(@RequestBody Map<String, String> passwords) {
+        //log.info(passwords.toString());
 
+        MemberVO memberVO = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+        memberService.changePassword(memberVO.getId(), memberVO.getEmail(), passwords);
+
+        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "비밀번호 변경 성공", ""), HttpStatus.OK);
+    }
 }
