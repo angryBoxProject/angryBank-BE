@@ -6,7 +6,7 @@
 <mapper namespace="com.teamY.angryBox.mapper.DiaryMapper">
 
 
-    <insert id="insertDiary" parameterType="DiaryVO" statementType="CALLABLE">
+    <insert id="insertDiary" parameterType="DiaryVO" statementType="CALLABLE" useGeneratedKeys="true" keyProperty="id">
         { call INSERT_DIARY(
             #{memberId}, #{title}, #{content}, #{isPublic}, #{angryFigure}, #{coinBankId}
             ) }

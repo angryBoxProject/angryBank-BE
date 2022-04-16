@@ -12,8 +12,15 @@ import org.springframework.stereotype.Repository;
 public class DiaryRepository {
     private final DiaryMapper diaryMapper;
 
-    public void insertDiary(DiaryVO diary) {
+    public int insertDiary(DiaryVO diary) {
         log.info("diaryReposiroty 들어옴");
-        diaryMapper.insertDiary(diary);
+        return diaryMapper.insertDiary(diary);
     }
+
+    public void insertDiaryFile(int diaryId, int fileId) {
+        log.info("diaryId : " + diaryId, "  fileId : " + fileId);
+        diaryMapper.insertDiaryFile(diaryId, fileId);
+    }
+
+
 }
