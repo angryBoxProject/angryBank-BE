@@ -14,7 +14,7 @@ public class AngryBoxExceptionHandler {
 
     @ExceptionHandler(PasswordNotMatchesException.class)
     public ResponseEntity<ResponseMessage> handlePasswordNotMatchesException(PasswordNotMatchesException e) {
-        return new ResponseEntity<>(new ResponseMessage(false, "비밀번호 불일치", "비밀번호 불일치"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseMessage(false, "비밀번호 불일치", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
 

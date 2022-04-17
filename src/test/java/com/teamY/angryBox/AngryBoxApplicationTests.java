@@ -2,13 +2,16 @@ package com.teamY.angryBox;
 
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 import com.teamY.angryBox.mapper.MemberMapper;
+import com.teamY.angryBox.mapper.ProfileMapper;
 import com.teamY.angryBox.mapper.TestMapper;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.vo.MemberVO;
 import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
+import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
 @RequiredArgsConstructor
 class AngryBoxApplicationTests {
@@ -81,10 +85,12 @@ class AngryBoxApplicationTests {
 		System.out.println(authorities);
 	}
 
+	@Autowired
+	ProfileMapper profileMapper;
 	@Test
-	void oauthTest(){
-		//OAuthURL url = new KakaoURL();
+	void profileTest(){
 
-		System.out.println(kakaoURL.getTokenURL("코드이당"));
+	//log.info(profileMapper.selectJoinedProfile(1).toString());
+
 	}
 }

@@ -5,11 +5,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teamY.angryBox.mapper.ProfileMapper">
 
+    <select id = "selectJoinedProfile" resultType="ProfileJoinVO">
+        SELECT profile.id, member.id as member_id, email, nickname, file.id as file_id, original_file_name, system_file_name
+        FROM profile, member, file
+        WHERE profile.member_id = #{id} and profile.member_id = member.id and file.id = profile.file_id;
+    </select>
     <insert id = "insertProfile" parameterType="ProfileVO">
         INSERT INTO profile(member_id, file_id)
         VALUES (#{memberId}, #{fileId})
     </insert>
 
+    <select id = "selectProfileByMemberId" resultType="ProfileVO">
+        SELECT *
+        FROM profile
+        WHERE member_id = #{id}
+    </select>
 
-
+    <update id="updateProfileImage">
+        UPDATE profile
+        SET file_id = #{fileId}
+        WHERE id = #{id}
+    </update>
 </mapper>

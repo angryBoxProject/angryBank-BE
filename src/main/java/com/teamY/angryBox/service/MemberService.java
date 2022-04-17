@@ -89,5 +89,23 @@ public class MemberService {
         return memberRepository.getIsLogout(key) != null;
     }
 
+    public void updateMemberNickname(int id, String nickname) {
+        memberRepository.updateMemberNickname(id, nickname);
+    }
 
+    public void changePassword(int id, String email, Map<String, String> passwords) {
+        String password = memberRepository.findPassword(email);
+
+        if(!bCryptPasswordEncoder.matches(passwords.get("password"), password)) {
+            throw new PasswordNotMatchesException("현재 비밀번호가 일치하지 않음");
+        }
+
+        if(!passwords.get("newPassword").equals(passwords.get("checkNewPassword"))) {
+            throw new PasswordNotMatchesException("새로운 비밀번호가 서로 일치하지 않음");
+        }
+
+        String encodedPassword = bCryptPasswordEncoder.encode(passwords.get("newPassword"));
+
+        memberRepository.updateMemberPassword(id, encodedPassword);
+    }
 }

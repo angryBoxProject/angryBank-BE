@@ -16,4 +16,7 @@
         VALUES (#{originalFileName}, #{systemFileName}, #{fileSize}, #{fileType});
     </insert>
 
+    <delete id="deleteFile">
+        DELETE FROM file WHERE id = #{id}
+    </delete>
 </mapper>
