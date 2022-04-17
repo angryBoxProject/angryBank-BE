@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.DiaryMapper">
+
+    <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="int">
+        { call INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryFigure}, #{coinBankId} ) }
+    </select>
+
+    <insert id="insertDiaryFile">
+        INSERT INTO diary_file(diary_id, file_id) VALUES( #{diaryId}, #{fileId} )
+    </insert>
+
+
+</mapper>
