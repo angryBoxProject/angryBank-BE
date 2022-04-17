@@ -5,13 +5,72 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teamY.angryBox.mapper.DiaryMapper">
 
+<!--    다이어리 저장 및 id 값 조회-->
     <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="int">
         { call INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryFigure}, #{coinBankId} ) }
     </select>
-
     <insert id="insertDiaryFile">
         INSERT INTO diary_file(diary_id, file_id) VALUES( #{diaryId}, #{fileId} )
     </insert>
+
+    <!-- 저금통 안에 있는 다이어리 목록 -->
+    <resultMap id="selectDiaryListInCoinBankResultMap" type="DiaryVO">
+        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
+        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
+        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
+        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
+        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
+        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />
+        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectDiaryListInCoinBank" parameterType="int" resultType="DiaryVO" resultMap="selectDiaryListInCoinBankResultMap">
+        SELECT d.id, diary_no, member_id, title, write_date, angry_name, is_public
+        FROM diary AS d
+            LEFT JOIN angry_phase AS ap
+                ON d.angry_figure = ap.phase
+        WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
+    </select>
+
+<!-- 다이어리 상세 조회 -->
+    <resultMap id="DiaryDetail" type="diaryVO">
+        <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
+        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
+        <result property="title" javaType="string" column="title" jdbcType="VARCHAR" />
+        <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
+        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
+        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />
+        <result property="isPublic" javaType="int" column="is_public" jdbcType="TINYINT" />
+        <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="FileDetail" type="fileVO">
+        <result property="id" javaType="int" column="file_id" jdbcType="INTEGER" />
+        <result property="systemFileName" javaType="string" column="system_file_name" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="selectDiaryDetailResultMap" type="DiaryFileVO">
+        <collection property="diaryVO" resultMap="DiaryDetail" />
+        <collection property="fileVO" resultMap="FileDetail" />
+    </resultMap>
+    <select id="selectDiaryDetail" parameterType="int" resultType="DiaryFileVO" resultMap="selectDiaryDetailResultMap" >
+        SELECT d.id AS diary_id, d.diary_no, d.title, d.content, d.write_date, ap.angry_name, d.is_public, d.todack_count, f.id AS file_id, f.original_file_name, f.system_file_name, f.file_size, f.file_type
+        FROM diary AS d
+                 RIGHT JOIN diary_file AS df
+                            ON d.id = df.diary_id
+                 LEFT JOIN file AS f
+                           ON df.file_id = f.id
+                 LEFT JOIN angry_phase AS ap
+                           ON d.angry_figure = ap.phase
+        WHERE d.id = #{diaryId};
+    </select>
+
+
+
+<!--  연도까지 포함해서 수정!!!!!  -->
+<!--    <select id="selectDiaryListInMonth" parameterType="int" resultType="DiaryVO" resultMap="">-->
+<!--        SELECT id, member_id, title, content, write_date, is_public, angry_figure, todack_count, coin_bank_id, diary_no-->
+<!--        FROM diary-->
+<!--        WHERE member_id = #{memberId} AND MONTH(write_date) = #{writeDate};-->
+<!--    </select>-->
+
 
 
 </mapper>

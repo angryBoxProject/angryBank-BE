@@ -1,29 +1,37 @@
 package com.teamY.angryBox.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Alias("DiaryVO")
 public class DiaryVO {
 
     private int id;
     private int memberId;
+    private int diaryNo;
     private String title;
     private String content;
-    private Instant writeDate;
-    private int isPublic; //0 : 비밀, 1 : 공개
+    private String dateTime;
     private int angryFigure;
+    private String angryName;
+    private int isPublic;
     private int todackCount; //default 0
     private int coinBankId;
-    private int diaryNo;
-    private List<MultipartFile> files;
 
-    //다이어리 초기 작성 시 사용할 생성자
+
+    //다이어리 작성 시 사용할 생성자
     public DiaryVO(int memberId, String title, String content, int isPublic, int angryFigure, int coinBankId) {
         this.memberId = memberId;
         this.title = title;
@@ -34,5 +42,5 @@ public class DiaryVO {
     }
 
 
-
 }
+

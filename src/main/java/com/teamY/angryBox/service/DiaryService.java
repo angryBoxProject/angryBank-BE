@@ -4,6 +4,7 @@ package com.teamY.angryBox.service;
 
 import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.FileRepository;
+import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.FileVO;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +38,13 @@ public class DiaryService {
         }
     }
 
+    public List<DiaryVO> retrieveDiaryListInCoinBank(int memberId, int coinBankId) {
+        return diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId);
+    }
 
-    //diary 등록 메소드 생성 + diary id 조회 후 리턴
+    public List<DiaryFileVO> retrieveDiaryDetaile(int diaryId) {
+        return diaryRepository.selectDiaryDetail(diaryId);
+    }
 
-    //file 저장 메소드 호출 + file id 리턴 -> controller에서 for each로 메소드 호출 ex) https://hyeounstory.tistory.com/90
-
-    //file_diary 저장 메소드 생성
 
 }

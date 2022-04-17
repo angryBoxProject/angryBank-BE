@@ -1,10 +1,13 @@
 package com.teamY.angryBox.repository;
 
 import com.teamY.angryBox.mapper.DiaryMapper;
+import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,5 +24,12 @@ public class DiaryRepository {
         diaryMapper.insertDiaryFile(diaryId, fileId);
     }
 
+    public List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId) {
+        return diaryMapper.selectDiaryListInCoinBank(memberId, coinBankId);
+    }
+
+    public List<DiaryFileVO> selectDiaryDetail(int diaryId) {
+        return diaryMapper.selectDiaryDetail(diaryId);
+    }
 
 }
