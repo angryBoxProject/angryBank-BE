@@ -43,4 +43,8 @@ public class MemberRepository {
     public void updateMemberPassword(int id, String password) {
         mapper.updateMemberPassword(id, password);
     }
+
+    public MemberVO selectById(int id) {
+        return mapper.selectById(id);
+    }
 }
