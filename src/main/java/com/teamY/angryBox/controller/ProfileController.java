@@ -47,6 +47,10 @@ public class ProfileController {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("nickname", profile.getMember().getNickname());
         data.put("file", "/images/" + profile.getFile().getSystemFileName());
+        data.put("diaryCount", profile.getMember().getDiaryCount());
+        data.put("sendTodakCount", profile.getMember().getSendTodakCount());
+        data.put("recieveTodakCount", profile.getMember().getRecieveTodakCount());
+
         return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "프로필 조회 성공", "", data), HttpStatus.OK);
     }
 
