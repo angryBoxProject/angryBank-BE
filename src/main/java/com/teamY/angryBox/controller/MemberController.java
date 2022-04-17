@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -61,6 +62,19 @@ public class MemberController {
     public String test(@RequestHeader HttpHeaders headers){
         log.info("있냐고" + headers.get(HeaderUtil.HEADER_AUTHORIZATION));
         return "test";
+    }
+    @GetMapping("user")
+    public ResponseEntity<ResponseDataMessage> getMemberInfo() {
+        MemberVO memberVO = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+        memberVO = memberService.inquriyMember(memberVO.getId());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("memberId", memberVO.getId());
+        data.put("email", memberVO.getEmail());
+        data.put("nickname", memberVO.getNickname());
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "회원 정보 조회 성공", "", data), HttpStatus.OK);
     }
     @PostMapping("users")
     public ResponseEntity<ResponseMessage> memberRegister(@RequestParam String email, @RequestParam String nickname, @RequestParam String password) {

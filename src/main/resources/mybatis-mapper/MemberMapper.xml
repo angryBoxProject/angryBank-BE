@@ -36,4 +36,10 @@
         SET password = #{password}
         WHERE id = #{id}
     </update>
+
+    <select id="selectById" resultType="MemberVO">
+        SELECT id, email, nickname, register_type
+        FROM member
+        WHERE id = #{id}
+    </select>
 </mapper>
