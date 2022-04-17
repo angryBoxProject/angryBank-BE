@@ -35,4 +35,16 @@ public class MemberRepository {
     public String findPassword(String email) {
         return mapper.selectByEmail(email).getPassword();
     }
+
+    public void updateMemberNickname(int id, String nickname) {
+        mapper.updateMemberNickname(id, nickname);
+    }
+
+    public void updateMemberPassword(int id, String password) {
+        mapper.updateMemberPassword(id, password);
+    }
+
+    public MemberVO selectById(int id) {
+        return mapper.selectById(id);
+    }
 }

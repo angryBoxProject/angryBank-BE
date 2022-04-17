@@ -8,7 +8,7 @@ import org.apache.ibatis.type.Alias;
 
 @Getter
 @ToString
-@AllArgsConstructor
+//@AllArgsConstructor
 @Alias("MemberVO")
 public class MemberVO {
 
@@ -18,7 +18,17 @@ public class MemberVO {
     @JsonIgnore
     private String password;
     private String registerType;
+    private int diaryCount;
+    private int sendTodakCount;
+    private int recieveTodakCount;
 
+    public MemberVO(int id, String email, String nickname, String password, String registerType) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.registerType = registerType;
+    }
     public MemberVO(int id, String email, String nickname, String registerType) {
         this.id = id;
         this.email = email;
@@ -38,4 +48,14 @@ public class MemberVO {
         this.email = email;
         this.nickname = nickname;
     }
+
+    public MemberVO(int id, String email, String nickname, int diaryCount, int sendTodakCount, int recieveTodakCount) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.diaryCount = diaryCount;
+        this.sendTodakCount = sendTodakCount;
+        this.recieveTodakCount = recieveTodakCount;
+    }
 }
+

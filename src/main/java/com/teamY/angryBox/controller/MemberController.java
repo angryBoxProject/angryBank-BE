@@ -10,6 +10,7 @@ import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.service.ProfileService;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -61,6 +63,19 @@ public class MemberController {
         log.info("있냐고" + headers.get(HeaderUtil.HEADER_AUTHORIZATION));
         return "test";
     }
+    @GetMapping("user")
+    public ResponseEntity<ResponseDataMessage> getMemberInfo() {
+        MemberVO memberVO = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+        memberVO = memberService.inquriyMember(memberVO.getId());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("memberId", memberVO.getId());
+        data.put("email", memberVO.getEmail());
+        data.put("nickname", memberVO.getNickname());
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "회원 정보 조회 성공", "", data), HttpStatus.OK);
+    }
     @PostMapping("users")
     public ResponseEntity<ResponseMessage> memberRegister(@RequestParam String email, @RequestParam String nickname, @RequestParam String password) {
         String encodedPassword = bCryptPasswordEncoder.encode(password);
@@ -95,5 +110,14 @@ public class MemberController {
         }
     }
 
+    @PutMapping("users")
+    public ResponseEntity<ResponseMessage> changePassword(@RequestBody Map<String, String> passwords) {
+        //log.info(passwords.toString());
 
+        MemberVO memberVO = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+        memberService.changePassword(memberVO.getId(), memberVO.getEmail(), passwords);
+
+        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "비밀번호 변경 성공", ""), HttpStatus.OK);
+    }
 }

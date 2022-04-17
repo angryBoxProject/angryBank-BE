@@ -25,4 +25,10 @@ public class FileVO {
         this.fileSize = fileSize;
         this.fileType = fileType;
     }
+
+    public FileVO(int id, String originalFileName, String systemFileName) {
+        this.id = id;
+        this.originalFileName = originalFileName;
+        this.systemFileName = systemFileName;
+    }
 }
