@@ -13,13 +13,23 @@ import org.springframework.web.multipart.MultipartFile;
 @Repository
 public class FileRepository {
     private final FileManager fileManager;
-    private final FileMapper fileMapper;
+    private final FileMapper mapper;
 
     public FileVO uploadFile(MultipartFile file) {
         FileVO fileVO = fileManager.uploadFile(file);
-        log.info("uploaded fileVO" + fileVO);
-        fileMapper.insertFile(fileVO);
-        log.info("inserted fileVO" + fileVO);
+        //log.info("uploaded fileVO" + fileVO);
+        mapper.insertFile(fileVO);
+        //log.info("inserted fileVO" + fileVO);
         return fileVO;
+    }
+
+    public FileVO findById(int id) {
+        return mapper.selectById(id);
+    }
+
+
+    public void deleteFile(FileVO fileVO) {
+        fileManager.deleteFile(fileVO.getSystemFileName());
+        mapper.deleteFile(fileVO.getId());
     }
 }

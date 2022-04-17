@@ -5,5 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface FileMapper {
-    public void insertFile(FileVO file);
+    void insertFile(FileVO file);
+    FileVO selectById(int id);
+    void deleteFile(int id);
 }
