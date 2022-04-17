@@ -108,4 +108,8 @@ public class MemberService {
 
         memberRepository.updateMemberPassword(id, encodedPassword);
     }
+
+    public MemberVO inquriyMember(int memberId) {
+        return memberRepository.selectById(memberId);
+    }
 }
