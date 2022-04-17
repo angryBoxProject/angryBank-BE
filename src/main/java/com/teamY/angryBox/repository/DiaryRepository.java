@@ -13,12 +13,11 @@ public class DiaryRepository {
     private final DiaryMapper diaryMapper;
 
     public int insertDiary(DiaryVO diary) {
-        log.info("diaryReposiroty 들어옴");
-        return diaryMapper.insertDiary(diary);
+        int diaryId = diaryMapper.insertDiary(diary);
+        return diaryId;
     }
 
     public void insertDiaryFile(int diaryId, int fileId) {
-        log.info("diaryId : " + diaryId, "  fileId : " + fileId);
         diaryMapper.insertDiaryFile(diaryId, fileId);
     }
 

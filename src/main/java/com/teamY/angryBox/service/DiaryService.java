@@ -9,11 +9,10 @@ import com.teamY.angryBox.vo.FileVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,18 +22,20 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final FileRepository fileRepository;
 
-    //if 파일 있으면 -> diary insert + select + file insert 프로시저
-    //else 파일 없으면 -> diary insert만
+    @Transactional
+    public void registerDiary(DiaryVO diary, MultipartFile[] file) {
+        int diaryId = diaryRepository.insertDiary(diary);
 
-    public int registerDiary(DiaryVO diary) {
-        //diaryRepository.insertDiary(diary);
-        return diaryRepository.insertDiary(diary);
+        List<Integer> fileIdList = new ArrayList<>();
+        if(file != null) {
+            for(MultipartFile f : file) {
+                fileIdList.add(fileRepository.uploadFile(f).getId());
+            }
+            for(int i = 0; i < fileIdList.size(); i++) {
+                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i));
+            }
+        }
     }
-
-    public void registerDiaryFile(int diaryId, int fileId) {
-        diaryRepository.insertDiaryFile(diaryId, fileId);
-    }
-
 
 
     //diary 등록 메소드 생성 + diary id 조회 후 리턴

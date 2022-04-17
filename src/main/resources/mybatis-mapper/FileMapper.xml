@@ -16,8 +16,4 @@
         VALUES (#{originalFileName}, #{systemFileName}, #{fileSize}, #{fileType});
     </insert>
 
-    <insert id="insertDiaryFile">
-        INSERT INTO file_diary(diary_id, file_id) VALUES(#{diaryId}, #{fileId})
-    </insert>
-
 </mapper>
