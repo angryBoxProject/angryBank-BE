@@ -59,7 +59,7 @@ public class AuthTokenProvider {
     public Authentication getAuthentication(AuthToken authToken) throws Exception {
 
         Claims claims = authToken.getTokenClaims();
-        log.info("클레임스 : " + claims.get(AUTHORITIES_KEY).toString());
+        log.info("클레임스 : " + claims.get(AUTHORITIES_KEY).toString() + " " + (int) claims.get("memberId")/* + " " + (String) claims.get("email") + " " + (String)claims.get("nickname")*/);
 
         List<SimpleGrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
@@ -67,7 +67,9 @@ public class AuthTokenProvider {
                         .collect(Collectors.toList());
 
         //User principal = new User((String) claims.get("email"), "", authorities);
-        MemberVO memberVO = new MemberVO((int) claims.get("id"), (String) claims.get("email"), (String)claims.get("nickname"));
+
+        //log.info("   정보정보정보 : {}, {}, {}", (int) claims.get("id"),  (String) claims.get("email"), (String)claims.get("nickname"));
+        MemberVO memberVO = new MemberVO((int) claims.get("memberId"), (String) claims.get("email"), (String)claims.get("nickname"));
         MemberPrincipal principal = MemberPrincipal.create(memberVO);
 
         return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
