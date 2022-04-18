@@ -23,7 +23,7 @@ public interface DiaryMapper {
 
     int selectDiaryMemberId(int diaryId, int memberId);
 
-    void deleteDiary(int diaryId);
+    void deleteDiary(int diaryId, int memberId);
 
     void updateDiary(DiaryVO diaryVO);
 

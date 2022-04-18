@@ -3,10 +3,7 @@ package com.teamY.angryBox;
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 
 import com.teamY.angryBox.dto.NewCoinBankDTO;
-import com.teamY.angryBox.mapper.DiaryMapper;
-import com.teamY.angryBox.mapper.MemberMapper;
-import com.teamY.angryBox.mapper.ProfileMapper;
-import com.teamY.angryBox.mapper.TestMapper;
+import com.teamY.angryBox.mapper.*;
 import com.teamY.angryBox.repository.MemberRepository;
 
 import com.teamY.angryBox.service.CoinBankService;
@@ -28,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,10 +55,19 @@ class AngryBoxApplicationTests {
 	@Autowired
 	private DiaryMapper diaryMapper;
 
+	@Autowired
+	private TodackMapper todackMapper;
+
+
+
+
 	@Test
 	void test() {
 //		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
 //		log.info(df.toString());
+		//todackMapper.insertTodack(1, 2, 1);
+		//todackMapper.deleteTodack(1, 2, 1);
+
 
 	}
 

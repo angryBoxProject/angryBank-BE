@@ -99,9 +99,9 @@
         WHERE id = #{diaryId} AND member_id = #{memberId}
     </select>
 
-<!--    다이어리 삭제 -->
+<!--    다이어리 삭제 -> TOP글, 대나무숲 에도 반영 필요 -->
     <delete id="deleteDiary" parameterType="int" >
-        { CALL DELETE_DIARY( #{diaryId} ) }
+        { CALL DELETE_DIARY( #{diaryId}, #{memberId} ) }
     </delete>
 
 <!--    다이어리 수정 -->
@@ -123,9 +123,6 @@
     </select>
 
 <!--    angryName 목록  조회 -->
-
-
-
 
 
 

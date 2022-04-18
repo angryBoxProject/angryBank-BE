@@ -22,12 +22,12 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final FileRepository fileRepository;
 
-    public int retrieveAngryId(int angryPhaseId) {
+    public int getAngryId(int angryPhaseId) {
         return diaryRepository.selectAngryId(angryPhaseId);
     }
 
     @Transactional
-    public void registerDiary(DiaryVO diary, MultipartFile[] file) {
+    public void addDiary(DiaryVO diary, MultipartFile[] file) {
         int diaryId = diaryRepository.insertDiary(diary);
 
         List<Integer> fileIdList = new ArrayList<>();
@@ -41,15 +41,15 @@ public class DiaryService {
         }
     }
 
-    public List<DiaryVO> retrieveDiaryListInCoinBank(int memberId, int coinBankId) {
+    public List<DiaryVO> getDiaryListInCoinBank(int memberId, int coinBankId) {
         return diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId);
     }
 
-    public List<DiaryVO> retrieveDiaryListInMonth(int memberId, int year, int month) {
+    public List<DiaryVO> getDiaryListInMonth(int memberId, int year, int month) {
         return diaryRepository.selectDiaryListInMonth(memberId, year, month);
     }
 
-    public List<DiaryFileVO> retrieveDiaryDetail(int diaryId, int memberId) {
+    public List<DiaryFileVO> getDiaryDetail(int diaryId, int memberId) {
         if(diaryRepository.selectDiaryDetail(diaryId) == null) {
             //수정 예정
             return null;
@@ -63,16 +63,16 @@ public class DiaryService {
 
     }
 
-    public int retrieveDiaryMemberId(int diaryId, int memberId) {
+    public int getDiaryMemberId(int diaryId, int memberId) {
         return diaryRepository.selectDiaryMemberId(diaryId, memberId);
     }
 
-    public void removeDiary(int diaryId) {
-        diaryRepository.deleteDiary(diaryId);
+    public void removeDiary(int diaryId, int memberid) {
+        diaryRepository.deleteDiary(diaryId, memberid);
     }
 
     @Transactional
-    public void modifyDiary(DiaryVO diary, MultipartFile[] file, List removedFileId) {
+    public void changeDiary(DiaryVO diary, MultipartFile[] file, List removedFileId) {
         //다이어리 내용 변경
         diaryRepository.updateDiary(diary);
 

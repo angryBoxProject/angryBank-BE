@@ -43,8 +43,8 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryMemberId(diaryId, memberId);
     }
 
-    public void deleteDiary(int diaryId) {
-        diaryMapper.deleteDiary(diaryId);
+    public void deleteDiary(int diaryId, int memberId) {
+        diaryMapper.deleteDiary(diaryId, memberId);
     }
 
     public void updateDiary(DiaryVO diary) {
