@@ -47,4 +47,15 @@ public class MemberRepository {
     public MemberVO selectById(int id) {
         return mapper.selectById(id);
     }
+
+    public void updateCoinBankId(int id, int bankId){
+        mapper.updateCoinBankId(id, bankId);
+    }
+
+    public void updateCoinBankIdToNull(int id){
+        mapper.updateCoinBankIdToNull(id);
+    }
+    public int selectMemberCurBank(int id){
+        return mapper.selectMemberCurBank(id);
+    }
 }
