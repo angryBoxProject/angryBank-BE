@@ -82,7 +82,7 @@ public class ProfileController {
     @GetMapping("/images/{filename}")
     public UrlResource showImage(@PathVariable String filename) throws
             MalformedURLException {
-        return new UrlResource("file:" + "\\upload\\" + filename);
+        return new UrlResource("file:" + "/upload/" + filename);
     }
 
 }
