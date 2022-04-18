@@ -66,7 +66,7 @@ public class MemberService {
         data = new HashMap<>();
         data.put("nickname", member.getNickname());
         data.put("email", member.getEmail());
-        data.put("id", member.getId());
+        data.put("memberId", member.getId());
 
         AuthToken authToken = authTokenProvider.createAuthToken(member.getEmail(), new Date(new Date().getTime() + appProperties.getAuth().getTokenExpiry()), data);
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.CoinBankMapper">
+    <insert id = "insertCoinBank" parameterType="CoinBankVO">
+        INSERT INTO coin_bank(member_id, name, memo, angry_limit, reward)
+        VALUES(#{memberId}, #{name}, #{memo}, #{angryLimit}, #{reward})
+    </insert>
+
+    <update id = "updateCoinBank" parameterType="CoinBankVO">
+        UPDATE coin_bank
+        SET name = #{name}, memo = #{memo}, angry_limit = #{angryLimit}, reward = #{reward}
+        WHERE id = #{id} and member_id = #{memberId}
+    </update>
+
+    <select id = "selectBankExpired" resultType="CoinBankVO">
+        SELECT member_id, expired
+        FROM coin_bank
+        WHERE id = #{id}
+    </select>
+</mapper>

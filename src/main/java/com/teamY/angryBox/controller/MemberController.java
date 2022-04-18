@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,7 +90,7 @@ public class MemberController {
     }
 
     @PostMapping("auth/login")
-    public ResponseEntity<ResponseDataMessage> login(@RequestBody LogInDTO loginDTO) {
+    public ResponseEntity<ResponseDataMessage> login(@Valid @RequestBody LogInDTO loginDTO) {
 
         Map<String, Object> data = memberService.login(loginDTO);
         HttpHeaders httpHeaders = new HttpHeaders();
