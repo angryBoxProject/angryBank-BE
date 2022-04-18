@@ -24,6 +24,6 @@ public class CustomException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "에러 종류 [" + errorCode.getMessage() + "]      " + "에러 내용 [" + super.getMessage() + "]";
+        return "[에러 종류 : " + errorCode.getMessage() + "] " + "[에러 내용 : " + super.getMessage() + "]";
     }
 }

@@ -4,6 +4,7 @@ import com.teamY.angryBox.config.properties.AppProperties;
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.LogInDTO;
+import com.teamY.angryBox.dto.RegisterMemberDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.service.MemberService;
@@ -78,9 +79,10 @@ public class MemberController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "회원 정보 조회 성공", "", data), HttpStatus.OK);
     }
     @PostMapping("users")
-    public ResponseEntity<ResponseMessage> memberRegister(@RequestParam String email, @RequestParam String nickname, @RequestParam String password) {
-        String encodedPassword = bCryptPasswordEncoder.encode(password);
-        MemberVO member = new MemberVO(email, nickname, encodedPassword, "basic");
+    //public ResponseEntity<ResponseMessage> memberRegister(@RequestParam String email, @RequestParam String nickname, @RequestParam String password) {
+    public ResponseEntity<ResponseMessage> memberRegister(@Valid @RequestBody RegisterMemberDTO newUser) {
+        String encodedPassword = bCryptPasswordEncoder.encode(newUser.getPassword());
+        MemberVO member = new MemberVO(newUser.getEmail(), newUser.getNickname(), encodedPassword, "basic");
         memberService.registerMember(member);
 
         // 프로필 생성

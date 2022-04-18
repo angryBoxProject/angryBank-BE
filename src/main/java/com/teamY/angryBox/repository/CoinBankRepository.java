@@ -24,4 +24,8 @@ public class CoinBankRepository {
     public CoinBankVO selectBankExpired(int id){
         return mapper.selectBankExpired(id);
     }
+
+    public int expireCoinBank(int id) {
+        return mapper.expireCoinBank(id);
+    }
 }

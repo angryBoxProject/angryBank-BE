@@ -36,4 +36,12 @@ public class CoinBankService {
         log.info("수정될 저금통 내용 : " + bankVO);
         coinBankRepository.updateCoinBank(bankVO);
     }
+
+    public void expireCoinBank(int id) {
+        if(id < 1)
+            throw new InvalidRequestException("유효하지 않은 적금 ID");
+
+        if(coinBankRepository.expireCoinBank(id) == 0)
+            throw new SQLInquiryException("해당 ID 적금 조회 실패");
+    }
 }

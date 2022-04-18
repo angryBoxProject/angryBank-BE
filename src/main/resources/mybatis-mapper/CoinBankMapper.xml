@@ -20,4 +20,16 @@
         FROM coin_bank
         WHERE id = #{id}
     </select>
+
+    <select id = "selectById" resultType="CoinBankVO">
+        SELECT *
+        FROM coin_bank
+        WHERE id = #{id}
+    </select>
+
+    <update id = "expireCoinBank" parameterType="int">
+        UPDATE coin_bank
+        SET expired = 1
+        WHERE id = #{id}
+    </update>
 </mapper>

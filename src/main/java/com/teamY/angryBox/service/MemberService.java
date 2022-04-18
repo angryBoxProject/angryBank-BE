@@ -5,6 +5,7 @@ import com.teamY.angryBox.config.security.oauth.AuthToken;
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.LogInDTO;
+import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.error.customException.PasswordNotMatchesException;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.vo.MemberVO;
@@ -78,6 +79,10 @@ public class MemberService {
 
 
     public void registerMember(MemberVO member) {
+
+        if( memberRepository.findByEmail(member.getEmail()) != null)
+            throw new InvalidRequestException("이미 가입 되어 있는 이메일");
+
         memberRepository.insertMember(member);
     }
 

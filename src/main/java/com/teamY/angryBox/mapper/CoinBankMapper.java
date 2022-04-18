@@ -10,4 +10,6 @@ public interface CoinBankMapper {
     void updateCoinBank(CoinBankVO coinBankVO);
 
     CoinBankVO selectBankExpired(int id);
+
+    int expireCoinBank(int id);
 }
