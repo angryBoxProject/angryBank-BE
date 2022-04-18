@@ -4,7 +4,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teamY.angryBox.mapper.CoinBankMapper">
-    <insert id = "insertCoinBank" parameterType="CoinBankVO">
+    <insert id = "insertCoinBank" parameterType="CoinBankVO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO coin_bank(member_id, name, memo, angry_limit, reward)
         VALUES(#{memberId}, #{name}, #{memo}, #{angryLimit}, #{reward})
     </insert>
@@ -22,7 +22,7 @@
     </select>
 
     <select id = "selectById" resultType="CoinBankVO">
-        SELECT *
+        SELECT id, member_id, name, memo, angry_limit, reward, expired
         FROM coin_bank
         WHERE id = #{id}
     </select>
@@ -32,4 +32,18 @@
         SET expired = 1
         WHERE id = #{id}
     </update>
+
+    <select id = "selectCoinBankSum" resultType="int">
+        SELECT SUM(ap.phase)
+        FROM diary AS d
+            LEFT JOIN angry_phase AS ap
+                           ON d.angry_phase_id = ap.id
+        WHERE d.member_id = #{memberId} AND d.coin_bank_id = #{bankId};
+    </select>
+
+
+    <select id = "selectAngryPhase" resultType="int">
+        SELECT phase
+        FROM angry_phase;
+    </select>
 </mapper>
