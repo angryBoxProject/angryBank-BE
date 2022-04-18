@@ -17,6 +17,9 @@ public class TodackVO {
     private int diaryId;
     private int sendReceive;
 
+    public TodackVO() {
+    }
+
     public TodackVO(int diaryId, int sendMemberId, int receiveMemberId) {
         this.diaryId = diaryId;
         this.sendMemberId = sendMemberId;
