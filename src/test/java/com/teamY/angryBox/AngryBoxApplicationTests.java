@@ -1,12 +1,19 @@
 package com.teamY.angryBox;
 
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
+
 import com.teamY.angryBox.dto.NewCoinBankDTO;
+import com.teamY.angryBox.mapper.DiaryMapper;
 import com.teamY.angryBox.mapper.MemberMapper;
 import com.teamY.angryBox.mapper.ProfileMapper;
 import com.teamY.angryBox.mapper.TestMapper;
 import com.teamY.angryBox.repository.MemberRepository;
+
 import com.teamY.angryBox.service.CoinBankService;
+
+import com.teamY.angryBox.vo.DiaryFileVO;
+import com.teamY.angryBox.vo.FileVO;
+
 import com.teamY.angryBox.vo.MemberVO;
 import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
@@ -46,6 +53,16 @@ class AngryBoxApplicationTests {
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	private DiaryMapper diaryMapper;
+
+	@Test
+	void test() {
+//		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
+//		log.info(df.toString());
+
+	}
 
 	@Autowired
 	private KakaoURL kakaoURL;
@@ -89,11 +106,11 @@ class AngryBoxApplicationTests {
 
 	@Autowired
 	CoinBankService coinBankService;
+
+	@Disabled
 	@Test
 	void profileTest(){
 		//MemberVO memberVO = new MemberVO((int) claims.get("id"), (String) claims.get("email"), (String)claims.get("nickname"));
-		MemberVO memberVO = new MemberVO(1, "asdf@naver.com", "asdf");
-		log.info(memberVO.toString());
 	//log.info(profileMapper.selectJoinedProfile(1).toString());
 
 		//coinBankService.createCoinBank( new NewCoinBankDTO( "이름", "메모", 111, "치킨이닭"), 1);
