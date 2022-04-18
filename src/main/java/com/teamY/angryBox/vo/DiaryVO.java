@@ -24,7 +24,7 @@ public class DiaryVO {
     private String title;
     private String content;
     private String dateTime;
-    private int angryFigure;
+    private int angryFigure; // 수치로 받아올지 string으로 받아올지 논의 해보고 받아올 타입 변경하든지 해야 할듯
     private String angryName;
     private int isPublic;
     private int todackCount; //default 0

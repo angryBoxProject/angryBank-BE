@@ -20,8 +20,8 @@ public class DiaryRepository {
         return diaryId;
     }
 
-    public void insertDiaryFile(int diaryId, int fileId) {
-        diaryMapper.insertDiaryFile(diaryId, fileId);
+    public void insertDiaryFile(int diaryId, int fileId, int fileNo) {
+        diaryMapper.insertDiaryFile(diaryId, fileId, fileNo);
     }
 
     public List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId) {
@@ -32,4 +32,15 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryDetail(diaryId);
     }
 
+    public int selectDiaryMemberId(int diaryId, int memberId) {
+        return diaryMapper.selectDiaryMemberId(diaryId, memberId);
+    }
+
+    public void deleteFileInDiary(int diaryId) {
+        diaryMapper.deleteFileInDiary(diaryId);
+    }
+
+    public void deleteDiary(int diaryId) {
+        diaryMapper.deleteDiary(diaryId);
+    }
 }

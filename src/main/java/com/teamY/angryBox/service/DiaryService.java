@@ -33,7 +33,7 @@ public class DiaryService {
                 fileIdList.add(fileRepository.uploadFile(f).getId());
             }
             for(int i = 0; i < fileIdList.size(); i++) {
-                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i));
+                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), i+1);
             }
         }
     }
@@ -44,6 +44,15 @@ public class DiaryService {
 
     public List<DiaryFileVO> retrieveDiaryDetaile(int diaryId) {
         return diaryRepository.selectDiaryDetail(diaryId);
+    }
+
+    public int retrieveDiaryMemberId(int diaryId, int memberId) {
+        return diaryRepository.selectDiaryMemberId(diaryId, memberId);
+    }
+
+    public void removeDiary(int diaryId) {
+        diaryRepository.deleteFileInDiary(diaryId);
+        diaryRepository.deleteDiary(diaryId);
     }
 
 

@@ -18,6 +18,7 @@ public class FileVO {
     private long fileSize;
     private String fileType;
     private String dateTime;
+    private int fileNo;
 
     public FileVO(String originalFileName, String systemFileName, String fileType, long fileSize) {
         this.originalFileName = originalFileName;

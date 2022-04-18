@@ -10,10 +10,10 @@
         { call INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryFigure}, #{coinBankId} ) }
     </select>
     <insert id="insertDiaryFile">
-        INSERT INTO diary_file(diary_id, file_id) VALUES( #{diaryId}, #{fileId} )
+        INSERT INTO diary_file(diary_id, file_id, file_no) VALUES( #{diaryId}, #{fileId}, #{fileNo} )
     </insert>
 
-    <!-- 저금통 안에 있는 다이어리 목록 -->
+    <!-- 다이어리 목록 조회 (저금통별) -->
     <resultMap id="selectDiaryListInCoinBankResultMap" type="DiaryVO">
         <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
         <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
@@ -31,9 +31,29 @@
         WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
     </select>
 
+
+    <!-- 다이어리 목록 조회 (연도 + 월별) -->
+    <resultMap id="selectDiaryListInMonthResultMap" type="DiaryVO">
+        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
+        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
+        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
+        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
+        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
+        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />
+        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectDiaryListInMonth" parameterType="int" resultType="DiaryVO" resultMap="selectDiaryListInMonthResultMap">
+        SELECT d.id, member_id, diary_no, title, write_date, ap.angry_name, is_public
+        FROM diary AS d
+            LEFT JOIN angry_phase AS ap
+                ON d.angry_figure = ap.phase
+        WHERE member_id = #{memberId} AND YEAR(write_date) = #{year} AND MONTH(write_date) = #{month}
+    </select>
+
 <!-- 다이어리 상세 조회 -->
     <resultMap id="DiaryDetail" type="diaryVO">
         <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
+        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
         <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR" />
         <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
@@ -45,13 +65,14 @@
     <resultMap id="FileDetail" type="fileVO">
         <result property="id" javaType="int" column="file_id" jdbcType="INTEGER" />
         <result property="systemFileName" javaType="string" column="system_file_name" jdbcType="VARCHAR" />
+        <result property="fileNo" javaType="int" column="file_no" jdbcType="INTEGER" />
     </resultMap>
     <resultMap id="selectDiaryDetailResultMap" type="DiaryFileVO">
         <collection property="diaryVO" resultMap="DiaryDetail" />
         <collection property="fileVO" resultMap="FileDetail" />
     </resultMap>
     <select id="selectDiaryDetail" parameterType="int" resultType="DiaryFileVO" resultMap="selectDiaryDetailResultMap" >
-        SELECT d.id AS diary_id, d.diary_no, d.title, d.content, d.write_date, ap.angry_name, d.is_public, d.todack_count, f.id AS file_id, f.original_file_name, f.system_file_name, f.file_size, f.file_type
+        SELECT d.id AS diary_id, d.diary_no, d.title, d.content, d.write_date, ap.angry_name, d.is_public, d.todack_count, f.id AS file_id, f.original_file_name, f.system_file_name, f.file_size, f.file_type, df.file_no
         FROM diary AS d
                  RIGHT JOIN diary_file AS df
                             ON d.id = df.diary_id
@@ -59,18 +80,37 @@
                            ON df.file_id = f.id
                  LEFT JOIN angry_phase AS ap
                            ON d.angry_figure = ap.phase
-        WHERE d.id = #{diaryId};
+        WHERE d.id = #{diaryId}
     </select>
 
+<!--    다이어리 삭제 -->
+    <select id="selectDiaryMemberId" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM diary WHERE id = #{diaryId} AND member_id = #{memberId}
+    </select>
+    <delete id="deleteFileInDiary" parameterType="int">
+        DELETE FROM diary_file WHERE diary_id = #{diaryId};
+    </delete>
+    <delete id="deleteDiary" parameterType="int" >
+        DELETE FROM diary WHERE id = #{diaryId}
+    </delete>
 
 
-<!--  연도까지 포함해서 수정!!!!!  -->
-<!--    <select id="selectDiaryListInMonth" parameterType="int" resultType="DiaryVO" resultMap="">-->
-<!--        SELECT id, member_id, title, content, write_date, is_public, angry_figure, todack_count, coin_bank_id, diary_no-->
-<!--        FROM diary-->
-<!--        WHERE member_id = #{memberId} AND MONTH(write_date) = #{writeDate};-->
-<!--    </select>-->
 
-
+<!--    다이어리 전체 목록 -> isPublic 1인 것들만 (대나무숲) -->
+    <!--    <resultMap id="selectDiaryListResultMap" type="DiaryVO">-->
+    <!--        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />-->
+    <!--        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />-->
+    <!--        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />-->
+    <!--        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>-->
+    <!--        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />-->
+    <!--        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />-->
+    <!--        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />-->
+    <!--    </resultMap>-->
+    <!--    <select id="selectDiaryList" resultType="DiaryVO" resultMap="selectDiaryListResultMap">-->
+    <!--        SELECT d.id, member_id, diary_no, title, write_date, ap.angry_name, is_public-->
+    <!--        FROM diary AS d-->
+    <!--            LEFT JOIN angry_phase AS ap-->
+    <!--                ON d.angry_figure = ap.phase-->
+    <!--    </select>-->
 
 </mapper>
