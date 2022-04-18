@@ -1,5 +1,6 @@
 package com.teamY.angryBox.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +10,7 @@ import org.apache.ibatis.type.Alias;
 @Getter
 @Alias("CoinBankVO")
 public class CoinBankVO {
+
     private int id;
     private int memberId;
     private String name;
@@ -17,8 +19,15 @@ public class CoinBankVO {
     private String reward;
     private boolean expired;
 
-    @Setter
-    private boolean canCrush;
+    public CoinBankVO(int id, int memberId, String name, String memo, int angryLimit, String reward, boolean expired) {
+        this.id = id;
+        this.memberId = memberId;
+        this.name = name;
+        this.memo = memo;
+        this.angryLimit = angryLimit;
+        this.reward = reward;
+        this.expired = expired;
+    }
 
     public CoinBankVO(String name, String memo, int angryLimit, String reward) {
         this.name = name;

@@ -12,4 +12,10 @@ public interface CoinBankMapper {
     CoinBankVO selectBankExpired(int id);
 
     int expireCoinBank(int id);
+
+    int selectCoinBankSum(int memberId, int bankId);
+
+    CoinBankVO selectById(int id);
+
+    int[] selectAngryPhase();
 }

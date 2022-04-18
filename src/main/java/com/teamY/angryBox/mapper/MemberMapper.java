@@ -13,4 +13,8 @@ public interface MemberMapper {
     void updateMemberNickname(int id, String nickname);
     void updateMemberPassword(int id, String password);
     MemberVO selectById(int id);
+
+    void updateCoinBankId(int id, int bankId);
+    void updateCoinBankIdToNull(int id);
+    int selectMemberCurBank(int id);
 }
