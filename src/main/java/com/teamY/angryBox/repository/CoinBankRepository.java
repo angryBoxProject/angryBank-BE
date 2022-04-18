@@ -28,4 +28,16 @@ public class CoinBankRepository {
     public int expireCoinBank(int id) {
         return mapper.expireCoinBank(id);
     }
+
+    public int selectCoinBankSum(int memberId, int bankId){
+        return mapper.selectCoinBankSum(memberId, bankId);
+    }
+
+    public CoinBankVO selectById(int id){
+        return mapper.selectById(id);
+    }
+
+    public int[] selectAngryPhase(){
+        return mapper.selectAngryPhase();
+    }
 }
