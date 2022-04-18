@@ -15,9 +15,12 @@ import java.util.List;
 public class DiaryRepository {
     private final DiaryMapper diaryMapper;
 
+    public int selectAngryName(String angryName) {
+        return diaryMapper.selectAngryName(angryName);
+    }
+
     public int insertDiary(DiaryVO diary) {
-        int diaryId = diaryMapper.insertDiary(diary);
-        return diaryId;
+        return diaryMapper.insertDiary(diary);
     }
 
     public void insertDiaryFile(int diaryId, int fileId, int fileNo) {
@@ -28,6 +31,10 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryListInCoinBank(memberId, coinBankId);
     }
 
+    public List<DiaryVO> selectDiaryListInMonth(int memberId, int year, int month) {
+        return diaryMapper.selectDiaryListInMonth(memberId, year, month);
+    }
+
     public List<DiaryFileVO> selectDiaryDetail(int diaryId) {
         return diaryMapper.selectDiaryDetail(diaryId);
     }
@@ -36,11 +43,20 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryMemberId(diaryId, memberId);
     }
 
-    public void deleteFileInDiary(int diaryId) {
-        diaryMapper.deleteFileInDiary(diaryId);
-    }
-
     public void deleteDiary(int diaryId) {
         diaryMapper.deleteDiary(diaryId);
     }
+
+    public void updateDiary(DiaryVO diary) {
+        diaryMapper.updateDiary(diary);
+    }
+
+    public void deleteFileInDiary(int fileId){
+        diaryMapper.deleteFileInDiary(fileId);
+    }
+
+    public int selectMaxFileNo(int diaryId){
+        return diaryMapper.selectMaxFileNo(diaryId);
+    }
+
 }

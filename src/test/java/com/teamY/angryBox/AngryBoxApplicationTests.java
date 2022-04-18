@@ -53,8 +53,9 @@ class AngryBoxApplicationTests {
 
 	@Test
 	void test() {
-		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
-		log.info(df.toString());
+//		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
+//		log.info(df.toString());
+
 	}
 
 	@Autowired

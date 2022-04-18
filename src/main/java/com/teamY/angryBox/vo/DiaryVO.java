@@ -32,13 +32,22 @@ public class DiaryVO {
 
 
     //다이어리 작성 시 사용할 생성자
-    public DiaryVO(int memberId, String title, String content, int isPublic, int angryFigure, int coinBankId) {
+    public DiaryVO(int memberId, String title, String content, int isPublic, String angryName, int coinBankId) {
         this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.isPublic = isPublic;
-        this.angryFigure = angryFigure;
+        this.angryName = angryName;
         this.coinBankId = coinBankId;
+    }
+
+    //다이어리 수정 시 사용할 생성자
+    public DiaryVO(int id, String title, String content, int isPublic, String angryName) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.isPublic = isPublic;
+        this.angryName = angryName;
     }
 
 
