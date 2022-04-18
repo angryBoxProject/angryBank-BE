@@ -22,8 +22,8 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final FileRepository fileRepository;
 
-    public int retrieveAngryName(String angryName) {
-        return diaryRepository.selectAngryName(angryName);
+    public int retrieveAngryId(int angryPhaseId) {
+        return diaryRepository.selectAngryId(angryPhaseId);
     }
 
     @Transactional
@@ -50,8 +50,12 @@ public class DiaryService {
     }
 
     public List<DiaryFileVO> retrieveDiaryDetail(int diaryId, int memberId) {
-        if(diaryRepository.selectDiaryDetail(diaryId).get(0).getDiaryVO().getIsPublic() == 0 //비공개 상태이고
+        if(diaryRepository.selectDiaryDetail(diaryId) == null) {
+            //수정 예정
+            return null;
+        } else if(diaryRepository.selectDiaryDetail(diaryId).get(0).getDiaryVO().getIsPublic() == 0 //비공개 상태이고
         && diaryRepository.selectDiaryDetail(diaryId).get(0).getDiaryVO().getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
+            //수정 예정
             return null;
         } else {
             return diaryRepository.selectDiaryDetail(diaryId);

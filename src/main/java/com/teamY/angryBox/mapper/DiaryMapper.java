@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface DiaryMapper {
 
-    int selectAngryName(String angryName);
+    int selectAngryId(int angryPhaseId);
 
     int insertDiary(DiaryVO diary);
 

@@ -5,16 +5,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teamY.angryBox.mapper.DiaryMapper">
 
-    <!--    angryName 유효성검사 -->
-    <select id="selectAngryName" parameterType="string" resultType="int">
+    <!--    angryPhaseId 유효성검사 -->
+    <select id="selectAngryId" parameterType="int" resultType="int">
         SELECT COUNT(*)
         FROM angry_phase
-        WHERE angry_name = #{angryName}
+        WHERE id = #{angryPhaseId}
     </select>
 
     <!-- 다이어리 저장 및 id 값 조회-->
     <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="int">
-        { CALL INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryName}, #{coinBankId} ) }
+        { CALL INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId}, #{coinBankId} ) }
     </select>
     <insert id="insertDiaryFile">
         INSERT INTO diary_file(diary_id, file_id, file_no) VALUES( #{diaryId}, #{fileId}, #{fileNo} )
@@ -28,11 +28,11 @@
         <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
         <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />
+        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
         <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
     </resultMap>
     <select id="selectDiaryListInCoinBank" parameterType="int" resultType="DiaryVO" resultMap="selectDiaryListInCoinBankResultMap">
-        SELECT id, diary_no, member_id, title, write_date, angry_name, is_public
+        SELECT id, diary_no, member_id, title, write_date, angry_phase_id, is_public
         FROM diary
         WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
     </select>
@@ -45,14 +45,16 @@
         <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
         <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />
+        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
         <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
     </resultMap>
     <select id="selectDiaryListInMonth" parameterType="int" resultType="DiaryVO" resultMap="selectDiaryListInMonthResultMap">
-        SELECT id, member_id, diary_no, title, write_date, angry_name, is_public
+        SELECT id, member_id, diary_no, title, write_date, angry_phase_id, is_public
         FROM diary
         WHERE member_id = #{memberId} AND YEAR(write_date) = #{year} AND MONTH(write_date) = #{month}
     </select>
+
+<!--    날짜별 TOP 분노글 -->
 
 
 <!-- 다이어리 상세 조회 -->
@@ -63,7 +65,7 @@
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR" />
         <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
         <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />
+        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
         <result property="isPublic" javaType="int" column="is_public" jdbcType="TINYINT" />
         <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
     </resultMap>
@@ -77,14 +79,14 @@
         <collection property="fileVO" resultMap="FileDetail" />
     </resultMap>
     <select id="selectDiaryDetail" parameterType="int" resultType="DiaryFileVO" resultMap="selectDiaryDetailResultMap" >
-        SELECT d.id AS diary_id, d.member_id, d.diary_no, d.title, d.content, d.write_date, d.angry_name, d.is_public, d.todack_count, f.id AS file_id, f.original_file_name, f.system_file_name, f.file_size, f.file_type, df.file_no
+        SELECT d.id AS diary_id, d.member_id, d.diary_no, d.title, d.content, d.write_date, d.angry_phase_id, d.is_public, d.todack_count, f.id AS file_id, f.original_file_name, f.system_file_name, f.file_size, f.file_type, df.file_no
         FROM diary AS d
                  LEFT JOIN diary_file AS df
                             ON d.id = df.diary_id
                  LEFT JOIN file AS f
                            ON df.file_id = f.id
                  LEFT JOIN angry_phase AS ap
-                           ON d.angry_name = ap.angry_name
+                           ON d.angry_phase_id = ap.id
         WHERE d.id = #{diaryId}
         ORDER BY df.file_no
     </select>
@@ -104,7 +106,7 @@
 
 <!--    다이어리 수정 -->
     <update id="updateDiary" parameterType="DiaryVO">
-        UPDATE diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_name = #{angryName}
+        UPDATE diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}
         WHERE id = #{id}
     </update>
     <delete id="deleteFileInDiary" parameterType="int">

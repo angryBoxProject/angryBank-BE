@@ -15,8 +15,8 @@ import java.util.List;
 public class DiaryRepository {
     private final DiaryMapper diaryMapper;
 
-    public int selectAngryName(String angryName) {
-        return diaryMapper.selectAngryName(angryName);
+    public int selectAngryId(int angryPhaseId) {
+        return diaryMapper.selectAngryId(angryPhaseId);
     }
 
     public int insertDiary(DiaryVO diary) {

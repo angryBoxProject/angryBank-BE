@@ -30,17 +30,17 @@ public class DiaryController {
     @Transactional
     @PostMapping("diary")
     public ResponseEntity<ResponseMessage> registerDiary(@RequestParam String title, @RequestParam String content,
-                                                         @RequestParam int isPublic, @RequestParam String angryName,
+                                                         @RequestParam int isPublic, @RequestParam int angryPhaseId,
                                                          @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
 
 
 
-        if(diaryService.retrieveAngryName(angryName) == 0) {
+        if(diaryService.retrieveAngryId(angryPhaseId) == 0) {
             // 에러 던지는 걸로 수정 필요
             return new ResponseEntity<>(new ResponseMessage(false, "분노수치 이름 잘못 들어옴", "분노수치 이름 잘못 들어옴"), HttpStatus.BAD_REQUEST);
         } else {
             int memberId = ((MemberPrincipal )SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-            DiaryVO diary = new DiaryVO(memberId, title, content, isPublic, angryName, coinBankId);
+            DiaryVO diary = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
 
             diaryService.registerDiary(diary, file);
 
@@ -78,7 +78,7 @@ public class DiaryController {
         List<DiaryFileVO> diary = diaryService.retrieveDiaryDetail(diaryId, memberId);
         if(diary == null) {
             // 에러 던지는 걸로 수정 필요
-            return new ResponseEntity<>(new ResponseMessage(false, "비공개 글", "비공개 글"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseMessage(false, "비공개 글 혹은 잘못된 다이어리 번호(수정예정)", "비공개 글 혹은 잘못된 다이어리 번호(수정예정)"), HttpStatus.BAD_REQUEST);
         } else {
             Map<String, Object> data = new LinkedHashMap<>();
 
@@ -113,7 +113,7 @@ public class DiaryController {
     @PutMapping("diaries/{diaryId}")
     public ResponseEntity<ResponseMessage> modifyDiary(@PathVariable int diaryId,
                                                            @RequestParam String title, @RequestParam String content,
-                                                           @RequestParam int isPublic, @RequestParam String angryName,
+                                                           @RequestParam int isPublic, @RequestParam int angryPhaseId,
                                                            @RequestBody MultipartFile[] file, @RequestParam List removedFileId) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
@@ -121,7 +121,7 @@ public class DiaryController {
             // 에러 던지는 걸로 수정 필요
             return new ResponseEntity<>(new ResponseMessage(false, "다이어리 작성자와 수정 요청자 불일치", "다이어리 작성자와 수정 요청자 불일치"), HttpStatus.BAD_REQUEST);
         } else {
-            DiaryVO diaryVO = new DiaryVO(diaryId, title, content, isPublic, angryName);
+            DiaryVO diaryVO = new DiaryVO(diaryId, title, content, isPublic, angryPhaseId);
             diaryService.modifyDiary(diaryVO, file, removedFileId);
             return new ResponseEntity<>(new ResponseMessage(true, "다이어리 수정 성공", ""), HttpStatus.OK);
         }
