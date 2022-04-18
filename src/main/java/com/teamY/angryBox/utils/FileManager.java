@@ -43,7 +43,7 @@ public class FileManager {
         String systemFileName = createSystemFileName(originalFileName, extension);
 
         try {
-            String path = root.toAbsolutePath() + "\\" + systemFileName;
+            String path = root.toAbsolutePath() + "/" + systemFileName;
             log.info("파일 올리는 경로 : " + path);
             multipartFile.transferTo(new java.io.File(path));
         } catch (IOException e) {

@@ -52,6 +52,7 @@ public class ProfileController {
         data.put("recieveTodakCount", profile.getMember().getRecieveTodakCount());
 
         return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "프로필 조회 성공", "", data), HttpStatus.OK);
+
     }
 
 
