@@ -42,4 +42,22 @@
         FROM member
         WHERE id = #{id}
     </select>
+
+    <update id = "updateCoinBankId">
+        UPDATE member
+        SET coin_bank_id = #{bankId}
+        WHERE id = #{id}
+    </update>
+
+    <update id = "updateCoinBankIdToNull">
+        UPDATE member
+        SET coin_bank_id = NULL
+        WHERE id = #{id}
+    </update>
+
+    <select id = "selectMemberCurBank" resultType="int">
+        SELECT IFNULL(coin_bank_id, 0)
+        FROM member
+        WHERE id = #{id}
+    </select>
 </mapper>
