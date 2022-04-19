@@ -34,6 +34,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String key = String.valueOf(token).substring(7);
 
         try {
+            if (token == null || token.getToken() == null) {
+                request.setAttribute("error", ErrorCode.TOKEN_NOT_FOUND);
+                throw new RuntimeException("토큰이 존재하지 않음");
+            }
+
             if(memberRepository.getIsLogout(token.getToken()) != null){
                 request.setAttribute("error", ErrorCode.TOKEN_IN_BLACKLIST);
                 throw new RuntimeException(ErrorCode.TOKEN_IN_BLACKLIST.getMessage());

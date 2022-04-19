@@ -59,37 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManager();
     }
 
-    /*
-     * 쿠키 기반 인가 Repository
-     * 인가 응답을 연계 하고 검증할 때 사용.
-     * */
-//    @Bean
-//    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-//        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
-//    }
-
-    /*
-     * Oauth 인증 성공 핸들러
-     * */
-//    @Bean
-//    public TestHandler oAuth2AuthenticationSuccessHandler() {
-////        return new OAuth2AuthenticationSuccessHandler(
-////                authTokenProvider,
-////                appProperties,
-////                /*userRefreshTokenRepository,*/
-////                oAuth2AuthorizationRequestBasedOnCookieRepository()
-////        );
-//        return new TestHandler();
-//    }
-
-    /*
-     * Oauth 인증 실패 핸들러
-     * */
-//    @Bean
-//    public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
-//        return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -103,31 +72,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/hello").authenticated()
-                .anyRequest().permitAll();
+                .antMatchers("/", "/auth/login").permitAll()
+                .anyRequest().authenticated();
 
-        //.antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-        //.anyRequest().authenticated()
 
         http.
                 exceptionHandling().
                 authenticationEntryPoint(new JwtAuthenticationEntryPoint()).
                 accessDeniedHandler(tokenDeniedHandler);
 
-//        http.
-//                oauth2Login()
-//                .authorizationEndpoint()
-//                .baseUri("/oauth2/authorize")
-//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-//                .and()
-//                .redirectionEndpoint()
-//                .baseUri("/*/oauth2/code/*")
-//                .and()
-//                .userInfoEndpoint()
-//                .userService(oAuth2UserService)
-//                .and()
-//                .successHandler(oAuth2AuthenticationSuccessHandler())
-//                .failureHandler(oAuth2AuthenticationFailureHandler());
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
