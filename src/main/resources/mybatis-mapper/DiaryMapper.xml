@@ -11,6 +11,12 @@
         FROM angry_phase
         WHERE id = #{angryPhaseId}
     </select>
+    <!--    coin_bank와 member_id 유효성 검사 -->
+    <select id="selectCoinBankMemberId" parameterType="int" resultType="int">
+        SELECT COUNT(expired)
+        FROM coin_bank
+        WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = 1;
+    </select>
 
     <!-- 다이어리 저장 및 id 값 조회-->
     <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="int">
@@ -123,6 +129,7 @@
     </select>
 
 <!--    angryName 목록  조회 -->
+
 
 
 

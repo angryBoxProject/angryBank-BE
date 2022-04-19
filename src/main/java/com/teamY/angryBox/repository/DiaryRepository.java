@@ -19,6 +19,10 @@ public class DiaryRepository {
         return diaryMapper.selectAngryId(angryPhaseId);
     }
 
+    public int selectCoinBankMemberId(int coinBankId, int memberId) {
+        return diaryMapper.selectCoinBankMemberId(coinBankId, memberId);
+    }
+
     public int insertDiary(DiaryVO diary) {
         return diaryMapper.insertDiary(diary);
     }

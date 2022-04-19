@@ -11,6 +11,8 @@ public interface DiaryMapper {
 
     int selectAngryId(int angryPhaseId);
 
+    int selectCoinBankMemberId(int coinBankId, int memberId);
+
     int insertDiary(DiaryVO diary);
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);

@@ -43,8 +43,9 @@ public class DiaryVO {
     }
 
     //다이어리 수정 시 사용할 생성자
-    public DiaryVO(int id, String title, String content, int isPublic, int angryPhaseId) {
+    public DiaryVO(int id, int memberId, String title, String content, int isPublic, int angryPhaseId) {
         this.id = id;
+        this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.isPublic = isPublic;
