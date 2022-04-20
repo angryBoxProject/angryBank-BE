@@ -25,14 +25,14 @@ public class DiaryService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public void addDiary(DiaryVO diary, MultipartFile[] file) {
+    public void addDiary(DiaryVO diaryVO, MultipartFile[] file) {
 
-        if (diaryRepository.selectAngryId(diary.getAngryPhaseId()) == 0) {
+        if (diaryRepository.selectAngryId(diaryVO.getAngryPhaseId()) == 0) {
             throw new InvalidRequestException("분노수치 잘못 들어옴");
-        } else if ( diaryRepository.selectCoinBankMemberId(diary.getCoinBankId(), diary.getMemberId()) != 1) {
+        } else if ( diaryRepository.selectCoinBankMemberId(diaryVO.getCoinBankId(), diaryVO.getMemberId()) != 1) {
             throw new InvalidRequestException("적금 번호 잘못 들어옴");
         } else {
-            int diaryId = diaryRepository.insertDiary(diary);
+            int diaryId = diaryRepository.insertDiary(diaryVO);
 
             List<Integer> fileIdList = new ArrayList<>();
             if (file != null) {

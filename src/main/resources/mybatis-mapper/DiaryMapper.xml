@@ -15,8 +15,18 @@
     <select id="selectCoinBankMemberId" parameterType="int" resultType="int">
         SELECT COUNT(expired)
         FROM coin_bank
-        WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = 1;
+        WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = #{expired};
     </select>
+    <!--    다이어리 작성자 확인 -->
+    <select id="selectDiaryMemberId" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM diary
+        WHERE id = #{diaryId} AND member_id = #{memberId}
+    </select>
+<!--    다이어리에 해당 파일 있는지 확인-->
+<!--    //SELECT COUNT(*)-->
+<!--    FROM diary_file-->
+<!--    WHERE diary_id = 4 AND file_id = 8 AND file_no = 1;-->
 
 
     <!-- 다이어리 저장 및 id 값 조회-->
@@ -114,12 +124,6 @@
     </select>
 
 
-<!--    다이어리 작성자 확인 -->
-    <select id="selectDiaryMemberId" parameterType="int" resultType="int">
-        SELECT COUNT(*)
-        FROM diary
-        WHERE id = #{diaryId} AND member_id = #{memberId}
-    </select>
 
 
 <!--    다이어리 삭제 -> TOP글, 대나무숲 에도 반영 필요 -->
@@ -146,8 +150,6 @@
         WHERE d.id = #{diaryId};
     </select>
 
-<!--    angryName 목록  조회 -->
-
 <!--    저금통 별 다이어리 개수 -->
     <select id="selectDiaryCountInCoinBank" parameterType="int" resultType="int">
         SELECT COUNT(*)
@@ -163,7 +165,27 @@
     </select>
 
 
+<!--    angryName 목록  조회 -->
 
+<!--    다이어리 페이지네이션 -->
+    <resultMap id="diaryPaginationResultMap" type="DiaryVO">
+        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
+        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
+        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
+        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
+        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
+        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
+        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
+        <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
+        <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="diaryPagination" parameterType="int" resultType="DiaryVO" resultMap="diaryPaginationResultMap">
+        SELECT id, member_id, diary_no, title, write_date, angry_phase_id, is_public, todack_count, view_count
+        FROM diary
+        WHERE id <![CDATA[>]]> #{lastDiaryId}
+        ORDER BY id DESC
+        LIMIT #{size}
+    </select>
 
 
 <!--    다이어리 전체 목록 -> isPublic 1인 것들만 (대나무숲) -->

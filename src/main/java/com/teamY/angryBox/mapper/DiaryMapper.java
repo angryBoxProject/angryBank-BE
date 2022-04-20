@@ -12,7 +12,7 @@ public interface DiaryMapper {
 
     int selectAngryId(int angryPhaseId);
 
-    int selectCoinBankMemberId(int coinBankId, int memberId);
+    int selectCoinBankMemberId(int coinBankId, int memberId, int expired);
 
     int insertDiary(DiaryVO diary);
 
@@ -36,10 +36,12 @@ public interface DiaryMapper {
 
     int selectMaxFileNo(int diaryId);
 
+    List<DiaryVO> diaryPagination(int lastDiaryId, int size);
+
     //저금통 내 다이어리 개수
-    int selectDiaryCountInCoinBank(int diaryId, int meeberId);
+    int selectDiaryCountInCoinBank(int diaryId, int memberId);
 
     //저금통 별 토댝 총 개수
-    int selectTodackCountInCoinBank(int diaryId, int meeberId);
+    int selectTodackCountInCoinBank(int diaryId, int memberId);
 
 }

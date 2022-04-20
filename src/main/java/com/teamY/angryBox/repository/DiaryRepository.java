@@ -21,7 +21,8 @@ public class DiaryRepository {
     }
 
     public int selectCoinBankMemberId(int coinBankId, int memberId) {
-        return diaryMapper.selectCoinBankMemberId(coinBankId, memberId);
+        int expired = 0;
+        return diaryMapper.selectCoinBankMemberId(coinBankId, memberId, expired);
     }
 
     public int insertDiary(DiaryVO diary) {
@@ -66,6 +67,10 @@ public class DiaryRepository {
 
     public int selectMaxFileNo(int diaryId){
         return diaryMapper.selectMaxFileNo(diaryId);
+    }
+
+    public List<DiaryVO> diaryPagination(int diaryId, int size) {
+        return diaryMapper.diaryPagination(diaryId, size);
     }
 
     public int selectDiaryCountInCoinBank(int diaryId, int memberId) {

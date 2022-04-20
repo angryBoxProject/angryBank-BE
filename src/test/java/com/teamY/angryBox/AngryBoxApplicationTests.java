@@ -9,6 +9,7 @@ import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.service.CoinBankService;
 
 import com.teamY.angryBox.vo.DiaryFileVO;
+import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.FileVO;
 
 import com.teamY.angryBox.vo.MemberVO;
@@ -71,6 +72,10 @@ class AngryBoxApplicationTests {
 		//WHERE YEAR(write_date) = #{year} AND MONTH(write_date) = #{month} AND DAY(write_date) = #{day} AND is_public = #{isPublic}
 		//        ORDER BY todack_count DESC
 		//        Limit #{limit}
+
+		List<DiaryVO> test = diaryMapper.diaryPagination(5, 7);
+		log.info(test.toString());
+
 
 	}
 
