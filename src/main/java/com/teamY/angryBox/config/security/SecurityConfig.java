@@ -72,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/", "/auth/login").permitAll()
+                .antMatchers("/", "/auth/login", "/diaries/todayTop/**").permitAll()
                 .anyRequest().authenticated();
 
 

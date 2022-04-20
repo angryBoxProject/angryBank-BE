@@ -10,12 +10,12 @@ import org.apache.ibatis.type.Alias;
 @ToString
 @AllArgsConstructor
 @Getter
-//@Alias("TopDiaryDTO")
 public class TopDiaryDTO {
 
     private int writeYear;
     private int writeMonth;
     private int writeDay;
     private int isPublic;
-    private int limit;
+    //private int limit;
+    private int lastDiaryId;
 }

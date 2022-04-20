@@ -44,11 +44,11 @@ public class DiaryController {
     }
 
     @GetMapping("diaries/coinBank/{coinBankId}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId) {
+    public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId, @RequestParam int lastDiaryId, @RequestParam int size) {
         Map<String, Object> data = new HashMap<>();
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         //int memberId = 1;
-        List<DiaryVO> diaryListInCoinBank = diaryService.getDiaryListInCoinBank(memberId, coinBankId);
+        List<DiaryVO> diaryListInCoinBank = diaryService.getDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
 
         data.put("diaryListInCoinBank", diaryListInCoinBank);
 
@@ -56,28 +56,36 @@ public class DiaryController {
     }
 
     @GetMapping("diaries/month/{date}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String date) {
+    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String date, @RequestParam int lastDiaryId, @RequestParam int size) {
         Map<String, Object> data = new HashMap<>();
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         //int memberId = 1;
-        int year = Integer.parseInt(date.substring(0, 4));
-        int month = Integer.parseInt(date.substring(5, 7));
 
-        List<DiaryVO> diaryListInMonth = diaryService.getDiaryListInMonth(memberId, year, month);
+        List<DiaryVO> diaryListInMonth = diaryService.getDiaryListInMonth(memberId, date, lastDiaryId, size);
         data.put("diaryListInMonth", diaryListInMonth);
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공", "", data), HttpStatus.OK);
     }
 
-    @GetMapping("diaries/top/{date}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInTop(@PathVariable String date) {
+    @GetMapping("diaries/dailyTop/{date}/{lastDiaryId}")
+    public ResponseEntity<ResponseDataMessage> inquriyDailyTopDiary(@PathVariable String date, @PathVariable int lastDiaryId) {
         Map<String, Object> data = new HashMap<>();
         int writeYear = Integer.parseInt(date.substring(0, 4));
         int writeMonth = Integer.parseInt(date.substring(5, 7));
         int writeDay = Integer.parseInt(date.substring(8, 10));
-        TopDiaryDTO topDiaryDTO = new TopDiaryDTO(writeYear, writeMonth, writeDay, 1, 100);
+        TopDiaryDTO topDiaryDTO = new TopDiaryDTO(writeYear, writeMonth, writeDay, 1, lastDiaryId);
 
-        data.put("topDiaryList", diaryService.getTopDiary(topDiaryDTO));
+        data.put("dailyTopDiary", diaryService.getDailyTop(topDiaryDTO));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(TOP) 성공", "", data), HttpStatus.OK);
+    }
+
+    @GetMapping("diaries/todayTop/{lastDiaryId}")
+    public ResponseEntity<ResponseDataMessage> inquriyTodayTopDiary(@PathVariable int lastDiaryId) {
+        Map<String, Object> data = new HashMap<>();
+
+        log.info("lastDiaryId : " + lastDiaryId);
+        data.put("todayTopDiary", diaryService.getTodayTop(lastDiaryId));
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(TOP) 성공", "", data), HttpStatus.OK);
     }

@@ -46,16 +46,23 @@ public class DiaryService {
         }
     }
 
-    public List<DiaryVO> getDiaryListInCoinBank(int memberId, int coinBankId) {
-        return diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId);
+    public List<DiaryVO> getDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
+        return diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
     }
 
-    public List<DiaryVO> getDiaryListInMonth(int memberId, int year, int month) {
-        return diaryRepository.selectDiaryListInMonth(memberId, year, month);
+    public List<DiaryVO> getDiaryListInMonth(int memberId, String date, int lastDiaryId, int size) {
+        return diaryRepository.selectDiaryListInMonth(memberId, date, lastDiaryId, size);
     }
 
-    public List<DiaryVO> getTopDiary(TopDiaryDTO topDiaryDTO) {
-        return diaryRepository.selectTopDiary(topDiaryDTO);
+    public List<DiaryVO> getDailyTop(TopDiaryDTO topDiaryDTO) {
+        return diaryRepository.selectDailyTop(topDiaryDTO);
+    }
+
+    public List<DiaryVO> getTodayTop(int lastDiaryId) {
+        if(lastDiaryId == -1) {
+            lastDiaryId = diaryRepository.selectLastId() + 1;
+        }
+        return diaryRepository.selectTodayTop(lastDiaryId);
     }
 
     public List<DiaryFileVO> getDiaryDetail(int diaryId, int memberId) {
