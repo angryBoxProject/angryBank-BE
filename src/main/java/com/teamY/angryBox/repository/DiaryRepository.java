@@ -1,5 +1,6 @@
 package com.teamY.angryBox.repository;
 
+import com.teamY.angryBox.dto.TopDiaryDTO;
 import com.teamY.angryBox.mapper.DiaryMapper;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
@@ -39,6 +40,10 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryListInMonth(memberId, year, month);
     }
 
+    public List<DiaryVO> selectTopDiary(TopDiaryDTO topDiaryDTO) {
+        return diaryMapper.selectTopDiary(topDiaryDTO);
+    }
+
     public List<DiaryFileVO> selectDiaryDetail(int diaryId) {
         return diaryMapper.selectDiaryDetail(diaryId);
     }
@@ -62,5 +67,14 @@ public class DiaryRepository {
     public int selectMaxFileNo(int diaryId){
         return diaryMapper.selectMaxFileNo(diaryId);
     }
+
+    public int selectDiaryCountInCoinBank(int diaryId, int memberId) {
+        return diaryMapper.selectDiaryCountInCoinBank(diaryId, memberId);
+    }
+
+    public int selectTodackCountInCoinBank(int diaryId, int memberId) {
+        return diaryMapper.selectTodackCountInCoinBank( diaryId, memberId);
+    }
+
 
 }

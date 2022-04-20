@@ -15,4 +15,12 @@
     <delete id="downTodackCount" parameterType="TodackVO" statementType="CALLABLE">
         { CALL DOWN_TODACK( #{diaryId}, #{sendMemberId}, #{receiveMemberId} ) }
     </delete>
+
+
+<!--    토닥 보내기 및 취소 중복 확인 -->
+    <select id="checkSendTodack" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM todacktodack
+        WHERE member_id = #{memberId} AND diary_id = #{diaryId} AND send_receive = #{send};
+    </select>
+
 </mapper>

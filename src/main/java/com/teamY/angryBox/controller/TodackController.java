@@ -23,36 +23,24 @@ public class TodackController {
     private final TodackService todackService;
     private final DiaryService diaryService;
 
-
     //이미 보낸 사람이 또 보내지 않도록 유효성검사
     @PostMapping("todack")
     public ResponseEntity<ResponseMessage> upTodackCount(@RequestBody TodackVO todackVO) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        todackService.checkSendTodack(memberId, todackVO,0, 0);
+        todackService.upTodackCount(todackVO);
 
-        //로그인한 사용자와 보내느 사람이 일치하지 않는 경우, 작성자와 토닥 받는 사람이 일치하지 않는 경우
-        if(memberId != todackVO.getSendMemberId() || diaryService.getDiaryMemberId(todackVO.getDiaryId(), todackVO.getReceiveMemberId()) == 0) {
-
-            return new ResponseEntity<>(new ResponseMessage(false, "토닥 보내기 실패", ""), HttpStatus.BAD_REQUEST);
-        } else {
-            //TodackVO todack = new TodackVO(todackVO.getDiaryId(), todackVO.getSendMemberId(), todackVO.getReceiveMemberId());
-            todackService.upTodackCount(todackVO);
-
-            return new ResponseEntity<>(new ResponseMessage(true, "토닥 보내기 성공", ""), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseMessage(true, "토닥 보내기 성공", ""), HttpStatus.OK);
     }
+
     //이미 취소한 사람이 또 취소하지 않도록 유효성검사
+    //보낸사람과 memberId 일치, 받는 사람과 작성자 일치 여부 확인 필요
     @DeleteMapping("todack")
     public ResponseEntity<ResponseMessage> downTodackCount(@RequestBody TodackVO todackVO) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        todackService.checkSendTodack(memberId, todackVO,0, 1);
+        todackService.downTodackCount(todackVO);
 
-        if(memberId != todackVO.getSendMemberId() || diaryService.getDiaryMemberId(todackVO.getDiaryId(), todackVO.getReceiveMemberId()) == 0) {
-
-            return new ResponseEntity<>(new ResponseMessage(false, "토닥 보내기 실패", ""), HttpStatus.BAD_REQUEST);
-        } else {
-            //TodackVO todack = new TodackVO(todackVO.getDiaryId(), todackVO.getSendMemberId(), todackVO.getReceiveMemberId());
-            todackService.downTodackCount(todackVO);
-
-            return new ResponseEntity<>(new ResponseMessage(true, "토닥 취소 성공", ""), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseMessage(true, "토닥 취소 성공", ""), HttpStatus.OK);
     }
 }

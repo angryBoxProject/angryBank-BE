@@ -1,6 +1,7 @@
 package com.teamY.angryBox.service;
 
 
+import com.teamY.angryBox.dto.TopDiaryDTO;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.FileRepository;
@@ -22,14 +23,6 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final FileRepository fileRepository;
-
-//    public int getAngryId(int angryPhaseId) {
-//        return diaryRepository.selectAngryId(angryPhaseId);
-//    }
-//
-//    public int getCoinBankMemberId(int coinBankId, int memberId) {
-//        return diaryRepository.selectCoinBankMemberId(coinBankId, memberId);
-//    }
 
     @Transactional
     public void addDiary(DiaryVO diary, MultipartFile[] file) {
@@ -59,6 +52,10 @@ public class DiaryService {
 
     public List<DiaryVO> getDiaryListInMonth(int memberId, int year, int month) {
         return diaryRepository.selectDiaryListInMonth(memberId, year, month);
+    }
+
+    public List<DiaryVO> getTopDiary(TopDiaryDTO topDiaryDTO) {
+        return diaryRepository.selectTopDiary(topDiaryDTO);
     }
 
     public List<DiaryFileVO> getDiaryDetail(int diaryId, int memberId) {

@@ -3,9 +3,11 @@ package com.teamY.angryBox.controller;
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
+import com.teamY.angryBox.dto.TopDiaryDTO;
 import com.teamY.angryBox.service.DiaryService;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,7 @@ public class DiaryController {
                                                          @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        //int memberId = 1;
         DiaryVO diary = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
 
         diaryService.addDiary(diary, file);
@@ -44,6 +47,7 @@ public class DiaryController {
     public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId) {
         Map<String, Object> data = new HashMap<>();
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        //int memberId = 1;
         List<DiaryVO> diaryListInCoinBank = diaryService.getDiaryListInCoinBank(memberId, coinBankId);
 
         data.put("diaryListInCoinBank", diaryListInCoinBank);
@@ -51,12 +55,13 @@ public class DiaryController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(저금통별) 성공", "", data), HttpStatus.OK);
     }
 
-    @GetMapping("diaries/month/{dateTime}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String dateTime) {
+    @GetMapping("diaries/month/{date}")
+    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String date) {
         Map<String, Object> data = new HashMap<>();
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        int year = Integer.parseInt(dateTime.substring(0, 4));
-        int month = Integer.parseInt(dateTime.substring(5, 7));
+        //int memberId = 1;
+        int year = Integer.parseInt(date.substring(0, 4));
+        int month = Integer.parseInt(date.substring(5, 7));
 
         List<DiaryVO> diaryListInMonth = diaryService.getDiaryListInMonth(memberId, year, month);
         data.put("diaryListInMonth", diaryListInMonth);
@@ -64,9 +69,24 @@ public class DiaryController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공", "", data), HttpStatus.OK);
     }
 
+    @GetMapping("diaries/top/{date}")
+    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInTop(@PathVariable String date) {
+        Map<String, Object> data = new HashMap<>();
+        int writeYear = Integer.parseInt(date.substring(0, 4));
+        int writeMonth = Integer.parseInt(date.substring(5, 7));
+        int writeDay = Integer.parseInt(date.substring(8, 10));
+        TopDiaryDTO topDiaryDTO = new TopDiaryDTO(writeYear, writeMonth, writeDay, 1, 100);
+
+        data.put("topDiaryList", diaryService.getTopDiary(topDiaryDTO));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(TOP) 성공", "", data), HttpStatus.OK);
+    }
+
+
     @GetMapping("diaries/{diaryId}")
     public ResponseEntity<ResponseMessage> inquriyDiaryDetail(@PathVariable int diaryId) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        //int memberId = 1;
         List<DiaryFileVO> diary = diaryService.getDiaryDetail(diaryId, memberId);
 
         Map<String, Object> data = new LinkedHashMap<>();
@@ -86,10 +106,10 @@ public class DiaryController {
 
     }
 
-    //TOP글, 대나무숲 에도 반영 필요
     @DeleteMapping("diaries/{diaryId}")
     public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryId) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        //int memberId = 1;
 
         if (diaryService.getDiaryMemberId(diaryId, memberId) == 0) {
             // 에러 던지는 걸로 수정 필요
@@ -107,6 +127,8 @@ public class DiaryController {
                                                        @RequestBody MultipartFile[] file, @RequestParam List removedFileId) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        //int memberId = 1;
+
         DiaryVO diaryVO = new DiaryVO(diaryId, memberId, title, content, isPublic, angryPhaseId);
         diaryService.changeDiary(diaryVO, file, removedFileId);
 

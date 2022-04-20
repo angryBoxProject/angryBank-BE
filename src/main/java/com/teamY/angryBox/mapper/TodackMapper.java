@@ -10,5 +10,7 @@ public interface TodackMapper {
 
     void downTodackCount(TodackVO todack);
 
+    int checkSendTodack(int memberId, int diaryId, int send);
+
 
 }

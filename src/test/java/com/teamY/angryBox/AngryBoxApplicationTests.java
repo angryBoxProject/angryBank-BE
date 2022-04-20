@@ -67,7 +67,10 @@ class AngryBoxApplicationTests {
 //		log.info(df.toString());
 		//todackMapper.insertTodack(1, 2, 1);
 		//todackMapper.deleteTodack(1, 2, 1);
-
+		//log.info((diaryMapper.selectTopDiary(2022, 4, 18, 1,2)).toString());
+		//WHERE YEAR(write_date) = #{year} AND MONTH(write_date) = #{month} AND DAY(write_date) = #{day} AND is_public = #{isPublic}
+		//        ORDER BY todack_count DESC
+		//        Limit #{limit}
 
 	}
 

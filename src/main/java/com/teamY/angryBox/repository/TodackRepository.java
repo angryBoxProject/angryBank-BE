@@ -20,4 +20,8 @@ public class TodackRepository {
     public void downTodackCount(TodackVO todack) {
         todackMapper.downTodackCount(todack);
     }
+
+    public int checkSendTodack(int memberId, int diaryId, int send) {
+        return todackMapper.checkSendTodack(memberId, diaryId, send);
+    }
 }

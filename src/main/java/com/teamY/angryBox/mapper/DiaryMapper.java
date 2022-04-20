@@ -1,5 +1,6 @@
 package com.teamY.angryBox.mapper;
 
+import com.teamY.angryBox.dto.TopDiaryDTO;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,7 +20,9 @@ public interface DiaryMapper {
 
     List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId);
 
-    List<DiaryVO> selectDiaryListInMonth(int memberId, int year, int month);
+    List<DiaryVO> selectDiaryListInMonth(int memberId, int writeYear, int writeMonth);
+
+    List<DiaryVO> selectTopDiary(TopDiaryDTO topDiaryDTO);
 
     List<DiaryFileVO> selectDiaryDetail(int diaryId);
 
@@ -31,7 +34,12 @@ public interface DiaryMapper {
 
     void deleteFileInDiary(int fileId);
 
-    int selectMaxFileNo(int diaryIn);
+    int selectMaxFileNo(int diaryId);
 
+    //저금통 내 다이어리 개수
+    int selectDiaryCountInCoinBank(int diaryId, int meeberId);
+
+    //저금통 별 토댝 총 개수
+    int selectTodackCountInCoinBank(int diaryId, int meeberId);
 
 }
