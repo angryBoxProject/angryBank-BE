@@ -39,63 +39,63 @@
 
 
     <!-- 다이어리 목록 조회 (저금통별) -->
-    <resultMap id="selectDiaryListInCoinBankResultMap" type="DiaryVO">
-        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
-        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
-        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
-        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
-        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
-        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
-        <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
-        <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
-    </resultMap>
-    <select id="selectDiaryListInCoinBank" parameterType="int" resultType="DiaryVO" resultMap="selectDiaryListInCoinBankResultMap">
-        SELECT id, diary_no, member_id, title, write_date, angry_phase_id, is_public, todack_count, view_count
+    <select id="selectDiaryListInCoinBank" parameterType="int" resultType="DiaryVO">
+        SELECT id, member_id, diary_no, title, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
         FROM diary
-        WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
+        WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId} AND id <![CDATA[<]]> #{lastDiaryId}
+        ORDER BY id DESC
+        LIMIT #{size}
     </select>
-
-
     <!-- 다이어리 목록 조회 (연도 + 월별) -->
-    <resultMap id="selectDiaryListInMonthResultMap" type="DiaryVO">
-        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
-        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
-        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
-        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
-        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
-        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
-        <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
-        <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
-    </resultMap>
-    <select id="selectDiaryListInMonth" parameterType="int" resultType="DiaryVO" resultMap="selectDiaryListInMonthResultMap">
-        SELECT id, member_id, diary_no, title, write_date, angry_phase_id, is_public, todack_count, view_count
+    <select id="selectDiaryListInMonth" parameterType="int" resultType="DiaryVO">
+        SELECT id, member_id, diary_no, title, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
         FROM diary
-        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
+        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth} AND id <![CDATA[<]]> #{lastDiaryId}
+        ORDER BY id DESC
+        LIMIT #{size}
     </select>
-
-
 <!--    날짜별 TOP 분노글 -->
-    <resultMap id="selectTopDiaryResultMap" type="DiaryVO">
-        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
-        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
-        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
-        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
-        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
-        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
-        <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
-        <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
-    </resultMap>
-    <select id="selectTopDiary" parameterType="int" resultType="DiaryVO" resultMap="selectTopDiaryResultMap">
-        SELECT id, member_id, diary_no, title, write_date, angry_phase_id, is_public, todack_count, view_count
+    <select id="selectDailyTop" parameterType="int" resultType="DiaryVO">
+        SELECT id, member_id, diary_no, title, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
         FROM diary
-        WHERE YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth} AND DAY(write_date) = #{writeDay} AND is_public = #{isPublic}
+        WHERE YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth} AND DAY(write_date) = #{writeDay} AND is_public = #{isPublic} AND id <![CDATA[<]]> #{lastDiaryId}
         ORDER BY todack_count DESC
-        Limit #{limit}
+        LIMIT #{size}
+    </select>
+<!--    오늘의 TOP 분노글-->
+        <resultMap id="selectDiaryListResultMap" type="DiaryVO">
+            <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
+            <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
+            <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
+            <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
+            <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
+            <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
+            <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
+            <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
+            <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
+        </resultMap>
+    <select id="selectTodayTop" parameterType="int" resultType="DiaryVO" resultMap="selectDiaryListResultMap">
+        SELECT d.id AS id, d.member_id AS member_id, d.title AS title, DATE(d.write_date) AS write_date, d.angry_phase_id AS angry_phase_id, d.todack_count AS todack_count, d.view_count AS view_count
+        FROM top_diary_today AS tdt
+            LEFT JOIN diary AS d
+                ON tdt.diary_id = d.id
+        WHERE id <![CDATA[<]]> #{lastDiaryId}
+        ORDER BY tdt.id;
+    </select>
+    <!--    대나무숲 -->
+    <select id="bambooGrove" parameterType="int" resultType="DiaryVO" >
+        SELECT id, member_id, diary_no, title, write_date, angry_phase_id, todack_count, view_count
+        FROM diary
+        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = #{isPublic}
+        ORDER BY id DESC
+        LIMIT #{size}
     </select>
 
+<!--    마지막 id 조회 -->
+    <select id="selectLastId" resultType="int">
+        SELECT MAX(id)
+        FROM diary
+    </select>
 
 <!-- 다이어리 상세 조회 -->
     <resultMap id="DiaryDetail" type="diaryVO">
@@ -122,9 +122,6 @@
     <select id="selectDiaryDetail" parameterType="int" resultType="DiaryFileVO" resultMap="selectDiaryDetailResultMap" >
         { CALL SELECT_DIARY( #{diaryId} ) }
     </select>
-
-
-
 
 <!--    다이어리 삭제 -> TOP글, 대나무숲 에도 반영 필요 -->
     <delete id="deleteDiary" parameterType="int" >
@@ -167,42 +164,7 @@
 
 <!--    angryName 목록  조회 -->
 
-<!--    다이어리 페이지네이션 -->
-    <resultMap id="diaryPaginationResultMap" type="DiaryVO">
-        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
-        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
-        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
-        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
-        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
-        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
-        <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
-        <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
-    </resultMap>
-    <select id="diaryPagination" parameterType="int" resultType="DiaryVO" resultMap="diaryPaginationResultMap">
-        SELECT id, member_id, diary_no, title, write_date, angry_phase_id, is_public, todack_count, view_count
-        FROM diary
-        WHERE id <![CDATA[>]]> #{lastDiaryId}
-        ORDER BY id DESC
-        LIMIT #{size}
-    </select>
 
 
-<!--    다이어리 전체 목록 -> isPublic 1인 것들만 (대나무숲) -->
-    <!--    <resultMap id="selectDiaryListResultMap" type="DiaryVO">-->
-    <!--        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />-->
-    <!--        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />-->
-    <!--        <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />-->
-    <!--        <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>-->
-    <!--        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />-->
-    <!--        <result property="angryName" javaType="string" column="angry_name" jdbcType="VARCHAR" />-->
-    <!--        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />-->
-    <!--    </resultMap>-->
-    <!--    <select id="selectDiaryList" resultType="DiaryVO" resultMap="selectDiaryListResultMap">-->
-    <!--        SELECT d.id, member_id, diary_no, title, write_date, ap.angry_name, is_public-->
-    <!--        FROM diary AS d-->
-    <!--            LEFT JOIN angry_phase AS ap-->
-    <!--                ON d.angry_figure = ap.phase-->
-    <!--    </select>-->
 
 </mapper>

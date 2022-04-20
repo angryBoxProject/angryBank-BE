@@ -21,8 +21,7 @@ public class DiaryRepository {
     }
 
     public int selectCoinBankMemberId(int coinBankId, int memberId) {
-        int expired = 0;
-        return diaryMapper.selectCoinBankMemberId(coinBankId, memberId, expired);
+        return diaryMapper.selectCoinBankMemberId(coinBankId, memberId, 0);
     }
 
     public int insertDiary(DiaryVO diary) {
@@ -33,17 +32,28 @@ public class DiaryRepository {
         diaryMapper.insertDiaryFile(diaryId, fileId, fileNo);
     }
 
-    public List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId) {
-        return diaryMapper.selectDiaryListInCoinBank(memberId, coinBankId);
+    public List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
+        return diaryMapper.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
     }
 
-    public List<DiaryVO> selectDiaryListInMonth(int memberId, int year, int month) {
-        return diaryMapper.selectDiaryListInMonth(memberId, year, month);
+    public List<DiaryVO> selectDiaryListInMonth(int memberId, String date, int lastDiaryId, int size) {
+        int year = Integer.parseInt(date.substring(0, 4));
+        int month = Integer.parseInt(date.substring(5, 7));
+        return diaryMapper.selectDiaryListInMonth(memberId, year, month, lastDiaryId, size);
     }
 
-    public List<DiaryVO> selectTopDiary(TopDiaryDTO topDiaryDTO) {
-        return diaryMapper.selectTopDiary(topDiaryDTO);
+    public List<DiaryVO> selectDailyTop(TopDiaryDTO topDiaryDTO) {
+        return diaryMapper.selectDailyTop(topDiaryDTO);
     }
+
+    public List<DiaryVO> selectTodayTop(int lastDiaryId) {
+        return diaryMapper.selectTodayTop(lastDiaryId);
+    }
+
+    public int selectLastId() {
+        return diaryMapper.selectLastId();
+    }
+
 
     public List<DiaryFileVO> selectDiaryDetail(int diaryId) {
         return diaryMapper.selectDiaryDetail(diaryId);
@@ -69,8 +79,8 @@ public class DiaryRepository {
         return diaryMapper.selectMaxFileNo(diaryId);
     }
 
-    public List<DiaryVO> diaryPagination(int diaryId, int size) {
-        return diaryMapper.diaryPagination(diaryId, size);
+    public List<DiaryVO> bambooGrove(int diaryId, int size) {
+        return diaryMapper.bambooGrove(diaryId, 1, size);
     }
 
     public int selectDiaryCountInCoinBank(int diaryId, int memberId) {
