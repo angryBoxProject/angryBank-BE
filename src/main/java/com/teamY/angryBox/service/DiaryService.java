@@ -119,4 +119,7 @@ public class DiaryService {
         }
     }
 
+    public List<DiaryVO> searchDiary(String keyword, int lastDiaryId, int size) {
+        return diaryRepository.searchDiary(keyword, lastDiaryId, size);
+    }
 }

@@ -91,5 +91,9 @@ public class DiaryRepository {
         return diaryMapper.selectTodackCountInCoinBank( diaryId, memberId);
     }
 
+    public List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size) {
+
+        return diaryMapper.searchDiary(searchKeyword, lastDiaryId, size);
+    }
 
 }
