@@ -144,5 +144,14 @@ public class DiaryController {
 
     }
 
+    @GetMapping("diaries/search/{keyword}/{lastDiaryId}/{size}")
+    public ResponseEntity<ResponseDataMessage> searchDiary(@PathVariable String keyword, @PathVariable int lastDiaryId, @PathVariable int size) {
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("diaries", diaryService.searchDiary(keyword, lastDiaryId, size));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "검색 성공", "", data), HttpStatus.OK);
+    }
 
 }

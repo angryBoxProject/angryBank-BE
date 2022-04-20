@@ -48,4 +48,6 @@ public interface DiaryMapper {
     //저금통 별 토댝 총 개수
     int selectTodackCountInCoinBank(int diaryId, int memberId);
 
+
+    List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size);
 }
