@@ -1,7 +1,8 @@
 package com.teamY.angryBox.service;
 
 
-import com.teamY.angryBox.dto.TopDiaryDTO;
+
+import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.FileRepository;
@@ -9,6 +10,8 @@ import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +30,9 @@ public class DiaryService {
     @Transactional
     public void addDiary(DiaryVO diaryVO, MultipartFile[] file) {
 
-        if (diaryRepository.selectAngryId(diaryVO.getAngryPhaseId()) == 0) {
+        if (diaryRepository.checkAngryId(diaryVO.getAngryPhaseId()) == 0) {
             throw new InvalidRequestException("분노수치 잘못 들어옴");
-        } else if ( diaryRepository.selectCoinBankMemberId(diaryVO.getCoinBankId(), diaryVO.getMemberId()) != 1) {
+        } else if ( diaryRepository.checkCoinBankExpired(diaryVO.getCoinBankId(), diaryVO.getMemberId()) != 1) {
             throw new InvalidRequestException("적금 번호 잘못 들어옴");
         } else {
             int diaryId = diaryRepository.insertDiary(diaryVO);
@@ -45,52 +48,74 @@ public class DiaryService {
             }
         }
     }
-
+    // ----------------------------------------
     public List<DiaryVO> getDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
+        if(diaryRepository.checkCoinBankMemberId(coinBankId, memberId) == 0) {
+            throw new InvalidRequestException("적금 번호 확인 필요");
+        }
+        if(lastDiaryId == -1) {
+            lastDiaryId = diaryRepository.selectLastId(memberId, coinBankId) + 1;
+        }
         return diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
     }
 
     public List<DiaryVO> getDiaryListInMonth(int memberId, String date, int lastDiaryId, int size) {
-        return diaryRepository.selectDiaryListInMonth(memberId, date, lastDiaryId, size);
-    }
+        int writeYear = Integer.parseInt(date.substring(0, 4));
+        int writeMonth = Integer.parseInt(date.substring(5, 7));
 
-    public List<DiaryVO> getDailyTop(TopDiaryDTO topDiaryDTO) {
-        return diaryRepository.selectDailyTop(topDiaryDTO);
-    }
-
-    public List<DiaryVO> getTodayTop(int lastDiaryId) {
         if(lastDiaryId == -1) {
-            lastDiaryId = diaryRepository.selectLastId() + 1;
+            lastDiaryId = diaryRepository.selectDailyLastIdInMonth(memberId, writeYear, writeMonth) + 1;
         }
-        return diaryRepository.selectTodayTop(lastDiaryId);
+        return diaryRepository.selectDiaryListInMonth(memberId, writeYear, writeMonth, lastDiaryId, size);
+    }
+
+    public List<DiaryVO> getDailyTop(String date, int lastDiaryId, int size) {
+        int writeYear = Integer.parseInt(date.substring(0, 4));
+        int writeMonth = Integer.parseInt(date.substring(5, 7));
+        int writeDay = Integer.parseInt(date.substring(8, 10));
+
+        if(diaryRepository.checkDailyTopDiary(writeYear, writeMonth, writeDay) == 0) {
+            throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
+        }
+        if(lastDiaryId == -1) {
+            lastDiaryId = diaryRepository.selectDailyLastId(writeYear, writeMonth, writeDay) + 1;
+        }
+        return diaryRepository.selectDailyTop(writeYear, writeMonth, writeDay, lastDiaryId, size);
+    }
+
+    public List<DiaryVO> getTodayTop(int lastDiaryId, int size) {
+        if(lastDiaryId == -1) {
+            lastDiaryId = 0;
+        }
+        return diaryRepository.selectTodayTop(lastDiaryId, size);
     }
 
     public List<DiaryFileVO> getDiaryDetail(int diaryId, int memberId) {
-        if (diaryRepository.selectDiaryDetail(diaryId) == null) {
+        List<DiaryFileVO> dfVO = diaryRepository.selectDiaryDetail(diaryId);
+        if (dfVO.size() == 0) {
             throw new InvalidRequestException("diaryId 잘못 들어옴");
-        } else if (diaryRepository.selectDiaryDetail(diaryId).get(0).getDiaryVO().getIsPublic() == 0 //비공개 상태이고
-                && diaryRepository.selectDiaryDetail(diaryId).get(0).getDiaryVO().getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
+        } else if (dfVO.get(0).getDiaryVO().getIsPublic() == 0 //비공개 상태이고
+                && dfVO.get(0).getDiaryVO().getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
             throw new InvalidRequestException("비밀글 당사자 외 조회 불가");
         } else {
-            return diaryRepository.selectDiaryDetail(diaryId);
+            return dfVO;
         }
-
-    }
-
-    public int getDiaryMemberId(int diaryId, int memberId) {
-        return diaryRepository.selectDiaryMemberId(diaryId, memberId);
     }
 
     public void removeDiary(int diaryId, int memberid) {
-        diaryRepository.deleteDiary(diaryId, memberid);
+        if(diaryRepository.checkDiaryMemberId(diaryId, memberid) == 0) {
+            throw new InvalidRequestException("작성자와 삭제자 불일치 혹은 존재하지 않는 다이어리Id");
+        } else {
+            diaryRepository.deleteDiary(diaryId, memberid);
+        }
     }
 
     @Transactional
     public void changeDiary(DiaryVO diary, MultipartFile[] file, List removedFileId) {
 
-        if (diaryRepository.selectAngryId(diary.getAngryPhaseId()) == 0) {
+        if (diaryRepository.checkAngryId(diary.getAngryPhaseId()) == 0) {
             throw new InvalidRequestException("분노수치 잘못 들어옴");
-        } else if(diaryRepository.selectDiaryMemberId(diary.getId(), diary.getMemberId()) == 0) {
+        } else if(diaryRepository.checkDiaryMemberId(diary.getId(), diary.getMemberId()) == 0) {
             throw new InvalidRequestException("작성자와 수정자 불일치");
         }
 
@@ -101,6 +126,9 @@ public class DiaryService {
         if (removedFileId != null) {
             for (int i = 0; i < removedFileId.size(); i++) {
                 int fileId = Integer.parseInt(removedFileId.get(i).toString());
+                if(diaryRepository.checkFileInDiary(diary.getId(), fileId) == 0) {
+                    throw new InvalidRequestException("삭제된 파일 번호 확인 필요");
+                }
                 diaryRepository.deleteFileInDiary(fileId);
             }
         }
@@ -118,5 +146,4 @@ public class DiaryService {
             }
         }
     }
-
 }
