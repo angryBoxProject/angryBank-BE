@@ -29,6 +29,8 @@ public class DiaryVO {
     private int todackCount; //default 0
     private int coinBankId;
     private int viewCount;
+    private int todayTopId;
+    private int dailyTopId;
 
 
     //다이어리 작성 시 사용할 생성자
@@ -50,6 +52,8 @@ public class DiaryVO {
         this.isPublic = isPublic;
         this.angryPhaseId = angryPhaseId;
     }
+
+
 
 
 }

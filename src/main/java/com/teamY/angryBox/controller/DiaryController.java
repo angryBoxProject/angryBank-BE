@@ -3,7 +3,7 @@ package com.teamY.angryBox.controller;
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
-import com.teamY.angryBox.dto.TopDiaryDTO;
+
 import com.teamY.angryBox.service.DiaryService;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
@@ -29,7 +29,7 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @PostMapping("diary")
-    public ResponseEntity<ResponseMessage> registerDiary(@RequestParam String title, @RequestParam String content,
+    public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
                                                          @RequestParam int isPublic, @RequestParam int angryPhaseId,
                                                          @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
 
@@ -43,8 +43,8 @@ public class DiaryController {
 
     }
 
-    @GetMapping("diaries/coinBank/{coinBankId}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId, @RequestParam int lastDiaryId, @RequestParam int size) {
+    @GetMapping("diaries/coinBank/{coinBankId}/{lastDiaryId}/{size}")
+    public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId, @PathVariable int lastDiaryId, @PathVariable int size) {
         Map<String, Object> data = new HashMap<>();
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         //int memberId = 1;
@@ -55,8 +55,8 @@ public class DiaryController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(저금통별) 성공", "", data), HttpStatus.OK);
     }
 
-    @GetMapping("diaries/month/{date}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String date, @RequestParam int lastDiaryId, @RequestParam int size) {
+    @GetMapping("diaries/month/{date}/{lastDiaryId}/{size}")
+    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
         Map<String, Object> data = new HashMap<>();
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         //int memberId = 1;
@@ -67,25 +67,26 @@ public class DiaryController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공", "", data), HttpStatus.OK);
     }
 
-    @GetMapping("diaries/dailyTop/{date}/{lastDiaryId}")
-    public ResponseEntity<ResponseDataMessage> inquriyDailyTopDiary(@PathVariable String date, @PathVariable int lastDiaryId) {
+    @GetMapping("diaries/dailyTop/{date}/{lastDiaryId}/{size}")
+    public ResponseEntity<ResponseDataMessage> inquriyDailyTopDiary(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
         Map<String, Object> data = new HashMap<>();
-        int writeYear = Integer.parseInt(date.substring(0, 4));
-        int writeMonth = Integer.parseInt(date.substring(5, 7));
-        int writeDay = Integer.parseInt(date.substring(8, 10));
-        TopDiaryDTO topDiaryDTO = new TopDiaryDTO(writeYear, writeMonth, writeDay, 1, lastDiaryId);
+//        int writeYear = Integer.parseInt(date.substring(0, 4));
+//        int writeMonth = Integer.parseInt(date.substring(5, 7));
+//        int writeDay = Integer.parseInt(date.substring(8, 10));
+//        TopDiaryDTO topDiaryDTO = new TopDiaryDTO(writeYear, writeMonth, writeDay, 1, lastDiaryId);
+//        data.put("dailyTopDiary", diaryService.getDailyTop(topDiaryDTO));
 
-        data.put("dailyTopDiary", diaryService.getDailyTop(topDiaryDTO));
+        data.put("dailyTopDiary", diaryService.getDailyTop(date, lastDiaryId, size));
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(TOP) 성공", "", data), HttpStatus.OK);
     }
 
-    @GetMapping("diaries/todayTop/{lastDiaryId}")
-    public ResponseEntity<ResponseDataMessage> inquriyTodayTopDiary(@PathVariable int lastDiaryId) {
+    @GetMapping("diaries/todayTop/{lastDiaryId}/{size}")
+    public ResponseEntity<ResponseDataMessage> inquriyTodayTopDiary(@PathVariable int lastDiaryId, @PathVariable int size) {
         Map<String, Object> data = new HashMap<>();
 
         log.info("lastDiaryId : " + lastDiaryId);
-        data.put("todayTopDiary", diaryService.getTodayTop(lastDiaryId));
+        data.put("todayTopDiary", diaryService.getTodayTop(lastDiaryId, size));
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(TOP) 성공", "", data), HttpStatus.OK);
     }
@@ -118,14 +119,8 @@ public class DiaryController {
     public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryId) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         //int memberId = 1;
-
-        if (diaryService.getDiaryMemberId(diaryId, memberId) == 0) {
-            // 에러 던지는 걸로 수정 필요
-            return new ResponseEntity<>(new ResponseMessage(false, "작성자와 삭제자 불일치 혹은 존재하지 않는 다이어리Id", "작성자와 삭제자 불일치 혹은 존재하지 않는 다이어리Id"), HttpStatus.BAD_REQUEST);
-        } else {
             diaryService.removeDiary(diaryId, memberId);
             return new ResponseEntity<>(new ResponseMessage(true, "다이어리 삭제 성공", ""), HttpStatus.OK);
-        }
     }
 
     @PutMapping("diaries/{diaryId}")
