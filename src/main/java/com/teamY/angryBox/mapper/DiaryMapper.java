@@ -20,6 +20,8 @@ public interface DiaryMapper {
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
+    int checkDiaryId(int diaryId);
+
     int checkDiaryMemberId(int diaryId, int memberId);
 
     int checkFileInDiary(int diaryId, int fileId);

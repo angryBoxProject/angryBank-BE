@@ -6,21 +6,26 @@
 <mapper namespace="com.teamY.angryBox.mapper.NotificationMapper">
 
 <!--    추가 -->
-    <insert id="sendNotification" parameterType="int">
-        INSERT INTO notification(send_member_id, receive_member_id, content) VALUES(#{memberId}, #{content})
+    <insert id="sendNotification" parameterType="NotificationDTO">
+        INSERT INTO notification(diary_id, send_member_id, receive_member_id, content) VALUES(#{diaryId}, #{sendMemberId}, #{receiveMemberId}, #{content})
     </insert>
 
-
-
 <!--    확인 여부 업데이트 -->
+    <update id="updateNotification" parameterType="int">
+        UPDATE notification SET verif = #{verif} WHERE id = #{ntfId}
+    </update>
 
+<!--    알림 목록 조회 -->
+    <select id="selectNftList" parameterType="int" resultType="NotificationDTO">
+        SELECT id, diary_id, content, date_time, verif
+        FROM notification
+        WHERE receive_member_id = #{receiveMemberId};
+    </select>
 
-<!--    안 읽은 알람 카운트 -->
-
-
-<!--    목록 조회 -->
-
-
+<!--    알림의 다이어리 ID 조회 -->
+    <select id="selectDiaryIdInNtf" parameterType="int" resultType="int">
+        SELECT diary_id FROM notification WHERE id = #{ntfId};
+    </select>
 
 
 

@@ -44,6 +44,10 @@ public class DiaryRepository {
         return diaryMapper.checkDailyTopDiary(writeYear, writeMonth, writeDay, 1);
     }
 
+    public int checkDiaryId(int diaryId) {
+        return diaryMapper.checkDiaryId(diaryId);
+    }
+
     public int checkDiaryMemberId(int diaryId, int memberId) {
         return diaryMapper.checkDiaryMemberId(diaryId, memberId);
     }

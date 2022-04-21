@@ -23,6 +23,12 @@
         FROM coin_bank
         WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = #{expired};
     </select>
+    <!--    다이어리 존재 여부 확인 -->
+    <select id="checkDiaryId" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM diary
+        WHERE id = #{diaryId};
+    </select>
     <!--    다이어리 작성자 확인 -->
     <select id="checkDiaryMemberId" parameterType="int" resultType="int">
         SELECT COUNT(*)
@@ -216,6 +222,13 @@
 
 
 <!--    angryName 목록  조회 -->
+
+<!--    다이어리 제목 조회 -->
+<!--    <select id="selectTitle" parameterType="int" resultType="string">-->
+<!--        SELECT title-->
+<!--        FROM diary-->
+<!--        WHERE id = #{diaryId}-->
+<!--    </select>-->
 
 
     <select id="searchDiary" resultType="DiaryVO">

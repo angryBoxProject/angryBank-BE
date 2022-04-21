@@ -59,6 +59,8 @@ class AngryBoxApplicationTests {
 	@Autowired
 	private TodackMapper todackMapper;
 
+	@Autowired
+	private NotificationMapper notificationMapper;
 
 
 
@@ -75,7 +77,8 @@ class AngryBoxApplicationTests {
 
 //		List<DiaryVO> test = diaryMapper.diaryPagination(5, 7);
 //		log.info(test.toString());
-		log.info(diaryMapper.selectDailyTop(2022, 4, 20, 1, 2, 2).toString());
+		//og.info(diaryMapper.selectDailyTop(2022, 4, 20, 1, 2, 2).toString());
+		log.info(notificationMapper.selectNftList(1).toString());
 
 
 	}

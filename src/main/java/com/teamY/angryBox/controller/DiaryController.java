@@ -95,21 +95,8 @@ public class DiaryController {
     @GetMapping("diaries/{diaryId}")
     public ResponseEntity<ResponseMessage> inquriyDiaryDetail(@PathVariable int diaryId) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        //int memberId = 1;
-        List<DiaryFileVO> diary = diaryService.getDiaryDetail(diaryId, memberId);
 
-        Map<String, Object> data = new LinkedHashMap<>();
-
-        for (int i = 0; i < diary.size(); i++) {
-            data.put("diary", diary.get(i).getDiaryVO());
-            if (diary.get(i).getFileVO() != null) {
-                Map<String, Object> fileInfo = new HashMap<>();
-                fileInfo.put("fileLink", "/images/" + diary.get(i).getFileVO().getSystemFileName());
-                fileInfo.put("fileNo", diary.get(i).getFileVO().getFileNo());
-                fileInfo.put("fileId", diary.get(i).getFileVO().getId());
-                data.put("file" + (i + 1) + ": ", fileInfo);
-            }
-        }
+        Map<String, Object> data = diaryService.getDiaryDetail(diaryId, memberId);
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 상세조회 성공", "", data), HttpStatus.OK);
 
