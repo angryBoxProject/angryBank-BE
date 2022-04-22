@@ -20,11 +20,10 @@ public class TodackService {
     private final NotificationRepository notificationRepository;
 
     public void upTodackCount(TodackVO todack) {
-
         todackRepository.upTodackCount(todack);
 
         NotificationDTO ntfDTO = new NotificationDTO(todack.getDiaryId(), todack.getSendMemberId(), todack.getReceiveMemberId());
-        notificationRepository.sendNotification(ntfDTO);
+        notificationRepository.sendNtf(ntfDTO);
     }
 
     public void downTodackCount(TodackVO todack) {

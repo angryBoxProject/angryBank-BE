@@ -182,7 +182,7 @@
         { CALL SELECT_DIARY( #{diaryId} ) }
     </select>
 
-<!--    다이어리 삭제 -> TOP글, 대나무숲 에도 반영 필요 -->
+<!--    다이어리 삭제 -->
     <delete id="deleteDiary" parameterType="int" >
         { CALL DELETE_DIARY( #{diaryId}, #{memberId} ) }
     </delete>

@@ -8,11 +8,13 @@ import java.util.List;
 @Mapper
 public interface NotificationMapper {
 
-    void sendNotification(NotificationDTO ntfDTO);
+    void sendNtf(NotificationDTO ntfDTO);
 
-    void updateNotification(int verif, int ntfId);
+    void updateNtf(int verif, int ntfId);
 
     int selectDiaryIdInNtf(int ntfId);
 
-    List<NotificationDTO> selectNftList(int receiveMemberId);
+    List<NotificationDTO> selectNftList(int memberId, int lastNtfId, int size);
+
+    int selectLastIdInNtf(int memberId);
 }
