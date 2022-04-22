@@ -51,9 +51,9 @@ public class DiaryService {
                     diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), i + 1);
                 }
             }
-
+            DiaryVO insertedDiary = new DiaryVO(diaryId, diaryVO.getTitle(), diaryVO.getContent(), diaryVO.getIsPublic(), diaryVO.getAngryPhaseId(), diaryVO.getCoinBankId());
             if(diaryVO.getIsPublic() == 1) {
-                template.convertAndSend("/sub/topic/bamboo", diaryVO);
+                template.convertAndSend("/sub/topic/bamboo", insertedDiary);
             }
         }
     }
