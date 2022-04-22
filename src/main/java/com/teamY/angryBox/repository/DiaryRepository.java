@@ -89,6 +89,10 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryDetail(diaryId);
     }
 
+    public int selectLastId(){
+        return diaryMapper.selectLastId();
+    }
+
     public void deleteDiary(int diaryId, int memberId) {
         diaryMapper.deleteDiary(diaryId, memberId);
     }

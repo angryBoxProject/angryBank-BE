@@ -59,8 +59,8 @@ jwt:
 app:
     auth:
       tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
-      tokenExpiry: 600000
-    refreshTokenExpiry: 60000
+      tokenExpiry: 7200000
+    refreshTokenExpiry: 7200000
 #  oauth2:
 #    authorizedRedirectUris:
 #      - http://localhost:3000/oauth/redirect

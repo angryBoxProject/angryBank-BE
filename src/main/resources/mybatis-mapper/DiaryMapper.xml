@@ -47,6 +47,16 @@
         FROM diary
         WHERE id = #{diaryId}
     </select>
+
+    <!--    전체 게시글 마지막 id 조회 -->
+    <select id="selectLastId" resultType="int">
+        SELECT id
+        FROM diary
+        where is_public = 1
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
     <!--    저금통별 마지막 id 조회 -->
     <select id="selectLastIdInCoinBank" parameterType="int" resultType="int">
         SELECT IFNULL(MAX(id), -2)

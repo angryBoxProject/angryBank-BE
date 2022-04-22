@@ -40,6 +40,8 @@ public interface DiaryMapper {
 
     List<DiaryFileVO> selectDiaryDetail(int diaryId);
 
+    int selectLastId();
+
     int selectLastIdInCoinBank(int memberId, int coinBankId);
 
     int selectDailyLastId(int writeYear, int writeMonth, int writeDay);
