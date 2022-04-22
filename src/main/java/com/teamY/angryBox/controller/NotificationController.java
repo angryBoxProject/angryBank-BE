@@ -5,7 +5,6 @@ import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.service.DiaryService;
 import com.teamY.angryBox.service.NotificationService;
-import com.teamY.angryBox.vo.DiaryFileVO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -31,11 +28,20 @@ public class NotificationController {
     @GetMapping("notification/{notificationId}")
     public ResponseEntity<ResponseMessage> inquryNotification(@PathVariable int notificationId) {
         int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        notificationService.getNotification(notificationId);
+        notificationService.changeNtf(notificationId);
         int diaryId = notificationService.getDiaryIdInNft(notificationId);
         Map<String, Object> data = diaryService.getDiaryDetail(diaryId, memberId);
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "알림을 통한 다이어리 상세조회 성공", "", data), HttpStatus.OK);
+    }
+
+    @GetMapping("notification/{lastNotificationId}/{size}")
+    public ResponseEntity<ResponseMessage> inquryNotificationList(@PathVariable int lastNotificationId, @PathVariable int size) {
+        int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        Map<String, Object> data = new HashMap<>();
+        data.put("ntfList", notificationService.getNtfList(memberId,  lastNotificationId, size));
+        
+        return new ResponseEntity<>(new ResponseDataMessage(true, "알림 목록 조회 성공", "", data), HttpStatus.OK);
     }
 
 }
