@@ -38,11 +38,11 @@ public interface DiaryMapper {
 
     List<DiaryFileVO> selectDiaryDetail(int diaryId);
 
-    int selectLastId(int memberId, int coinBankId);
+    int selectLastIdInCoinBank(int memberId, int coinBankId);
 
     int selectDailyLastId(int writeYear, int writeMonth, int writeDay);
 
-    int selectDailyLastIdInMonth(int memberId, int writeYear, int writeMonth);
+    int selectLastIdInMonth(int memberId, int writeYear, int writeMonth);
 
     void deleteDiary(int diaryId, int memberId);
 
