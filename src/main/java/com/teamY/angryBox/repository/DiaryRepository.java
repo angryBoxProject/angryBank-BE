@@ -73,16 +73,16 @@ public class DiaryRepository {
         return diaryMapper.selectTodayTop(lastDiaryId, size);
     }
 
-    public int selectLastId(int memberId, int coinBankId) {
-        return diaryMapper.selectLastId(memberId, coinBankId);
+    public int selectLastIdInCoinBank(int memberId, int coinBankId) {
+        return diaryMapper.selectLastIdInCoinBank(memberId, coinBankId);
     }
 
     public int selectDailyLastId(int writeYear, int writeMonth, int writeDay) {
         return diaryMapper.selectDailyLastId(writeYear, writeMonth, writeDay);
     }
 
-    public int selectDailyLastIdInMonth(int memberId, int writeYear, int writeMonth) {
-        return diaryMapper.selectDailyLastIdInMonth(memberId, writeYear, writeMonth);
+    public int selectLastIdInMonth(int memberId, int writeYear, int writeMonth) {
+        return diaryMapper.selectLastIdInMonth(memberId, writeYear, writeMonth);
     }
 
     public List<DiaryFileVO> selectDiaryDetail(int diaryId) {

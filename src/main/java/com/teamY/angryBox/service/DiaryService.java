@@ -53,7 +53,10 @@ public class DiaryService {
             throw new InvalidRequestException("적금 번호 확인 필요");
         }
         if(lastDiaryId == -1) {
-            lastDiaryId = diaryRepository.selectLastId(memberId, coinBankId) + 1;
+            lastDiaryId = diaryRepository.selectLastIdInCoinBank(memberId, coinBankId) + 1;
+            if(lastDiaryId == -1) {
+                throw new InvalidRequestException("해당 적금에 작성한 다이어리 없음");
+            }
         }
         return diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
     }
@@ -63,7 +66,10 @@ public class DiaryService {
         int writeMonth = Integer.parseInt(date.substring(5, 7));
 
         if(lastDiaryId == -1) {
-            lastDiaryId = diaryRepository.selectDailyLastIdInMonth(memberId, writeYear, writeMonth) + 1;
+            lastDiaryId = diaryRepository.selectLastIdInMonth(memberId, writeYear, writeMonth) + 1;
+            if(lastDiaryId == -1) {
+                throw new InvalidRequestException("해당 월에 작성한 다이어리 없음");
+            }
         }
         return diaryRepository.selectDiaryListInMonth(memberId, writeYear, writeMonth, lastDiaryId, size);
     }
@@ -73,11 +79,14 @@ public class DiaryService {
         int writeMonth = Integer.parseInt(date.substring(5, 7));
         int writeDay = Integer.parseInt(date.substring(8, 10));
 
-        if(diaryRepository.checkDailyTopDiary(writeYear, writeMonth, writeDay) == 0) {
-            throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
-        }
+//        if(diaryRepository.checkDailyTopDiary(writeYear, writeMonth, writeDay) == 0) {
+//            throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
+//        }
         if(lastDiaryId == -1) {
             lastDiaryId = diaryRepository.selectDailyLastId(writeYear, writeMonth, writeDay) + 1;
+            if(lastDiaryId == -1) {
+                throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
+            }
         }
         return diaryRepository.selectDailyTop(writeYear, writeMonth, writeDay, lastDiaryId, size);
     }
