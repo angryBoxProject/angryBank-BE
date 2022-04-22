@@ -75,11 +75,6 @@ class AngryBoxApplicationTests {
 		//        ORDER BY todack_count DESC
 		//        Limit #{limit}
 
-//		List<DiaryVO> test = diaryMapper.diaryPagination(5, 7);
-//		log.info(test.toString());
-		//og.info(diaryMapper.selectDailyTop(2022, 4, 20, 1, 2, 2).toString());
-		//log.info(notificationMapper.selectNftList(1).toString());
-
 
 	}
 

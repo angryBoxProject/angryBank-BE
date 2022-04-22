@@ -150,7 +150,7 @@
 
     </select>
     <!--    대나무숲 -->
-    <select id="bambooGrove" parameterType="int" resultType="DiaryVO" >
+    <select id="bambooGrove" resultType="DiaryVO" >
         SELECT id, member_id, diary_no, title, write_date, angry_phase_id, todack_count, view_count
         FROM diary
         WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = #{isPublic}
@@ -172,11 +172,13 @@
         <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
         <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
     </resultMap>
+
     <resultMap id="FileDetail" type="fileVO">
         <result property="id" javaType="int" column="file_id" jdbcType="INTEGER" />
         <result property="systemFileName" javaType="string" column="system_file_name" jdbcType="VARCHAR" />
         <result property="fileNo" javaType="int" column="file_no" jdbcType="INTEGER" />
     </resultMap>
+
     <resultMap id="selectDiaryDetailResultMap" type="DiaryFileVO">
         <collection property="diaryVO" resultMap="DiaryDetail" />
         <collection property="fileVO" resultMap="FileDetail" />

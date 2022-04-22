@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,8 +42,11 @@ public class MemberController {
 
     //oauth 회원가입한 회원은 비번 변경 불가
 
+    //private final SimpMessagingTemplate template; // 특정 broker 로 메세지 전달
+
     @GetMapping("/")
     public String helloworld(){
+        //template.convertAndSend("/sub/topic/bamboo", "hellooooo");
         return "service!!!";
     }
 
