@@ -27,6 +27,7 @@ public class CoinBankService {
     @Transactional
     public void createCoinBank(NewCoinBankDTO bank, int memberId){
 
+        // 멤버에게 이미 할당 된 저금통이 있는지 없는지 검사 추가해야됨
         CoinBankVO bankVO = new CoinBankVO(memberId, bank.getName(), bank.getMemo(), bank.getAngryLimit(), bank.getReward());
         coinBankRepository.insertCoinBank(bankVO);
         memberRepository.updateCoinBankId(bankVO.getMemberId(), bankVO.getId());

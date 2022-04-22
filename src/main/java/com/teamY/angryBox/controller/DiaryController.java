@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class DiaryController {
 
     private final DiaryService diaryService;
+
 
     @PostMapping("diary")
     public ResponseEntity<ResponseMessage> registerDiary(@RequestParam String title, @RequestParam String content,
@@ -152,6 +154,14 @@ public class DiaryController {
         data.put("diaries", diaryService.searchDiary(keyword, lastDiaryId, size));
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "검색 성공", "", data), HttpStatus.OK);
+    }
+
+    @GetMapping("diaries")
+    public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("diaries", diaryService.bambooGrove(lastDiaryId, size));
+        return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "대나무숲 조회 성공", "", data), HttpStatus.OK);
     }
 
 }

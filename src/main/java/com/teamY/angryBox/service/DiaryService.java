@@ -9,6 +9,7 @@ import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,8 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final FileRepository fileRepository;
+
+    private final SimpMessagingTemplate template; // 특정 broker 로 메세지 전달
 
     @Transactional
     public void addDiary(DiaryVO diaryVO, MultipartFile[] file) {
@@ -42,6 +45,10 @@ public class DiaryService {
                 for (int i = 0; i < fileIdList.size(); i++) {
                     diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), i + 1);
                 }
+            }
+
+            if(diaryVO.getIsPublic() == 1) {
+                template.convertAndSend("/sub/topic/bamboo", diaryVO);
             }
         }
     }
@@ -121,5 +128,12 @@ public class DiaryService {
 
     public List<DiaryVO> searchDiary(String keyword, int lastDiaryId, int size) {
         return diaryRepository.searchDiary(keyword, lastDiaryId, size);
+    }
+
+    public List<DiaryVO> bambooGrove(int lastDiaryId, int size) {
+        if(lastDiaryId == -1)
+            lastDiaryId = diaryRepository.selectLastId() + 1;
+
+        return diaryRepository.bambooGrove(lastDiaryId, size);
     }
 }

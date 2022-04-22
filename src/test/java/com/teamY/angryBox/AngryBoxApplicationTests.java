@@ -73,8 +73,8 @@ class AngryBoxApplicationTests {
 		//        ORDER BY todack_count DESC
 		//        Limit #{limit}
 
-		List<DiaryVO> test = diaryMapper.diaryPagination(5, 7);
-		log.info(test.toString());
+		//List<DiaryVO> test = diaryMapper.diaryPagination(5, 7);
+		//log.info(test.toString());
 
 
 	}
