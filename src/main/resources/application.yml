@@ -68,5 +68,5 @@ app:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  type-aliases-package: com.teamY.angryBox.vo
+  type-aliases-package: com.teamY.angryBox.vo, com.teamY.angryBox.dto
   mapper-locations: mybatis-mapper/*.xml

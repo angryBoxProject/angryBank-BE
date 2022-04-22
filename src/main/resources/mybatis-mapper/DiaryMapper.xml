@@ -23,6 +23,12 @@
         FROM coin_bank
         WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = #{expired};
     </select>
+    <!--    다이어리 존재 여부 확인 -->
+    <select id="checkDiaryId" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM diary
+        WHERE id = #{diaryId};
+    </select>
     <!--    다이어리 작성자 확인 -->
     <select id="checkDiaryMemberId" parameterType="int" resultType="int">
         SELECT COUNT(*)
@@ -179,7 +185,7 @@
         { CALL SELECT_DIARY( #{diaryId} ) }
     </select>
 
-<!--    다이어리 삭제 -> TOP글, 대나무숲 에도 반영 필요 -->
+<!--    다이어리 삭제 -->
     <delete id="deleteDiary" parameterType="int" >
         { CALL DELETE_DIARY( #{diaryId}, #{memberId} ) }
     </delete>
@@ -220,7 +226,20 @@
 
 <!--    angryName 목록  조회 -->
 
+<!--    다이어리 제목 조회 -->
+<!--    <select id="selectTitle" parameterType="int" resultType="string">-->
+<!--        SELECT title-->
+<!--        FROM diary-->
+<!--        WHERE id = #{diaryId}-->
+<!--    </select>-->
 
 
+    <select id="searchDiary" resultType="DiaryVO">
+        SELECT id, member_id, diary_no, title, write_date, angry_phase_id, todack_count, view_count
+        FROM diary
+        WHERE is_public = 1 AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT('%', #{searchKeyword}, '%')) AND id <![CDATA[<]]> #{lastDiaryId}
+        ORDER BY id desc
+        LIMIT #{size}
+    </select>
 
 </mapper>

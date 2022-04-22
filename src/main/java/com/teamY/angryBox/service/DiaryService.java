@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +47,7 @@ public class DiaryService {
             }
         }
     }
-    // ----------------------------------------
+
     public List<DiaryVO> getDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
         if(diaryRepository.checkCoinBankMemberId(coinBankId, memberId) == 0) {
             throw new InvalidRequestException("적금 번호 확인 필요");
@@ -99,21 +98,35 @@ public class DiaryService {
         return diaryRepository.selectTodayTop(lastDiaryId, size);
     }
 
-    public List<DiaryFileVO> getDiaryDetail(int diaryId, int memberId) {
+    public Map<String, Object> getDiaryDetail(int diaryId, int memberId) {
         List<DiaryFileVO> dfVO = diaryRepository.selectDiaryDetail(diaryId);
         if (dfVO.size() == 0) {
-            throw new InvalidRequestException("diaryId 잘못 들어옴");
+            throw new InvalidRequestException("해당 다이어리 존재하지 않음");
         } else if (dfVO.get(0).getDiaryVO().getIsPublic() == 0 //비공개 상태이고
                 && dfVO.get(0).getDiaryVO().getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
             throw new InvalidRequestException("비밀글 당사자 외 조회 불가");
         } else {
-            return dfVO;
+            Map<String, Object> data = new LinkedHashMap<>();
+
+            for (int i = 0; i < dfVO.size(); i++) {
+                data.put("diary", dfVO.get(i).getDiaryVO());
+                if (dfVO.get(i).getFileVO() != null) {
+                    Map<String, Object> fileInfo = new HashMap<>();
+                    fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
+                    fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
+                    fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
+                    data.put("file" + (i + 1) + ": ", fileInfo);
+                }
+            }
+            return data;
         }
     }
 
     public void removeDiary(int diaryId, int memberid) {
-        if(diaryRepository.checkDiaryMemberId(diaryId, memberid) == 0) {
-            throw new InvalidRequestException("작성자와 삭제자 불일치 혹은 존재하지 않는 다이어리Id");
+        if(diaryRepository.checkDiaryId(diaryId) == 0) {
+            throw new InvalidRequestException("해당 다이어리 존재하지 않음");
+        } else if(diaryRepository.checkDiaryMemberId(diaryId, memberid) == 0) {
+            throw new InvalidRequestException("작성자와 삭제자 불일치");
         } else {
             diaryRepository.deleteDiary(diaryId, memberid);
         }
@@ -155,4 +168,10 @@ public class DiaryService {
             }
         }
     }
+
+
+    public List<DiaryVO> searchDiary(String keyword, int lastDiaryId, int size) {
+        return diaryRepository.searchDiary(keyword, lastDiaryId, size);
+    }
+
 }
