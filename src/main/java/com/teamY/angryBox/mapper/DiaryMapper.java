@@ -1,6 +1,6 @@
 package com.teamY.angryBox.mapper;
 
-import com.teamY.angryBox.dto.TopDiaryDTO;
+
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,27 +10,41 @@ import java.util.List;
 @Mapper
 public interface DiaryMapper {
 
-    int selectAngryId(int angryPhaseId);
+    int checkAngryId(int angryPhaseId);
 
-    int selectCoinBankMemberId(int coinBankId, int memberId, int expired);
+    int checkCoinBankMemberId(int coinBankId, int memberId);
+
+    int checkCoinBankExpired(int coinBankId, int memberId, int expired);
 
     int insertDiary(DiaryVO diary);
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
+    int checkDiaryId(int diaryId);
+
+    int checkDiaryMemberId(int diaryId, int memberId);
+
+    int checkFileInDiary(int diaryId, int fileId);
+
+    int checkIsPublic(int diaryId);
+
+    int checkDailyTopDiary(int writeYear, int writeMonth, int writeDay, int isPublic);
+
     List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size);
 
     List<DiaryVO> selectDiaryListInMonth(int memberId, int writeYear, int writeMonth, int lastDiaryId, int size);
 
-    List<DiaryVO> selectDailyTop(TopDiaryDTO topDiaryDTO);
+    List<DiaryVO> selectDailyTop(int writeYear, int writeMonth, int writeDay, int isPublic, int lastDiaryId, int size);
 
-    List<DiaryVO> selectTodayTop(int lastDiaryId);
+    List<DiaryVO> selectTodayTop(int lastDiaryId, int size);
 
     List<DiaryFileVO> selectDiaryDetail(int diaryId);
 
-    int selectLastId();
+    int selectLastIdInCoinBank(int memberId, int coinBankId);
 
-    int selectDiaryMemberId(int diaryId, int memberId);
+    int selectDailyLastId(int writeYear, int writeMonth, int writeDay);
+
+    int selectLastIdInMonth(int memberId, int writeYear, int writeMonth);
 
     void deleteDiary(int diaryId, int memberId);
 

@@ -1,6 +1,6 @@
 package com.teamY.angryBox.repository;
 
-import com.teamY.angryBox.dto.TopDiaryDTO;
+
 import com.teamY.angryBox.mapper.DiaryMapper;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
@@ -16,12 +16,16 @@ import java.util.List;
 public class DiaryRepository {
     private final DiaryMapper diaryMapper;
 
-    public int selectAngryId(int angryPhaseId) {
-        return diaryMapper.selectAngryId(angryPhaseId);
+    public int checkAngryId(int angryPhaseId) {
+        return diaryMapper.checkAngryId(angryPhaseId);
     }
 
-    public int selectCoinBankMemberId(int coinBankId, int memberId) {
-        return diaryMapper.selectCoinBankMemberId(coinBankId, memberId, 0);
+    public int checkCoinBankMemberId(int coinBankId, int memberId) {
+        return diaryMapper.checkCoinBankMemberId(coinBankId, memberId);
+    }
+
+    public int checkCoinBankExpired(int coinBankId, int memberId) {
+        return diaryMapper.checkCoinBankExpired(coinBankId, memberId, 0);
     }
 
     public int insertDiary(DiaryVO diary) {
@@ -32,35 +36,57 @@ public class DiaryRepository {
         diaryMapper.insertDiaryFile(diaryId, fileId, fileNo);
     }
 
+    public int checkIsPublic(int diaryId) {
+        return diaryMapper.checkIsPublic(diaryId);
+    }
+
+    public int checkDailyTopDiary(int writeYear, int writeMonth, int writeDay) {
+        return diaryMapper.checkDailyTopDiary(writeYear, writeMonth, writeDay, 1);
+    }
+
+    public int checkDiaryId(int diaryId) {
+        return diaryMapper.checkDiaryId(diaryId);
+    }
+
+    public int checkDiaryMemberId(int diaryId, int memberId) {
+        return diaryMapper.checkDiaryMemberId(diaryId, memberId);
+    }
+
+    public int checkFileInDiary(int diaryId, int fileId) {
+        return diaryMapper.checkFileInDiary(diaryId, fileId);
+    }
+
     public List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
         return diaryMapper.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
     }
 
-    public List<DiaryVO> selectDiaryListInMonth(int memberId, String date, int lastDiaryId, int size) {
-        int year = Integer.parseInt(date.substring(0, 4));
-        int month = Integer.parseInt(date.substring(5, 7));
+    public List<DiaryVO> selectDiaryListInMonth(int memberId, int year, int month, int lastDiaryId, int size) {
+
         return diaryMapper.selectDiaryListInMonth(memberId, year, month, lastDiaryId, size);
     }
 
-    public List<DiaryVO> selectDailyTop(TopDiaryDTO topDiaryDTO) {
-        return diaryMapper.selectDailyTop(topDiaryDTO);
+    public List<DiaryVO> selectDailyTop(int writeYear, int writeMonth, int writeDay, int lastDiaryId, int size) {
+        return diaryMapper.selectDailyTop(writeYear, writeMonth, writeDay, 1, lastDiaryId, size);
     }
 
-    public List<DiaryVO> selectTodayTop(int lastDiaryId) {
-        return diaryMapper.selectTodayTop(lastDiaryId);
+    public List<DiaryVO> selectTodayTop(int lastDiaryId, int size) {
+        return diaryMapper.selectTodayTop(lastDiaryId, size);
     }
 
-    public int selectLastId() {
-        return diaryMapper.selectLastId();
+    public int selectLastIdInCoinBank(int memberId, int coinBankId) {
+        return diaryMapper.selectLastIdInCoinBank(memberId, coinBankId);
     }
 
+    public int selectDailyLastId(int writeYear, int writeMonth, int writeDay) {
+        return diaryMapper.selectDailyLastId(writeYear, writeMonth, writeDay);
+    }
+
+    public int selectLastIdInMonth(int memberId, int writeYear, int writeMonth) {
+        return diaryMapper.selectLastIdInMonth(memberId, writeYear, writeMonth);
+    }
 
     public List<DiaryFileVO> selectDiaryDetail(int diaryId) {
         return diaryMapper.selectDiaryDetail(diaryId);
-    }
-
-    public int selectDiaryMemberId(int diaryId, int memberId) {
-        return diaryMapper.selectDiaryMemberId(diaryId, memberId);
     }
 
     public void deleteDiary(int diaryId, int memberId) {
