@@ -31,7 +31,7 @@
 
 <!--    알림 마지막 id 조회-->
     <select id="selectLastIdInNtf" parameterType="int" resultType="int">
-        SELECT IFNULL(MAX(id), -2)
+        SELECT IFNULL(MAX(id), -1)
         FROM notification
         WHERE receive_member_id = #{memberId};
     </select>

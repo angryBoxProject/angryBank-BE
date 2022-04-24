@@ -1,21 +1,18 @@
 package com.teamY.angryBox.service;
 
 
-
-import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
+import com.teamY.angryBox.error.customException.SQLInquiryException;
 import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.FileRepository;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,9 +59,9 @@ public class DiaryService {
         if(diaryRepository.checkCoinBankMemberId(coinBankId, memberId) == 0) {
             throw new InvalidRequestException("적금 번호 확인 필요");
         }
-        if(lastDiaryId == -1) {
+        if(lastDiaryId == 0) {
             lastDiaryId = diaryRepository.selectLastIdInCoinBank(memberId, coinBankId) + 1;
-            if(lastDiaryId == -1) {
+            if(lastDiaryId == 0) {
                 throw new InvalidRequestException("해당 적금에 작성한 다이어리 없음");
             }
         }
@@ -75,9 +72,9 @@ public class DiaryService {
         int writeYear = Integer.parseInt(date.substring(0, 4));
         int writeMonth = Integer.parseInt(date.substring(5, 7));
 
-        if(lastDiaryId == -1) {
+        if(lastDiaryId == 0) {
             lastDiaryId = diaryRepository.selectLastIdInMonth(memberId, writeYear, writeMonth) + 1;
-            if(lastDiaryId == -1) {
+            if(lastDiaryId == 0) {
                 throw new InvalidRequestException("해당 월에 작성한 다이어리 없음");
             }
         }
@@ -89,24 +86,22 @@ public class DiaryService {
         int writeMonth = Integer.parseInt(date.substring(5, 7));
         int writeDay = Integer.parseInt(date.substring(8, 10));
 
-//        if(diaryRepository.checkDailyTopDiary(writeYear, writeMonth, writeDay) == 0) {
-//            throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
-//        }
-        if(lastDiaryId == -1) {
-            lastDiaryId = diaryRepository.selectDailyLastId(writeYear, writeMonth, writeDay) + 1;
-            if(lastDiaryId == -1) {
-                throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
-            }
+        if(diaryRepository.selectDailyLastId(writeYear, writeMonth, writeDay) == -1) {
+            throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
+        } else {
+            return diaryRepository.selectDailyTop(writeYear, writeMonth, writeDay, lastDiaryId, size);
         }
-        return diaryRepository.selectDailyTop(writeYear, writeMonth, writeDay, lastDiaryId, size);
     }
 
     public List<DiaryVO> getTodayTop(int lastDiaryId, int size) {
-        if(lastDiaryId == -1) {
-            lastDiaryId = 0;
+        if(diaryRepository.selectTodayLastId() == -1) {
+            throw new SQLInquiryException("오늘의 TOP 다이어리 없음");
+        } else {
+            return diaryRepository.selectTodayTop(lastDiaryId, size);
         }
-        return diaryRepository.selectTodayTop(lastDiaryId, size);
     }
+
+
 
     public Map<String, Object> getDiaryDetail(int diaryId, int memberId) {
         List<DiaryFileVO> dfVO = diaryRepository.selectDiaryDetail(diaryId);
@@ -132,13 +127,13 @@ public class DiaryService {
         }
     }
 
-    public void removeDiary(int diaryId, int memberid) {
+    public void removeDiary(int diaryId, int memberId) {
         if(diaryRepository.checkDiaryId(diaryId) == 0) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
-        } else if(diaryRepository.checkDiaryMemberId(diaryId, memberid) == 0) {
+        } else if(diaryRepository.checkDiaryMemberId(diaryId, memberId) == 0) {
             throw new InvalidRequestException("작성자와 삭제자 불일치");
         } else {
-            diaryRepository.deleteDiary(diaryId, memberid);
+            diaryRepository.deleteDiary(diaryId, memberId);
         }
     }
 

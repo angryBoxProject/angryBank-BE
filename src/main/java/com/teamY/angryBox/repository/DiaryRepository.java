@@ -85,6 +85,10 @@ public class DiaryRepository {
         return diaryMapper.selectLastIdInMonth(memberId, writeYear, writeMonth);
     }
 
+    public int selectTodayLastId() {
+        return diaryMapper.selectTodayLastId();
+    }
+
     public List<DiaryFileVO> selectDiaryDetail(int diaryId) {
         return diaryMapper.selectDiaryDetail(diaryId);
     }

@@ -48,6 +48,8 @@ public interface DiaryMapper {
 
     int selectLastIdInMonth(int memberId, int writeYear, int writeMonth);
 
+    int selectTodayLastId();
+
     void deleteDiary(int diaryId, int memberId);
 
     void updateDiary(DiaryVO diaryVO);
