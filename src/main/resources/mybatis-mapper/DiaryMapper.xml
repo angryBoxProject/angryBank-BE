@@ -49,23 +49,27 @@
     </select>
     <!--    저금통별 마지막 id 조회 -->
     <select id="selectLastIdInCoinBank" parameterType="int" resultType="int">
-        SELECT IFNULL(MAX(id), -2)
+        SELECT IFNULL(MAX(id), -1)
         FROM diary
         WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId};
     </select>
     <!--    월별 다이어리 마지막 id 조회 -->
     <select id="selectLastIdInMonth" parameterType="int" resultType="int">
-        SELECT IFNULL(MAX(id), -2)
+        SELECT IFNULL(MAX(id), -1)
         FROM diary
         WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
     </select>
     <!--    날짜별 다이어리 마지막 id 조회-->
     <select id="selectDailyLastId" parameterType="int" resultType="int">
-        SELECT IFNULL(MAX(id), -2)
+        SELECT IFNULL(MAX(id), -1)
         FROM top_diary_daily
         WHERE YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth} AND DAY(write_date) = #{writeDay}
     </select>
-
+    <!--    오늘의 TOP 다이어리 마지막 id 조회-->
+    <select id="selectTodayLastId" resultType="int">
+        SELECT IFNULL(MAX(id), -1)
+        FROM top_diary_today
+    </select>
 
 
     <!--  해당 날짜에 TOP 다이어리 여부 확인  -->
@@ -122,7 +126,7 @@
         FROM top_diary_daily AS tdd
             LEFT JOIN diary AS d
                 ON tdd.diary_id = d.id
-        WHERE YEAR(tdd.write_date) = #{writeYear} AND MONTH(tdd.write_date) = #{writeMonth} AND DAY(tdd.write_date) = #{writeDay} AND is_public = #{isPublic} AND tdd.id <![CDATA[<]]> #{lastDiaryId}
+        WHERE YEAR(tdd.write_date) = #{writeYear} AND MONTH(tdd.write_date) = #{writeMonth} AND DAY(tdd.write_date) = #{writeDay} AND is_public = #{isPublic} AND tdd.id <![CDATA[>]]> #{lastDiaryId}
         ORDER BY tdd.id
         LIMIT #{size}
     </select>

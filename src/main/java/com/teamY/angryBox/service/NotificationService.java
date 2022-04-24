@@ -26,12 +26,14 @@ public class NotificationService {
     }
 
     public List<NotificationDTO> getNtfList(int memberId, int lastNtfId, int size) {
-        if(lastNtfId == -1) {
+        if (lastNtfId == 0) {
             lastNtfId = notificationRepository.selectLastIdInNtf(memberId) + 1;
-            if(lastNtfId == -1) {
+            if (lastNtfId == 0) {
                 throw new InvalidRequestException("알림 목록 없음");
             }
         }
         return notificationRepository.selectNftList(memberId, lastNtfId, size);
     }
+
+
 }
