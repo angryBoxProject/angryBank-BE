@@ -120,7 +120,7 @@ public class DiaryService {
                     fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
                     fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
                     fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
-                    data.put("file" + (i + 1) + ": ", fileInfo);
+                    data.put("file" + (i + 1), fileInfo);
                 }
             }
             return data;

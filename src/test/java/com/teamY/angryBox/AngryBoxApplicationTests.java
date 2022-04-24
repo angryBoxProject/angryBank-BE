@@ -4,6 +4,7 @@ import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 
 import com.teamY.angryBox.dto.NewCoinBankDTO;
 import com.teamY.angryBox.mapper.*;
+import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.MemberRepository;
 
 import com.teamY.angryBox.service.CoinBankService;
@@ -62,10 +63,14 @@ class AngryBoxApplicationTests {
 	@Autowired
 	private NotificationMapper notificationMapper;
 
+	@Autowired
+	private DiaryRepository diaryRepository;
 
 
 	@Test
 	void test() {
+
+		log.info("" + diaryRepository.selectDiaryDetail(170).get(0).getFileVO());
 //		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
 //		log.info(df.toString());
 		//todackMapper.insertTodack(1, 2, 1);
