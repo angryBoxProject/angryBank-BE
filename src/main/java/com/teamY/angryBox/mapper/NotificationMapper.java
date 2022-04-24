@@ -10,7 +10,7 @@ public interface NotificationMapper {
 
     void sendNtf(NotificationDTO ntfDTO);
 
-    void updateNtf(int verif, int ntfId);
+    void updateNtf(int checked, int ntfId);
 
     int selectDiaryIdInNtf(int ntfId);
 
