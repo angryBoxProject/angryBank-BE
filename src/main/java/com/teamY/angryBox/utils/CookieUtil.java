@@ -9,6 +9,9 @@ import java.util.Base64;
 import java.util.Optional;
 
 public class CookieUtil {
+
+    public final static String REFRESH_TOKEN_COOKIE = "refresh_token";
+
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 

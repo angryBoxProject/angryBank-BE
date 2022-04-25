@@ -1,6 +1,7 @@
 package com.teamY.angryBox.config.security.oauth;
 
 import com.teamY.angryBox.error.ErrorCode;
+import com.teamY.angryBox.error.customException.InvalidRefreshTokenException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,11 @@ public class AuthToken {
         this.token = createAuthToken(id, role, expiry);
     }
 
+    AuthToken(Date expiry, String key) {
+        this.key = key;
+        this.token = createAuthToken(expiry);
+    }
+
     private String createAuthToken(String id, Date expiry, Map<String, Object> claims) {
 
         return Jwts.builder()
@@ -41,6 +47,14 @@ public class AuthToken {
                 .setClaims(claims)
                 .claim(AUTHORITIES_KEY, "ROLE_USER")
                 .setSubject("accessToken")
+                .signWith(SignatureAlgorithm.HS256, key)
+                .setExpiration(expiry)
+                .compact();
+    }
+
+    private String createAuthToken(Date expiry) {
+        return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
                 .signWith(SignatureAlgorithm.HS256, key)
                 .setExpiration(expiry)
                 .compact();
@@ -57,33 +71,81 @@ public class AuthToken {
     }
 
     public boolean validate(ServletRequest request) {
+        ErrorCode error;
         try{
             return this.getTokenClaims() != null;
         } catch (SecurityException e) {
             log.info("Invalid JWT signature.");
-            request.setAttribute("error", ErrorCode.TOKEN_MALFORMED_JWT);
+            error = ErrorCode.TOKEN_MALFORMED_JWT;
         } catch (MalformedJwtException e) {
             log.info("Invalid JWT token.");
-            request.setAttribute("error", ErrorCode.TOKEN_MALFORMED_JWT);
+            error = ErrorCode.TOKEN_MALFORMED_JWT;
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT token.");
-            request.setAttribute("error", ErrorCode.TOKEN_EXPIRED_JWT);
+            error = ErrorCode.TOKEN_EXPIRED_JWT;
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT token.");
-            request.setAttribute("error",ErrorCode.TOKEN_UNSUPPORTED_JWT);
+            error = ErrorCode.TOKEN_UNSUPPORTED_JWT;
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
-            request.setAttribute("error", ErrorCode.TOKEN_ILLEGAL_JWT);
+            error = ErrorCode.TOKEN_ILLEGAL_JWT;
         } catch(RuntimeException e) {
             log.info("no token");
-            request.setAttribute("error", ErrorCode.TOKEN_NOT_FOUND);
+            error = ErrorCode.TOKEN_NOT_FOUND;
         } catch (Exception e) {
            log.info("something wrong with token");
-            request.setAttribute("error", ErrorCode.TOKEN_ILLEGAL_JWT);
+            error = ErrorCode.TOKEN_ILLEGAL_JWT;
         }
+
+        if(request != null)
+            request.setAttribute("error", error);
+
         return false;
     }
 
+    public boolean validateRefresh() {
+        ErrorCode error;
+
+        try{
+            return this.getTokenClaims() != null;
+        } catch (SecurityException e) {
+            log.info("Invalid JWT signature.");
+            error = ErrorCode.TOKEN_MALFORMED_JWT;
+        } catch (MalformedJwtException e) {
+            log.info("Invalid JWT token.");
+            error = ErrorCode.TOKEN_MALFORMED_JWT;
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT token.");
+            error = ErrorCode.TOKEN_EXPIRED_JWT;
+            //log.info("" + e.getClaims().get("email"));
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT token.");
+            error = ErrorCode.TOKEN_UNSUPPORTED_JWT;
+        } catch (IllegalArgumentException e) {
+            log.info("JWT token compact of handler are invalid.");
+            error = ErrorCode.TOKEN_ILLEGAL_JWT;
+        } catch(RuntimeException e) {
+            log.info("no token");
+            error = ErrorCode.TOKEN_NOT_FOUND;
+        } catch (Exception e) {
+            log.info("something wrong with token");
+            error = ErrorCode.TOKEN_ILLEGAL_JWT;
+        }
+
+        throw new InvalidRefreshTokenException(error.getMessage(), error);
+    }
+
+    public Claims getExpireTokenClaims() {
+
+        Claims claims = null;
+        try{
+            Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        } catch(ExpiredJwtException e) {
+            claims = e.getClaims();
+        } finally {
+            return claims;
+        }
+    }
     public Claims getTokenClaims() throws Exception {
         if (token == null) {
             throw new RuntimeException("토큰이 존재하지 않음");
