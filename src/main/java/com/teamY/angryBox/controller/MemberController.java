@@ -145,14 +145,4 @@ public class MemberController {
 
     }
 
-    @PutMapping("users")
-    public ResponseEntity<ResponseMessage> changePassword(@RequestBody Map<String, String> passwords) {
-        //log.info(passwords.toString());
-
-        MemberVO memberVO = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
-
-        memberService.changePassword(memberVO.getId(), memberVO.getEmail(), passwords);
-
-        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "비밀번호 변경 성공", ""), HttpStatus.OK);
-    }
 }
