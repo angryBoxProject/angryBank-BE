@@ -51,11 +51,7 @@ public class MemberService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Map<String, Object> data = createToken();
-
-        String refreshToken = (String) data.get("refresh_token");
-        String accessToken = (String) data.get("access_token");
-        memberRepository.setRefreshToken(refreshToken, accessToken, authTokenProvider.getTokenExpire(refreshToken));
+        Map<String, Object> data = addToken();
 
         return data;
     }
@@ -65,7 +61,19 @@ public class MemberService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return createToken();
+        Map<String, Object> data = addToken();
+
+        return data;
+    }
+
+    public Map<String, Object> addToken() {
+        Map<String, Object> data = createToken();
+
+        String refreshToken = (String) data.get("refresh_token");
+        String accessToken = (String) data.get("access_token");
+        memberRepository.setRefreshToken(refreshToken, accessToken, authTokenProvider.getTokenExpire(refreshToken));
+
+        return data;
     }
 
     public Map<String, Object> createToken() {

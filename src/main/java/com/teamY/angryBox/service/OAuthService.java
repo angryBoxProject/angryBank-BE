@@ -46,27 +46,33 @@ public class OAuthService {
         String accessToken = getAccessToken(url.getTokenURL(code));
         log.info("accessToken : " + accessToken);
 
-        String userEmail = getUserEmail(url.getUserInfoUri(), accessToken, url.getContentType());
+        Map<String, Object> userInfoMap = getUserInfo(url.getUserInfoUri(), accessToken, url.getContentType());
+
+        String userEmail = (String) userInfoMap.get("email");
+        String userNickname = (String) userInfoMap.get("nickname");
+
+        if(userEmail == null) {
+            userEmail = userInfoMap.get("oauthId") + "@angrybox.link";
+        }
 
         if(memberRepository.findByEmail(userEmail) == null) {
 
             log.info("회원 가입 해야됨");
 
-            String nickname = providerEnum.getProviderName() + (int)(Math.random()*100000);
-
             //UUID uuidPassword = UUID.randomUUID();
             //String password = "!" + providerEnum.getProviderName() + uuidPassword;
             String password = bCryptPasswordEncoder.encode("password");
 
-            MemberVO member = new MemberVO(userEmail, nickname, password, providerEnum.getProviderName());
+            MemberVO member = new MemberVO(userEmail, userNickname, password, providerEnum.getProviderName());
             log.info(member.toString());
 
             memberRepository.insertMember(member);
         }
+
         return userEmail;
     }
 
-    public String getUserEmail(String uri, String accessToken, String contentType) {
+    public Map<String, Object> getUserInfo(String uri, String accessToken, String contentType) {
 
         HttpHeaders header = new HttpHeaders();
         header.add(HeaderUtil.HEADER_AUTHORIZATION,HeaderUtil.TOKEN_PREFIX + accessToken);
@@ -79,12 +85,20 @@ public class OAuthService {
         ResponseEntity<Map> resultEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, Map.class);
         log.info("userinfo result : " + resultEntity.toString());
         // kakao_account 이것도 분기 만들어줘야됨
-        Map<String, String> kakaoAccount = (Map<String, String>) resultEntity.getBody().get("kakao_account");
+        //Map<String, Object> kakaoAccount = (Map<String, Object>) resultEntity.getBody().get("kakao_account");
 
-        log.info("" + kakaoAccount);
+        Map<String, Object> kakaoAccount = (Map<String, Object>) resultEntity.getBody();
+        Map<String, Object> userInfo = new HashMap<>();
 
-        return kakaoAccount.get("email");
+        userInfo.put("email", ((Map<String, String>)kakaoAccount.get("kakao_account")).get("email"));
+        userInfo.put("nickname", ((Map<String, String>) kakaoAccount.get("properties")).get("nickname"));
+        userInfo.put("oauthId", kakaoAccount.get("id"));
+
+        log.info("???? " + userInfo.toString());
+
+        return userInfo;
     }
+
 
     public String getAccessToken(String uri) {
         HttpHeaders header = new HttpHeaders();
