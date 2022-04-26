@@ -5,6 +5,7 @@ import com.teamY.angryBox.config.security.oauth.AuthToken;
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.LogInDTO;
+import com.teamY.angryBox.error.customException.CustomException;
 import com.teamY.angryBox.error.customException.InvalidRefreshTokenException;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.error.customException.PasswordNotMatchesException;
@@ -103,7 +104,7 @@ public class MemberService {
 
     }
 
-    public Map<String, Object> refresh(String accessToken, String refreshToken) {
+    public Map<String, Object> refresh(String accessToken, String refreshToken) throws CustomException {
 
         AuthToken authRefreshToken = authTokenProvider.convertAuthToken(refreshToken);
         AuthToken authAccessToken = authTokenProvider.convertAuthToken(accessToken);

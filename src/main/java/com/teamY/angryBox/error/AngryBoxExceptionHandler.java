@@ -1,6 +1,7 @@
 package com.teamY.angryBox.error;
 
 import com.teamY.angryBox.dto.ResponseMessage;
+import com.teamY.angryBox.error.customException.InvalidRefreshTokenException;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.error.customException.PasswordNotMatchesException;
 import com.teamY.angryBox.error.customException.SQLInquiryException;
@@ -31,7 +32,11 @@ public class AngryBoxExceptionHandler {
     public ResponseEntity<ResponseMessage> handleInvalidRequestException(InvalidRequestException e) {
         return new ResponseEntity<>(new ResponseMessage(false, "", e.getMessage()), e.getStatusCode());
     }
-
+    
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ResponseMessage> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
+        return new ResponseEntity<>(new ResponseMessage(false, "", e.getMessage()), e.getStatusCode());
+    }
 
 
     /**
