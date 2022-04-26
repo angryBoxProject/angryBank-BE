@@ -27,7 +27,21 @@ public class MemberRepository {
         stringRedisTemplate.opsForValue().set(key, "logout");
         stringRedisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
     }
+
+    public void setRefreshToken(String key, String value, long expire) {
+        stringRedisTemplate.opsForValue().set(key, value);
+        stringRedisTemplate.expire(key, expire, TimeUnit.MILLISECONDS);
+    }
+
+    public void deleteRefreshToken(String key) {
+        stringRedisTemplate.delete(key);
+    }
     public String getIsLogout(String key) {
+        ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
+        return stringValueOperations.get(key);
+    }
+
+    public String getTokenSet(String key) {
         ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
         return stringValueOperations.get(key);
     }
@@ -46,5 +60,16 @@ public class MemberRepository {
 
     public MemberVO selectById(int id) {
         return mapper.selectById(id);
+    }
+
+    public void updateCoinBankId(int id, int bankId){
+        mapper.updateCoinBankId(id, bankId);
+    }
+
+    public void updateCoinBankIdToNull(int id){
+        mapper.updateCoinBankIdToNull(id);
+    }
+    public int selectMemberCurBank(int id){
+        return mapper.selectMemberCurBank(id);
     }
 }

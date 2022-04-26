@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.CoinBankMapper">
+    <insert id = "insertCoinBank" parameterType="CoinBankVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO coin_bank(member_id, name, memo, angry_limit, reward)
+        VALUES(#{memberId}, #{name}, #{memo}, #{angryLimit}, #{reward})
+    </insert>
+
+    <update id = "updateCoinBank" parameterType="CoinBankVO">
+        UPDATE coin_bank
+        SET name = #{name}, memo = #{memo}, angry_limit = #{angryLimit}, reward = #{reward}
+        WHERE id = #{id} and member_id = #{memberId}
+    </update>
+
+    <select id = "selectBankExpired" resultType="CoinBankVO">
+        SELECT member_id, expired
+        FROM coin_bank
+        WHERE id = #{id}
+    </select>
+
+    <select id = "selectById" resultType="CoinBankVO">
+        SELECT id, member_id, name, memo, angry_limit, reward, expired
+        FROM coin_bank
+        WHERE id = #{id}
+    </select>
+
+    <update id = "expireCoinBank" parameterType="int">
+        UPDATE coin_bank
+        SET expired = 1
+        WHERE id = #{id}
+    </update>
+
+    <select id = "selectCoinBankSum" resultType="int">
+        SELECT SUM(ap.phase)
+        FROM diary AS d
+            LEFT JOIN angry_phase AS ap
+                           ON d.angry_phase_id = ap.id
+        WHERE d.member_id = #{memberId} AND d.coin_bank_id = #{bankId};
+    </select>
+
+
+    <select id = "selectAngryPhase" resultType="int">
+        SELECT phase
+        FROM angry_phase;
+    </select>
+</mapper>

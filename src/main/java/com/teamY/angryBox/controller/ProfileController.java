@@ -54,6 +54,7 @@ public class ProfileController {
         data.put("recieveTodakCount", profile.getMember().getRecieveTodakCount());
 
         return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "프로필 조회 성공", "", data), HttpStatus.OK);
+
     }
 
 
@@ -83,7 +84,7 @@ public class ProfileController {
     @GetMapping("/images/{filename}")
     public UrlResource showImage(@PathVariable String filename) throws
             MalformedURLException {
-        return new UrlResource("file:" + "\\upload\\" + filename);
+        return new UrlResource("file:" + "/upload/" + filename);
     }
 
     @PutMapping("users")

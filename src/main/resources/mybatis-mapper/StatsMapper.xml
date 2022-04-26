@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.StatsMapper">
+
+
+<!--    저금통 분노 limit 조회 -->
+    <select id="selectCoinBankLimit" parameterType="int" resultType="int">
+        SELECT angry_limit
+        FROM coin_bank
+        WHERE member_id = #{memberId} AND id = #{coin_bank_id};
+    </select>
+<!--    월별 분노수치 통계(각 분노수치별 개수) -->
+    <select id="selectAngryPhase" parameterType="int" resultType="int">
+        SELECT COUNT(angry_phase_id)
+        FROM diary
+        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
+        GROUP BY angry_phase_id
+        ORDER BY angry_phase_id
+    </select>
+<!--    월별 분노수치 합 -->
+    <select id="selectAngryPhaseSum" parameterType="int" resultType="int">
+        SELECT SUM(ap.phase)
+        FROM diary AS d
+             LEFT JOIN angry_phase AS ap
+                   ON d.angry_phase_id = ap.id
+        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
+        ORDER BY ap.id
+    </select>
+
+<!--    저금통별 통계 -->
+
+
+<!--    월별 다이어리 작성 일자 조회 -->
+    <select id="selectWriteDay" parameterType="int" resultType="int">
+        SELECT DAY(write_date)
+        FROM diary
+        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
+        GROUP BY DAY(write_date);
+    </select>
+
+
+</mapper>

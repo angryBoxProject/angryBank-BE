@@ -1,10 +1,18 @@
 package com.teamY.angryBox;
 
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
-import com.teamY.angryBox.mapper.MemberMapper;
-import com.teamY.angryBox.mapper.ProfileMapper;
-import com.teamY.angryBox.mapper.TestMapper;
+
+import com.teamY.angryBox.dto.NewCoinBankDTO;
+import com.teamY.angryBox.mapper.*;
+import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.MemberRepository;
+
+import com.teamY.angryBox.service.CoinBankService;
+
+import com.teamY.angryBox.vo.DiaryFileVO;
+import com.teamY.angryBox.vo.DiaryVO;
+import com.teamY.angryBox.vo.FileVO;
+
 import com.teamY.angryBox.vo.MemberVO;
 import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
@@ -19,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +53,35 @@ class AngryBoxApplicationTests {
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	private DiaryMapper diaryMapper;
+
+	@Autowired
+	private TodackMapper todackMapper;
+
+	@Autowired
+	private NotificationMapper notificationMapper;
+
+	@Autowired
+	private DiaryRepository diaryRepository;
+
+
+	@Test
+	void test() {
+
+		log.info("" + diaryRepository.selectDiaryDetail(170).get(0).getFileVO());
+//		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
+//		log.info(df.toString());
+		//todackMapper.insertTodack(1, 2, 1);
+		//todackMapper.deleteTodack(1, 2, 1);
+		//log.info((diaryMapper.selectTopDiary(2022, 4, 18, 1,2)).toString());
+		//WHERE YEAR(write_date) = #{year} AND MONTH(write_date) = #{month} AND DAY(write_date) = #{day} AND is_public = #{isPublic}
+		//        ORDER BY todack_count DESC
+		//        Limit #{limit}
+
+
+	}
 
 	@Autowired
 	private KakaoURL kakaoURL;
@@ -86,11 +124,14 @@ class AngryBoxApplicationTests {
 	}
 
 	@Autowired
-	ProfileMapper profileMapper;
+	CoinBankService coinBankService;
+
+	@Disabled
 	@Test
 	void profileTest(){
-
+		//MemberVO memberVO = new MemberVO((int) claims.get("id"), (String) claims.get("email"), (String)claims.get("nickname"));
 	//log.info(profileMapper.selectJoinedProfile(1).toString());
 
+		//coinBankService.createCoinBank( new NewCoinBankDTO( "이름", "메모", 111, "치킨이닭"), 1);
 	}
 }
