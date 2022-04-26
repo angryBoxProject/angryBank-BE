@@ -52,8 +52,8 @@ public class MemberService {
 
         Map<String, Object> data = createToken();
 
-        String refreshToken = (String) data.get("refresh");
-        String accessToken = (String) data.get("access");
+        String refreshToken = (String) data.get("refresh_token");
+        String accessToken = (String) data.get("access_token");
         memberRepository.setRefreshToken(refreshToken, accessToken, authTokenProvider.getTokenExpire(refreshToken));
 
         return data;
