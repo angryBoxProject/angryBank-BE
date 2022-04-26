@@ -11,6 +11,7 @@ import com.teamY.angryBox.enums.OAuthProviderEnum;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
+import com.teamY.angryBox.vo.oauth.GoogleURL;
 import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ import java.util.UUID;
 public class OAuthService {
     private final RestTemplate restTemplate;
     private final KakaoURL kakaoURL;
+    private final GoogleURL googleURL;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -46,7 +48,9 @@ public class OAuthService {
         String accessToken = getAccessToken(url.getTokenURL(code));
         log.info("accessToken : " + accessToken);
 
-        Map<String, Object> userInfoMap = getUserInfo(url.getUserInfoUri(), accessToken, url.getContentType());
+        Map<String, Object> userInfoMap = getUserInfo(url.getUserInfoUri(), accessToken, url.getContentType(), providerEnum);
+
+        log.info("userInfoMap : " + userInfoMap.toString());
 
         String userEmail = (String) userInfoMap.get("email");
         String userNickname = (String) userInfoMap.get("nickname");
@@ -72,7 +76,7 @@ public class OAuthService {
         return userEmail;
     }
 
-    public Map<String, Object> getUserInfo(String uri, String accessToken, String contentType) {
+    public Map<String, Object> getUserInfo(String uri, String accessToken, String contentType, OAuthProviderEnum providerEnum) {
 
         HttpHeaders header = new HttpHeaders();
         header.add(HeaderUtil.HEADER_AUTHORIZATION,HeaderUtil.TOKEN_PREFIX + accessToken);
@@ -80,25 +84,42 @@ public class OAuthService {
 
         HttpEntity<?> entity = new HttpEntity<>(header);
 
-        log.info("getUserInfo URI" + uri);
 
         ResponseEntity<Map> resultEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, Map.class);
         log.info("userinfo result : " + resultEntity.toString());
-        // kakao_account 이것도 분기 만들어줘야됨
-        //Map<String, Object> kakaoAccount = (Map<String, Object>) resultEntity.getBody().get("kakao_account");
 
-        Map<String, Object> kakaoAccount = (Map<String, Object>) resultEntity.getBody();
+
         Map<String, Object> userInfo = new HashMap<>();
+
+        switch(providerEnum) {
+            case KAKAO:
+                getKakaoUserInfo((Map<String, Object>) resultEntity.getBody(), userInfo);
+                break;
+            case GOOGLE:
+                getGoogleUserInfo((Map<String, Object>) resultEntity.getBody(), userInfo);
+                break;
+        }
+
+        log.info("userInfo : " + userInfo.toString());
+
+        return userInfo;
+    }
+
+    private void getKakaoUserInfo(Map<String, Object> kakaoAccount, Map<String, Object> userInfo) {
 
         userInfo.put("email", ((Map<String, String>)kakaoAccount.get("kakao_account")).get("email"));
         userInfo.put("nickname", ((Map<String, String>) kakaoAccount.get("properties")).get("nickname"));
         userInfo.put("oauthId", kakaoAccount.get("id"));
 
-        log.info("???? " + userInfo.toString());
-
-        return userInfo;
     }
 
+    private void getGoogleUserInfo(Map<String, Object> googleAccount, Map<String, Object> userInfo) {
+
+        userInfo.put("email", googleAccount.get("email"));
+        userInfo.put("nickname", googleAccount.get("name"));
+        userInfo.put("oauthId", googleAccount.get("id"));
+
+    }
 
     public String getAccessToken(String uri) {
         HttpHeaders header = new HttpHeaders();
@@ -107,6 +128,7 @@ public class OAuthService {
         log.info("getAccessToken URI" + uri);
         ResponseEntity<Map> resultEntity = restTemplate.exchange(uri, HttpMethod.POST, entity, Map.class);
 
+        log.info("get token response body : " + resultEntity.getBody().toString());
         // 리프레쉬 토큰은 어떻게 받아오지?(구글)
         return (String) resultEntity.getBody().get("access_token");
     }
@@ -116,7 +138,8 @@ public class OAuthService {
         switch(providerEnum) {
             case KAKAO:
                 return kakaoURL;
-            //case GOOGLE:
+            case GOOGLE:
+                return googleURL;
         }
 
         return null;

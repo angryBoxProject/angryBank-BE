@@ -25,8 +25,8 @@ public class OAuthTestController {
     }
 
     @GetMapping("google")
-    public void getGoogleAuthCode(@RequestParam String code){
+    public void getGoogleAuthCode(@RequestParam String code, HttpServletRequest request, HttpServletResponse response){
         log.info("google code : " + code);
-        //oAuthController.googleLogin(code);
+        oAuthController.googleLogin(code, request, response);
     }
 }

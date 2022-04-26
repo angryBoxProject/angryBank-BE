@@ -32,13 +32,13 @@ public class OAuthController {
     private final MemberService memberService;
     private final AppProperties appProperties;
 
-    private LogInDTO makeOAuthLoginDTO(String code){
-        return new LogInDTO(oAuthService.OAuthLogin(OAuthProviderEnum.KAKAO, code), "password");
+    private LogInDTO makeOAuthLoginDTO(String code, OAuthProviderEnum providerEnum){
+        return new LogInDTO(oAuthService.OAuthLogin(providerEnum, code), "password");
     }
     @PostMapping("kakao")
     public ResponseEntity<ResponseDataMessage> kakaoLogin(@RequestParam String code, HttpServletRequest request, HttpServletResponse response) {
 
-        LogInDTO logInDTO = makeOAuthLoginDTO(code);
+        LogInDTO logInDTO = makeOAuthLoginDTO(code, OAuthProviderEnum.KAKAO);
         log.info("auth logindto : " + logInDTO.toString());
 
         Map<String, Object> data = memberService.OAuthLogin(logInDTO);
@@ -55,7 +55,25 @@ public class OAuthController {
     }
 
     @PostMapping("google")
-    public String googleLogin(@RequestParam String code){
+    public ResponseEntity<ResponseDataMessage> googleLogin(@RequestParam String code, HttpServletRequest request, HttpServletResponse response){
+
+        LogInDTO logInDTO = makeOAuthLoginDTO(code, OAuthProviderEnum.GOOGLE);
+
+        log.info("auth logindto : " + logInDTO.toString());
+
+        Map<String, Object> data = memberService.OAuthLogin(logInDTO);
+        log.info("oauth access_token : " + data.get("access_token"));
+        log.info("oauth refresh_token : " + data.get("refresh_token"));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HeaderUtil.HEADER_AUTHORIZATION, HeaderUtil.TOKEN_PREFIX + data.get("access_token"));
+
+        CookieUtil.deleteCookie(request, response, CookieUtil.REFRESH_TOKEN_COOKIE);
+        CookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE, (String) data.get("refresh_token"), (int) (appProperties.getAuth().getRefreshTokenExpiry() / 1000));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "로그인 성공", "", data), httpHeaders, HttpStatus.OK);
+
+
 //        HttpHeaders header = new HttpHeaders();
 //        HttpEntity<?> entity = new HttpEntity<>(header);
 //
@@ -84,7 +102,7 @@ public class OAuthController {
 //        log.info("email : " +  email);
 //
 //        return email;
-        return null;
+
     }
 
 }
