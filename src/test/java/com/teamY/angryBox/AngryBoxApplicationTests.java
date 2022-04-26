@@ -70,7 +70,9 @@ class AngryBoxApplicationTests {
 	@Test
 	void test() {
 
-		log.info("" + diaryRepository.selectDiaryDetail(170).get(0).getFileVO());
+		log.info("" + diaryRepository.selectTodayTop(0, 100));
+
+//		log.info("" + diaryRepository.selectDiaryDetail(170).get(0).getFileVO());
 //		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
 //		log.info(df.toString());
 		//todackMapper.insertTodack(1, 2, 1);

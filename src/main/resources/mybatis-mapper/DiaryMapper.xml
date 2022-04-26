@@ -133,7 +133,7 @@
         <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
     </resultMap>
     <select id="selectDailyTop" parameterType="int" resultType="DiaryVO" resultMap="selectDailyListResultMap">
-        SELECT tdd.id AS tdd_id, d.id AS d_id, member_id, diary_no, title, DATE(d.write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
+        SELECT tdd.id AS tdd_id, d.id AS d_id, member_id, diary_no, title, content, DATE(d.write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
         FROM top_diary_daily AS tdd
             LEFT JOIN diary AS d
                 ON tdd.diary_id = d.id
@@ -156,7 +156,7 @@
             <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
         </resultMap>
     <select id="selectTodayTop" parameterType="int" resultType="DiaryVO" resultMap="selectTodayListResultMap">
-        SELECT tdt.id AS tdt_id, d.id AS d_id, d.member_id AS member_id, d.title AS title, DATE(d.write_date) AS write_date, d.angry_phase_id AS angry_phase_id, d.todack_count AS todack_count, d.view_count AS view_count
+        SELECT tdt.id AS tdt_id, d.id AS d_id, d.member_id AS member_id, d.title AS title, d.content AS content, DATE(d.write_date) AS write_date, d.angry_phase_id AS angry_phase_id, d.todack_count AS todack_count, d.view_count AS view_count
         FROM top_diary_today AS tdt
             LEFT JOIN diary AS d
                 ON tdt.diary_id = d.id
