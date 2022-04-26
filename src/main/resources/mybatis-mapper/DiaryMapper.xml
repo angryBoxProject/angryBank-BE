@@ -104,7 +104,7 @@
 
     <!-- 다이어리 목록 조회 (저금통별) -->
     <select id="selectDiaryListInCoinBank" parameterType="int" resultType="DiaryVO">
-        SELECT id, member_id, diary_no, title, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
+        SELECT id, member_id, diary_no, title, content, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
         FROM diary
         WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId} AND id <![CDATA[<]]> #{lastDiaryId}
         ORDER BY id DESC
@@ -112,7 +112,7 @@
     </select>
     <!-- 다이어리 목록 조회 (연도 + 월별) -->
     <select id="selectDiaryListInMonth" parameterType="int" resultType="DiaryVO">
-        SELECT id, member_id, diary_no, title, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
+        SELECT id, member_id, diary_no, title, content, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
         FROM diary
         WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth} AND id <![CDATA[<]]> #{lastDiaryId}
         ORDER BY id DESC
@@ -125,6 +125,7 @@
         <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
         <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
+        <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
         <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
         <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
         <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
@@ -147,6 +148,7 @@
             <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
             <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
             <result property="title" javaType="string" column="title" jdbcType="VARCHAR"/>
+            <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
             <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
             <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
             <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
