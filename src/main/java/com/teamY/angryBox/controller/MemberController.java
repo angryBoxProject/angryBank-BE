@@ -8,6 +8,7 @@ import com.teamY.angryBox.dto.LogInDTO;
 import com.teamY.angryBox.dto.RegisterMemberDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
+import com.teamY.angryBox.service.MailService;
 import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.service.ProfileService;
 import com.teamY.angryBox.utils.CookieUtil;
@@ -25,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.internet.AddressException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +44,7 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberService memberService;
     private final AuthTokenProvider authTokenProvider;
-
+    private final MailService mailService;
     private final ProfileService profileService;
 
 
@@ -155,4 +157,12 @@ public class MemberController {
 
         return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "비밀번호 변경 성공", ""), HttpStatus.OK);
     }
+
+    @PostMapping("mail/{email}")
+    public ResponseEntity<ResponseMessage> sendMail(@PathVariable String email) throws AddressException {
+        log.info("컨트롤러 진입");
+        mailService.sendMail(email);
+        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "메일 전송 성공", ""), HttpStatus.OK);
+    }
+    
 }
