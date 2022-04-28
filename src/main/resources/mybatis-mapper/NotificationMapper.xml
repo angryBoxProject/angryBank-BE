@@ -47,7 +47,7 @@
 
 <!--    알림 받은 사용자 id 확인 -->
     <select id="checkMemberIdInNtf" parameterType="int" resultType="int">
-        SELECT receive_member_id FROM notification WHERE id = #{ntfId}
+        SELECT IFNULL(MAX(receive_member_id), 0) FROM notification WHERE id = #{ntfId}
     </select>
 
 
