@@ -9,9 +9,13 @@ public interface StatsMapper {
 
     int selectCoinBankLimit(int memberId, int coinBankId);
 
-    List<Integer> selectAngryPhase(int memberId, int writeYear, int writeMonth);
+    List<Integer> selectAngryPhaseInMonth(int memberId, String writeDate);
 
-    int selectAngryPhaseSum(int memberId, int writeYear, int writeMonth);
+    int selectAngryPhaseSumInMonth(int memberId, String writeDate);
+
+    List<Integer> selectAngryPhaseInCoinBank(int memberId, int coinBankId);
+
+    int selectAngryPhaseSumInCoinBank(int memberId, int coinBankId);
 
     List<Integer> selectWriteDay(int memberId, int writeYear, int writeMonth);
 

@@ -8,6 +8,7 @@ import com.teamY.angryBox.dto.LogInDTO;
 import com.teamY.angryBox.dto.RegisterMemberDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
+import com.teamY.angryBox.service.MailService;
 import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.service.ProfileService;
 import com.teamY.angryBox.utils.CookieUtil;
@@ -25,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.internet.AddressException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +44,7 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberService memberService;
     private final AuthTokenProvider authTokenProvider;
-
+    private final MailService mailService;
     private final ProfileService profileService;
 
 
@@ -110,7 +112,7 @@ public class MemberController {
         httpHeaders.add(HeaderUtil.HEADER_AUTHORIZATION, HeaderUtil.TOKEN_PREFIX + data.get("access_token"));
 
         CookieUtil.deleteCookie(request, response, CookieUtil.REFRESH_TOKEN_COOKIE);
-        CookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE, (String) data.get("refresh_token"), (int) appProperties.getAuth().getRefreshTokenExpiry() / 1000);
+        CookieUtil.setCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE, (String) data.get("refresh_token"), (int) appProperties.getAuth().getRefreshTokenExpiry() / 1000);
         return new ResponseEntity<>(new ResponseDataMessage(true, "로그인 성공", "", data), httpHeaders, HttpStatus.OK);
     }
 
@@ -145,14 +147,11 @@ public class MemberController {
 
     }
 
-    @PutMapping("users")
-    public ResponseEntity<ResponseMessage> changePassword(@RequestBody Map<String, String> passwords) {
-        //log.info(passwords.toString());
-
-        MemberVO memberVO = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
-
-        memberService.changePassword(memberVO.getId(), memberVO.getEmail(), passwords);
-
-        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "비밀번호 변경 성공", ""), HttpStatus.OK);
+    @PutMapping("mail/{email}")
+    public ResponseEntity<ResponseMessage> sendMail(@PathVariable String email) throws AddressException {
+        mailService.sendMail(email);
+        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "메일 전송 성공", ""), HttpStatus.OK);
     }
+
+
 }

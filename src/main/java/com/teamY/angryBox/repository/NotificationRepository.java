@@ -36,4 +36,12 @@ public class NotificationRepository {
     public int selectLastIdInNtf(int memberId) {
         return notificationMapper.selectLastIdInNtf(memberId);
     }
+
+    public int checkDiaryIdInNtf(int ntfId) {
+        return notificationMapper.checkDiaryIdInNtf(ntfId);
+    }
+
+    public int checkMemberIdInNtf(int ntfId) {
+        return notificationMapper.checkMemberIdInNtf(ntfId);
+    }
 }

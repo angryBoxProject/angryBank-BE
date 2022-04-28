@@ -52,6 +52,19 @@ spring:
         max-idle: 10 #pool의 "idle" 커넥션 최대 수
         min-idle: 2 #pool에서 관리하는 idle 커넥션의 최소 수
 
+  mail:
+    host: smtp.gmail.com
+    prot: 587
+    username: hellobox0426@gmail.com
+    password: sqflcwbayltvvwuu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
 jwt:
   secret: 'dGVhbVllYV9hbmdyeUJveF9CRQ=='
 
@@ -59,8 +72,11 @@ jwt:
 app:
     auth:
       tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
-      tokenExpiry: 120000
-      refreshTokenExpiry: 240000
+      tokenExpiry: 600000 # 10분
+      refreshTokenExpiry: 1209600000 # 2주
+      #tokenExpiry: 120000
+      #refreshTokenExpiry: 240000
+
 #  oauth2:
 #    authorizedRedirectUris:
 #      - http://localhost:3000/oauth/redirect

@@ -43,8 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-
-
     //UserDetailsService 설정
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -72,9 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/", "/login/oauth2/**", "/auth/login", "/auth/refresh", "/diaries/todayTop/**", "/diaries/dailyTop/**", "/images/**", "/stomp/**/**").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/", "/users", "/mail/**", "/login/oauth2/**", "/auth/login", "/auth/refresh", "/diaries/todayTop/**", "/diaries/dailyTop/**", "/images/**", "/stomp/**/**"
+                        , "/swagger-ui/**", "/api/v2/**", "/health", "/swagger/**", "/swagger-resources/**", "/webjars/**", "/v3/api-docs").permitAll()
 
+                .anyRequest().authenticated();
 
 
         http.
@@ -89,6 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*")); //프론트와 연결 테스트 실패 : Spring Boot에서 CORS 설정 시 .allowCredentials(true)와 .allowedOrigins("*")를 동시에 사용할 수 없도록 업데이트 됨 > .allowedOrigins("*") -> .allowed/originPatterns("*")로 변경하여 해결
+        //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
