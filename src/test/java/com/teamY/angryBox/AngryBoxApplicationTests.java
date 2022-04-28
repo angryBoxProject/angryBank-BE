@@ -69,8 +69,10 @@ class AngryBoxApplicationTests {
 
 	@Test
 	void test() {
-
-		log.info("" + diaryRepository.selectDiaryDetail(170).get(0).getFileVO());
+		log.info("" + notificationMapper.checkDiaryIdInNtf(1));
+		//log.info("" + notificationMapper.checkDiaryIdInNtf(60));
+		//log.info("" + notificationMapper.checkDiaryIdInNtf(59));
+		//log.info("" + diaryRepository.selectDiaryDetail(170).get(0).getFileVO());
 //		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
 //		log.info(df.toString());
 		//todackMapper.insertTodack(1, 2, 1);

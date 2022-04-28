@@ -17,4 +17,8 @@ public interface NotificationMapper {
     List<NotificationDTO> selectNftList(int memberId, int lastNtfId, int size);
 
     int selectLastIdInNtf(int memberId);
+
+    int checkDiaryIdInNtf(int ntfId);
+
+    int checkMemberIdInNtf(int ntfId);
 }
