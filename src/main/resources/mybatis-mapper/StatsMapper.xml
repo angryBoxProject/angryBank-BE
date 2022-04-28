@@ -13,25 +13,50 @@
         WHERE member_id = #{memberId} AND id = #{coin_bank_id};
     </select>
 <!--    월별 분노수치 통계(각 분노수치별 개수) -->
-    <select id="selectAngryPhase" parameterType="int" resultType="int">
-        SELECT COUNT(angry_phase_id)
-        FROM diary
-        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
-        GROUP BY angry_phase_id
-        ORDER BY angry_phase_id
+    <select id="selectAngryPhaseInMonth" resultType="int">
+        SELECT IFNULL(angry_phase, 0) AS angry_phase
+        FROM angry_phase as ap
+                 LEFT OUTER JOIN (
+            SELECT angry_phase_id, COUNT(angry_phase_id) AS angry_phase
+            FROM diary
+            WHERE member_id = #{memberId} AND DATE_FORMAT(write_date, '%Y-%m') = DATE_FORMAT(#{writeDate}, '%Y-%m')
+            GROUP BY angry_phase_id
+        ) AS d on (ap.id = d.angry_phase_id)
+        GROUP BY ap.id
+        ORDER BY ap.id;
     </select>
 <!--    월별 분노수치 합 -->
-    <select id="selectAngryPhaseSum" parameterType="int" resultType="int">
-        SELECT SUM(ap.phase)
+    <select id="selectAngryPhaseSumInMonth" resultType="int">
+        SELECT IFNULL(SUM(ap.phase), 0)
         FROM diary AS d
              LEFT JOIN angry_phase AS ap
                    ON d.angry_phase_id = ap.id
-        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
+        WHERE member_id = #{memberId} AND DATE_FORMAT(write_date, '%Y-%m') = DATE_FORMAT(#{writeDate}, '%Y-%m')
         ORDER BY ap.id
     </select>
 
-<!--    저금통별 통계 -->
-
+    <!--    저금통별 분노수치 통계(각 분노수치별 개수) -->
+    <select id="selectAngryPhaseInCoinBank" resultType="int">
+        SELECT IFNULL(angry_phase, 0) AS angry_phase
+        FROM angry_phase as ap
+                 LEFT OUTER JOIN (
+            SELECT angry_phase_id, COUNT(angry_phase_id) AS angry_phase
+            FROM diary
+            WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
+            GROUP BY angry_phase_id
+        ) AS d on (ap.id = d.angry_phase_id)
+        GROUP BY ap.id
+        ORDER BY ap.id;
+    </select>
+    <!--    저금통별 분노수치 합-->
+    <select id="selectAngryPhaseSumInCoinBank" resultType="int">
+        SELECT IFNULL(SUM(ap.phase), 0)
+        FROM diary AS d
+                 LEFT JOIN angry_phase AS ap
+                           ON d.angry_phase_id = ap.id
+        WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
+        ORDER BY ap.id
+    </select>
 
 <!--    월별 다이어리 작성 일자 조회 -->
     <select id="selectWriteDay" parameterType="int" resultType="int">
