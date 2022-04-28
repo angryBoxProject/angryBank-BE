@@ -46,42 +46,55 @@ public class DiaryController {
 
     @GetMapping("diaries/coinBank/{coinBankId}/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId, @PathVariable int lastDiaryId, @PathVariable int size) {
-        Map<String, Object> data = new HashMap<>();
+
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        List<DiaryVO> diaryListInCoinBank = diaryService.getDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
+        Map<String, Object> data = diaryService.getDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
 
-        data.put("diaryListInCoinBank", diaryListInCoinBank);
-
-        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(저금통별) 성공", "", data), HttpStatus.OK);
+        if(data.containsKey("null")) {
+            data.remove("null");
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(적금별) 성공(해당 적금에 작성한 다이어리 없음)", "", data), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(적금별) 성공", "", data), HttpStatus.OK);
+        }
     }
 
     @GetMapping("diaries/month/{date}/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
-        Map<String, Object> data = new HashMap<>();
+
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        List<DiaryVO> diaryListInMonth = diaryService.getDiaryListInMonth(memberId, date, lastDiaryId, size);
+        Map<String, Object> data = diaryService.getDiaryListInMonth(memberId, date, lastDiaryId, size);
 
-        data.put("diaryListInMonth", diaryListInMonth);
-
-        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공", "", data), HttpStatus.OK);
+        if(data.containsKey("null")) {
+            data.remove("null");
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공(해당 월에 작성한 다이어리 없음)", "", data), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공", "", data), HttpStatus.OK);
+        }
     }
 
     @GetMapping("diaries/dailyTop/{date}/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquriyDailyTopDiary(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
-        Map<String, Object> data = new HashMap<>();
 
-        data.put("dailyTopDiary", diaryService.getDailyTop(date, lastDiaryId, size));
+        Map<String, Object> data = diaryService.getDailyTop(date, lastDiaryId, size);
 
-        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Daily TOP) 성공", "", data), HttpStatus.OK);
+        if(data.containsKey("null")) {
+            data.remove("null");
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Daily TOP) 성공(해당 날짜에 TOP 다이어리 없음)", "", data), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Daily TOP) 성공", "", data), HttpStatus.OK);
+        }
     }
 
     @GetMapping("diaries/todayTop/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquriyTodayTopDiary(@PathVariable int lastDiaryId, @PathVariable int size) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = diaryService.getTodayTop(lastDiaryId, size);
 
-        data.put("todayTopDiary", diaryService.getTodayTop(lastDiaryId, size));
-
-        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Today TOP) 성공", "", data), HttpStatus.OK);
+        if(data.containsKey("null")) {
+            data.remove("null");
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Today TOP) 성공(금일 TOP 다이어리 없음)", "", data), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Today TOP) 성공", "", data), HttpStatus.OK);
+        }
     }
 
 

@@ -28,13 +28,13 @@ public interface DiaryMapper {
 
     int checkIsPublic(int diaryId);
 
-    int checkDailyTopDiary(int writeYear, int writeMonth, int writeDay);
+    int checkDailyTopDiary(String writeDate);
 
     List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size);
 
-    List<DiaryVO> selectDiaryListInMonth(int memberId, int writeYear, int writeMonth, int lastDiaryId, int size);
+    List<DiaryVO> selectDiaryListInMonth(int memberId, String writeDate, int lastDiaryId, int size);
 
-    List<DiaryVO> selectDailyTop(int writeYear, int writeMonth, int writeDay, int lastDiaryId, int size);
+    List<DiaryVO> selectDailyTop(String writeDate, int lastDiaryId, int size);
 
     List<DiaryVO> selectTodayTop(int lastDiaryId, int size);
 
@@ -44,9 +44,9 @@ public interface DiaryMapper {
 
     int selectLastIdInCoinBank(int memberId, int coinBankId);
 
-    int selectDailyLastId(int writeYear, int writeMonth, int writeDay);
+    int selectDailyLastId(String writeDate);
 
-    int selectLastIdInMonth(int memberId, int writeYear, int writeMonth);
+    int selectLastIdInMonth(int memberId, String writeDate);
 
     int selectTodayLastId();
 

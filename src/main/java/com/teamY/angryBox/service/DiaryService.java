@@ -57,50 +57,56 @@ public class DiaryService {
         }
     }
 
-    public List<DiaryVO> getDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
+    public Map<String, Object> getDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
+        Map<String, Object> data = new HashMap<>();
         if(diaryRepository.checkCoinBankMemberId(coinBankId, memberId) == 0) {
             throw new InvalidRequestException("적금 번호 확인 필요");
         }
         if(lastDiaryId == 0) {
             lastDiaryId = diaryRepository.selectLastIdInCoinBank(memberId, coinBankId) + 1;
             if(lastDiaryId == 0) {
-                throw new InvalidRequestException("해당 적금에 작성한 다이어리 없음");
+                data.put("null", null);
+            } else {
+                data.put("diaryListInCoinBank", diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size));
             }
         }
-        return diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
+        return data;
     }
 
-    public List<DiaryVO> getDiaryListInMonth(int memberId, String date, int lastDiaryId, int size) {
-        int writeYear = Integer.parseInt(date.substring(0, 4));
-        int writeMonth = Integer.parseInt(date.substring(5, 7));
+    public Map<String, Object> getDiaryListInMonth(int memberId, String writeDate, int lastDiaryId, int size) {
+        Map<String, Object> data = new HashMap<>();
 
         if(lastDiaryId == 0) {
-            lastDiaryId = diaryRepository.selectLastIdInMonth(memberId, writeYear, writeMonth) + 1;
+            lastDiaryId = diaryRepository.selectLastIdInMonth(memberId, writeDate) + 1;
             if(lastDiaryId == 0) {
-                throw new InvalidRequestException("해당 월에 작성한 다이어리 없음");
+                data.put("null", null);
+            } else {
+                data.put("diaryListInMonth", diaryRepository.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size));
             }
         }
-        return diaryRepository.selectDiaryListInMonth(memberId, writeYear, writeMonth, lastDiaryId, size);
+        return data;
     }
 
-    public List<DiaryVO> getDailyTop(String date, int lastDiaryId, int size) {
-        int writeYear = Integer.parseInt(date.substring(0, 4));
-        int writeMonth = Integer.parseInt(date.substring(5, 7));
-        int writeDay = Integer.parseInt(date.substring(8, 10));
+    public Map<String, Object> getDailyTop(String writeDate, int lastDiaryId, int size) {
+        Map<String, Object> data = new HashMap<>();
 
-        if(diaryRepository.selectDailyLastId(writeYear, writeMonth, writeDay) == -1) {
-            throw new InvalidRequestException("해당 날짜에 TOP 다이어리 없음");
+        if(diaryRepository.selectDailyLastId(writeDate) == -1) {
+            data.put("null", null);
         } else {
-            return diaryRepository.selectDailyTop(writeYear, writeMonth, writeDay, lastDiaryId, size);
+            data.put("dailyTopDiary", diaryRepository.selectDailyTop(writeDate, lastDiaryId, size));
         }
+        return data;
     }
 
-    public List<DiaryVO> getTodayTop(int lastDiaryId, int size) {
+    public Map<String, Object> getTodayTop(int lastDiaryId, int size) {
+        Map<String, Object> data = new HashMap<>();
+
         if(diaryRepository.selectTodayLastId() == -1) {
-            throw new SQLInquiryException("오늘의 TOP 다이어리 없음");
+            data.put("null", null);
         } else {
-            return diaryRepository.selectTodayTop(lastDiaryId, size);
+            data.put("todayTopDiary", diaryRepository.selectTodayTop(lastDiaryId, size));
         }
+        return data;
     }
 
 

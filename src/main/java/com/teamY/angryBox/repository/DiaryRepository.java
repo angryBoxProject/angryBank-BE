@@ -40,8 +40,8 @@ public class DiaryRepository {
         return diaryMapper.checkIsPublic(diaryId);
     }
 
-    public int checkDailyTopDiary(int writeYear, int writeMonth, int writeDay) {
-        return diaryMapper.checkDailyTopDiary(writeYear, writeMonth, writeDay);
+    public int checkDailyTopDiary(String writeDate) {
+        return diaryMapper.checkDailyTopDiary(writeDate);
     }
 
     public int checkDiaryId(int diaryId) {
@@ -60,13 +60,13 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
     }
 
-    public List<DiaryVO> selectDiaryListInMonth(int memberId, int year, int month, int lastDiaryId, int size) {
+    public List<DiaryVO> selectDiaryListInMonth(int memberId, String writeDate, int lastDiaryId, int size) {
 
-        return diaryMapper.selectDiaryListInMonth(memberId, year, month, lastDiaryId, size);
+        return diaryMapper.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size);
     }
 
-    public List<DiaryVO> selectDailyTop(int writeYear, int writeMonth, int writeDay, int lastDiaryId, int size) {
-        return diaryMapper.selectDailyTop(writeYear, writeMonth, writeDay, lastDiaryId, size);
+    public List<DiaryVO> selectDailyTop(String writeDate, int lastDiaryId, int size) {
+        return diaryMapper.selectDailyTop(writeDate, lastDiaryId, size);
     }
 
     public List<DiaryVO> selectTodayTop(int lastDiaryId, int size) {
@@ -77,12 +77,12 @@ public class DiaryRepository {
         return diaryMapper.selectLastIdInCoinBank(memberId, coinBankId);
     }
 
-    public int selectDailyLastId(int writeYear, int writeMonth, int writeDay) {
-        return diaryMapper.selectDailyLastId(writeYear, writeMonth, writeDay);
+    public int selectDailyLastId(String writeDate) {
+        return diaryMapper.selectDailyLastId(writeDate);
     }
 
-    public int selectLastIdInMonth(int memberId, int writeYear, int writeMonth) {
-        return diaryMapper.selectLastIdInMonth(memberId, writeYear, writeMonth);
+    public int selectLastIdInMonth(int memberId, String writeDate) {
+        return diaryMapper.selectLastIdInMonth(memberId, writeDate);
     }
 
     public int selectTodayLastId() {
