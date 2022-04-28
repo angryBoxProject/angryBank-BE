@@ -147,6 +147,7 @@ public class MemberController {
 
     }
 
+
     @PutMapping("users")
     public ResponseEntity<ResponseMessage> changePassword(@RequestBody Map<String, String> passwords) {
         //log.info(passwords.toString());
@@ -164,5 +165,6 @@ public class MemberController {
         mailService.sendMail(email);
         return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "메일 전송 성공", ""), HttpStatus.OK);
     }
-    
+
+
 }

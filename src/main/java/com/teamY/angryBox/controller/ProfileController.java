@@ -45,7 +45,9 @@ public class ProfileController {
         ProfileJoinVO profile = profileService.inquiryFullProfile(memberVO.getId());
 
         Map<String, Object> data = new HashMap<String, Object>();
+        data.put("memberId", profile.getMember().getId());
         data.put("nickname", profile.getMember().getNickname());
+        data.put("email", profile.getMember().getEmail());
         data.put("file", "/images/" + profile.getFile().getSystemFileName());
         data.put("diaryCount", profile.getMember().getDiaryCount());
         data.put("sendTodakCount", profile.getMember().getSendTodakCount());
@@ -85,4 +87,14 @@ public class ProfileController {
         return new UrlResource("file:" + "/upload/" + filename);
     }
 
+    @PutMapping("users")
+    public ResponseEntity<ResponseMessage> changePassword(@RequestBody Map<String, String> passwords) {
+        //log.info(passwords.toString());
+
+        MemberVO memberVO = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+        memberService.changePassword(memberVO.getId(), memberVO.getEmail(), passwords);
+
+        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "비밀번호 변경 성공", ""), HttpStatus.OK);
+    }
 }
