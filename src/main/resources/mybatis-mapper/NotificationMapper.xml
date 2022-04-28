@@ -17,7 +17,7 @@
 
 <!--    알림의 다이어리 ID 조회 -->
     <select id="selectDiaryIdInNtf" parameterType="int" resultType="int">
-        SELECT diary_id FROM notification WHERE id = #{ntfId};
+        SELECT diary_id FROM notification WHERE id = #{ntfId}
     </select>
 
 <!--    알림 목록 조회 -->
@@ -34,6 +34,20 @@
         SELECT IFNULL(MAX(id), -1)
         FROM notification
         WHERE receive_member_id = #{memberId};
+    </select>
+    
+<!--    알림 받은 게시글 존재 여부 확인 -->
+    <select id="checkDiaryIdInNtf" parameterType="int" resultType="int">
+        SELECT IFNULL(d.id, 0) AS diary_id
+        FROM notification AS n
+            LEFT JOIN diary AS d
+                ON d.id = n.diary_id
+        WHERE n.id = #{ntfId};
+    </select>
+
+<!--    알림 받은 사용자 id 확인 -->
+    <select id="checkMemberIdInNtf" parameterType="int" resultType="int">
+        SELECT IFNULL(MAX(receive_member_id), 0) FROM notification WHERE id = #{ntfId}
     </select>
 
 

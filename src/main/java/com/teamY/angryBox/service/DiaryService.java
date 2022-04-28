@@ -182,6 +182,8 @@ public class DiaryService {
     public List<DiaryVO> bambooGrove(int lastDiaryId, int size) {
         if(lastDiaryId == 0)
             lastDiaryId = diaryRepository.selectLastId() + 1;
+//        else if(lastDiaryId < 0)
+//            throw new
 
         return diaryRepository.bambooGrove(lastDiaryId, size);
     }

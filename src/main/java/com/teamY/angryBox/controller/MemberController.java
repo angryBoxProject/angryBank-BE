@@ -112,7 +112,7 @@ public class MemberController {
         httpHeaders.add(HeaderUtil.HEADER_AUTHORIZATION, HeaderUtil.TOKEN_PREFIX + data.get("access_token"));
 
         CookieUtil.deleteCookie(request, response, CookieUtil.REFRESH_TOKEN_COOKIE);
-        CookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE, (String) data.get("refresh_token"), (int) appProperties.getAuth().getRefreshTokenExpiry() / 1000);
+        CookieUtil.setCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE, (String) data.get("refresh_token"), (int) appProperties.getAuth().getRefreshTokenExpiry() / 1000);
         return new ResponseEntity<>(new ResponseDataMessage(true, "로그인 성공", "", data), httpHeaders, HttpStatus.OK);
     }
 
