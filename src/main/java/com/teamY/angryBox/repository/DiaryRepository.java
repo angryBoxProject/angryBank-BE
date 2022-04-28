@@ -28,7 +28,7 @@ public class DiaryRepository {
         return diaryMapper.checkCoinBankExpired(coinBankId, memberId, 0);
     }
 
-    public int insertDiary(DiaryVO diary) {
+    public DiaryVO insertDiary(DiaryVO diary) {
         return diaryMapper.insertDiary(diary);
     }
 
@@ -41,7 +41,7 @@ public class DiaryRepository {
     }
 
     public int checkDailyTopDiary(int writeYear, int writeMonth, int writeDay) {
-        return diaryMapper.checkDailyTopDiary(writeYear, writeMonth, writeDay, 1);
+        return diaryMapper.checkDailyTopDiary(writeYear, writeMonth, writeDay);
     }
 
     public int checkDiaryId(int diaryId) {
@@ -66,7 +66,7 @@ public class DiaryRepository {
     }
 
     public List<DiaryVO> selectDailyTop(int writeYear, int writeMonth, int writeDay, int lastDiaryId, int size) {
-        return diaryMapper.selectDailyTop(writeYear, writeMonth, writeDay, 1, lastDiaryId, size);
+        return diaryMapper.selectDailyTop(writeYear, writeMonth, writeDay, lastDiaryId, size);
     }
 
     public List<DiaryVO> selectTodayTop(int lastDiaryId, int size) {
@@ -114,7 +114,7 @@ public class DiaryRepository {
     }
 
     public List<DiaryVO> bambooGrove(int diaryId, int size) {
-        return diaryMapper.bambooGrove(diaryId, 1, size);
+        return diaryMapper.bambooGrove(diaryId, size);
     }
 
     public int selectDiaryCountInCoinBank(int diaryId, int memberId) {

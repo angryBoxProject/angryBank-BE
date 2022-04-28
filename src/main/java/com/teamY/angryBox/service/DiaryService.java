@@ -10,9 +10,6 @@ import com.teamY.angryBox.vo.DiaryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +34,10 @@ public class DiaryService {
         } else if ( diaryRepository.checkCoinBankExpired(diaryVO.getCoinBankId(), diaryVO.getMemberId()) != 1) {
             throw new InvalidRequestException("적금 번호 잘못 들어옴");
         } else {
-            int diaryId = diaryRepository.insertDiary(diaryVO);
+            DiaryVO insertedDiary = diaryRepository.insertDiary(diaryVO);
+            log.info("inserted diary : " + insertedDiary);
+            int diaryId = insertedDiary.getId();
+            log.info("방금 작성된 다이어리 id : " + diaryId);
 
             List<Integer> fileIdList = new ArrayList<>();
             if (file != null) {
@@ -48,8 +48,10 @@ public class DiaryService {
                     diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), i + 1);
                 }
             }
-            DiaryVO insertedDiary = new DiaryVO(diaryId, diaryVO.getTitle(), diaryVO.getContent(), diaryVO.getIsPublic(), diaryVO.getAngryPhaseId(), diaryVO.getCoinBankId());
-            if(diaryVO.getIsPublic() == 1) {
+
+
+            if(diaryVO.isPublic() == true) {
+                log.info(insertedDiary.toString());
                 template.convertAndSend("/sub/topic/bamboo", insertedDiary);
             }
         }
@@ -107,7 +109,7 @@ public class DiaryService {
         List<DiaryFileVO> dfVO = diaryRepository.selectDiaryDetail(diaryId);
         if (dfVO.size() == 0) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
-        } else if (dfVO.get(0).getDiaryVO().getIsPublic() == 0 //비공개 상태이고
+        } else if (dfVO.get(0).getDiaryVO().isPublic() == false //비공개 상태이고
                 && dfVO.get(0).getDiaryVO().getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
             throw new InvalidRequestException("비밀글 당사자 외 조회 불가");
         } else {
