@@ -5,8 +5,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teamY.angryBox.mapper.CoinBankMapper">
     <insert id = "insertCoinBank" parameterType="CoinBankVO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO coin_bank(member_id, name, memo, angry_limit, reward)
-        VALUES(#{memberId}, #{name}, #{memo}, #{angryLimit}, #{reward})
+        INSERT INTO coin_bank(member_id, name, memo, angry_limit, reward, bank_account)
+        VALUES(#{memberId}, #{name}, #{memo}, #{angryLimit}, #{reward}, DATE_FORMAT(NOW(), '%Y%m-%d-%h%m%s'))
     </insert>
 
     <update id = "updateCoinBank" parameterType="CoinBankVO">
@@ -22,7 +22,7 @@
     </select>
 
     <select id = "selectById" resultType="CoinBankVO">
-        SELECT id, member_id, name, memo, angry_limit, reward, expired
+        SELECT id, member_id, name, memo, angry_limit, reward, expired, bank_account
         FROM coin_bank
         WHERE id = #{id}
     </select>
@@ -34,7 +34,7 @@
     </update>
 
     <select id = "selectCoinBankSum" resultType="int">
-        SELECT SUM(ap.phase)
+        SELECT IFNULL(SUM(ap.phase), 0)
         FROM diary AS d
             LEFT JOIN angry_phase AS ap
                            ON d.angry_phase_id = ap.id

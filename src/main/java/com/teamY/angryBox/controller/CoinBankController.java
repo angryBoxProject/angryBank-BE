@@ -31,7 +31,6 @@ public class CoinBankController {
     public ResponseEntity<ResponseDataMessage> inquiryCoinBank() {
         MemberVO memberVO = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
 
-
         return new ResponseEntity<>(new ResponseDataMessage(true, "저금통 조회 성공", "", coinBankService.inquiryCoinBank(memberVO.getId())), HttpStatus.OK);
     }
 

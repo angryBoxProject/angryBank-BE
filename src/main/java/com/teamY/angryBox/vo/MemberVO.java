@@ -21,6 +21,7 @@ public class MemberVO {
     private int diaryCount;
     private int sendTodakCount;
     private int recieveTodakCount;
+    private String lastLogin;
 
     public MemberVO(int id, String email, String nickname, String password, String registerType) {
         this.id = id;
@@ -56,6 +57,16 @@ public class MemberVO {
         this.diaryCount = diaryCount;
         this.sendTodakCount = sendTodakCount;
         this.recieveTodakCount = recieveTodakCount;
+    }
+
+    public MemberVO(int id, String email, String nickname, int diaryCount, int sendTodakCount, int recieveTodakCount, String lastLogin) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.diaryCount = diaryCount;
+        this.sendTodakCount = sendTodakCount;
+        this.recieveTodakCount = recieveTodakCount;
+        this.lastLogin = lastLogin;
     }
 }
 

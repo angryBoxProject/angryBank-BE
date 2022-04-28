@@ -52,6 +52,7 @@ public class ProfileController {
         data.put("diaryCount", profile.getMember().getDiaryCount());
         data.put("sendTodakCount", profile.getMember().getSendTodakCount());
         data.put("recieveTodakCount", profile.getMember().getRecieveTodakCount());
+        data.put("lastLogin", profile.getMember().getLastLogin());
 
         return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "프로필 조회 성공", "", data), HttpStatus.OK);
 
