@@ -9,6 +9,7 @@ import com.teamY.angryBox.repository.MemberRepository;
 
 import com.teamY.angryBox.service.CoinBankService;
 
+import com.teamY.angryBox.service.StatService;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.FileVO;
@@ -17,6 +18,8 @@ import com.teamY.angryBox.vo.MemberVO;
 import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
 import io.swagger.annotations.Authorization;
+import io.swagger.models.auth.In;
+import jdk.jshell.StatementSnippet;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +31,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,13 +68,14 @@ class AngryBoxApplicationTests {
 	@Autowired
 	private DiaryRepository diaryRepository;
 
+	@Autowired
+	private StatService statService;
+
 
 	@Test
 	void test() {
-		log.info("" + notificationMapper.checkDiaryIdInNtf(1));
-		//log.info("" + notificationMapper.checkDiaryIdInNtf(60));
-		//log.info("" + notificationMapper.checkDiaryIdInNtf(59));
-		//log.info("" + diaryRepository.selectDiaryDetail(170).get(0).getFileVO());
+
+
 //		List<DiaryFileVO> df = diaryMapper.selectDiaryDetail(5);
 //		log.info(df.toString());
 		//todackMapper.insertTodack(1, 2, 1);
@@ -82,11 +85,15 @@ class AngryBoxApplicationTests {
 		//        ORDER BY todack_count DESC
 		//        Limit #{limit}
 
+		//log.info("" + statService.getAngryPhaseInMonth(2, "2022-04-19"));
+		log.info("" + statService.getAngryPhaseInCoinBank(2, 3));
+
 
 	}
 
 	@Autowired
 	private KakaoURL kakaoURL;
+
 	@Disabled
 	@Test
 	void contextLoads() {

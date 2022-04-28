@@ -59,8 +59,11 @@ jwt:
 app:
     auth:
       tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
-      tokenExpiry: 120000
-      refreshTokenExpiry: 240000
+      tokenExpiry: 600000 # 10분
+      refreshTokenExpiry: 1209600000 # 2주
+      #tokenExpiry: 120000
+      #refreshTokenExpiry: 240000
+
 #  oauth2:
 #    authorizedRedirectUris:
 #      - http://localhost:3000/oauth/redirect
