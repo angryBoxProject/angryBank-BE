@@ -88,13 +88,13 @@
         FROM top_diary_daily AS tdd
                  LEFT JOIN diary AS d
                            ON tdd.diary_id = d.id
-        WHERE YEAR(tdd.write_date) = #{writeYear} AND MONTH(tdd.write_date) = #{writeMonth} AND DAY(tdd.write_date) = #{writeDay} AND is_public = #{isPublic};
+        WHERE YEAR(tdd.write_date) = #{writeYear} AND MONTH(tdd.write_date) = #{writeMonth} AND DAY(tdd.write_date) = #{writeDay} AND is_public = 1;
     </select>
 
 
 
     <!-- 다이어리 저장 및 id 값 조회-->
-    <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="int">
+    <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="DiaryVO" resultMap="DiaryDetail">
         { CALL INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId}, #{coinBankId} ) }
     </select>
     <insert id="insertDiaryFile">
@@ -128,7 +128,7 @@
         <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
         <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
         <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
-        <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
+        <result property="isPublic" javaType="boolean" column="is_public" jdbcType="TINYINT" />
         <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
         <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
     </resultMap>
@@ -137,7 +137,7 @@
         FROM top_diary_daily AS tdd
             LEFT JOIN diary AS d
                 ON tdd.diary_id = d.id
-        WHERE YEAR(tdd.write_date) = #{writeYear} AND MONTH(tdd.write_date) = #{writeMonth} AND DAY(tdd.write_date) = #{writeDay} AND is_public = #{isPublic} AND tdd.id <![CDATA[>]]> #{lastDiaryId}
+        WHERE YEAR(tdd.write_date) = #{writeYear} AND MONTH(tdd.write_date) = #{writeMonth} AND DAY(tdd.write_date) = #{writeDay} AND is_public = 1 AND tdd.id <![CDATA[>]]> #{lastDiaryId}
         ORDER BY tdd.id
         LIMIT #{size}
     </select>
@@ -151,7 +151,7 @@
             <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
             <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
             <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
-            <result property="isPublic" javaType="int" column="is_public" jdbcType="INTEGER" />
+            <result property="isPublic" javaType="boolean" column="is_public" jdbcType="TINYINT" />
             <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
             <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
         </resultMap>
@@ -169,7 +169,7 @@
     <select id="bambooGrove" resultType="DiaryVO" >
         SELECT id, member_id, diary_no, title, write_date, angry_phase_id, todack_count, view_count
         FROM diary
-        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = #{isPublic}
+        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = 1
         ORDER BY id DESC
         LIMIT #{size}
     </select>
@@ -184,7 +184,7 @@
         <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
         <result property="coinBankId" javaType="int" column="coin_bank_id" jdbcType="INTEGER" />
         <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
-        <result property="isPublic" javaType="int" column="is_public" jdbcType="TINYINT" />
+        <result property="isPublic" javaType="boolean" column="is_public" jdbcType="TINYINT" />
         <result property="todackCount" javaType="int" column="todack_count" jdbcType="INTEGER" />
         <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
     </resultMap>

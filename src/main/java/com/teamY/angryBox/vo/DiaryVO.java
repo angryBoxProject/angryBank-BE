@@ -25,7 +25,7 @@ public class DiaryVO {
     private String content;
     private String dateTime;
     private int angryPhaseId;
-    private int isPublic;
+    private boolean isPublic;
     private int todackCount; //default 0
     private int coinBankId;
     private int viewCount;
@@ -34,7 +34,9 @@ public class DiaryVO {
 
 
     //다이어리 작성 시 사용할 생성자
-    public DiaryVO(int memberId, String title, String content, int isPublic, int angryPhaseId, int coinBankId) {
+
+    //                                      DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
+    public DiaryVO(int memberId, String title, String content, boolean isPublic, int angryPhaseId, int coinBankId) {
         this.memberId = memberId;
         this.title = title;
         this.content = content;
@@ -44,7 +46,7 @@ public class DiaryVO {
     }
 
     //다이어리 수정 시 사용할 생성자
-    public DiaryVO(int id, int memberId, String title, String content, int isPublic, int angryPhaseId) {
+    public DiaryVO(int id, int memberId, String title, String content, boolean isPublic, int angryPhaseId) {
         this.id = id;
         this.memberId = memberId;
         this.title = title;
