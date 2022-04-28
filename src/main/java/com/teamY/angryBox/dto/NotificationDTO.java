@@ -15,7 +15,7 @@ public class NotificationDTO {
     private int receiveMemberId;
     @Setter
     private String content;
-    private int checked;
+    private boolean checked;
     private String dateTime;
 
     public NotificationDTO(int diaryId, int sendMemberId, int receiveMemberId) {
@@ -24,7 +24,7 @@ public class NotificationDTO {
         this.receiveMemberId = receiveMemberId;
     }
 
-    public NotificationDTO(int id, int diaryId, String content, String dateTime, int checked) {
+    public NotificationDTO(int id, int diaryId, String content, String dateTime, boolean checked) {
         this.id = id;
         this.diaryId = diaryId;
         this.content = content;
