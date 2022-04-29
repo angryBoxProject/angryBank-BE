@@ -32,8 +32,8 @@ public class DiaryController {
 
     @PostMapping("diary")
     public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
-                                                         @RequestParam boolean isPublic, @RequestParam int angryPhaseId,
-                                                         @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
+                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
+                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         DiaryVO diary = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
@@ -120,7 +120,7 @@ public class DiaryController {
     @PutMapping("diaries/{diaryId}")
     public ResponseEntity<ResponseMessage> modifyDiary(@PathVariable int diaryId,
                                                        @RequestParam String title, @RequestParam String content,
-                                                       @RequestParam boolean isPublic, @RequestParam int angryPhaseId,
+                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
                                                        @RequestBody MultipartFile[] file, @RequestParam List removedFileId) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();

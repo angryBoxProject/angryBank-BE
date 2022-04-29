@@ -1,15 +1,11 @@
 package com.teamY.angryBox.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.ibatis.type.Alias;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @ToString
 @Getter
