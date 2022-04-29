@@ -40,6 +40,10 @@ public class DiaryRepository {
         return diaryMapper.checkIsPublic(diaryId);
     }
 
+    public int checkIsDeleted(int diaryId) {
+        return diaryMapper.checkIsDeleted(diaryId);
+    }
+
     public int checkDailyTopDiary(String writeDate) {
         return diaryMapper.checkDailyTopDiary(writeDate);
     }

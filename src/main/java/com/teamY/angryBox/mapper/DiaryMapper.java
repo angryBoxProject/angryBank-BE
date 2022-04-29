@@ -28,6 +28,8 @@ public interface DiaryMapper {
 
     int checkIsPublic(int diaryId);
 
+    int checkIsDeleted(int diaryId);
+
     int checkDailyTopDiary(String writeDate);
 
     List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size);

@@ -20,6 +20,7 @@ public class DiaryVO {
 
     private int id;
     private int memberId;
+    private boolean isDeleted;
     private int diaryNo;
     private String title;
     private String content;

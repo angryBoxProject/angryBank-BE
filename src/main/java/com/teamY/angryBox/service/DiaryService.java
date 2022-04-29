@@ -49,7 +49,6 @@ public class DiaryService {
                 }
             }
 
-
             if(diaryVO.isPublic() == true) {
                 log.info(insertedDiary.toString());
                 template.convertAndSend("/sub/topic/bamboo", insertedDiary);
@@ -138,6 +137,8 @@ public class DiaryService {
     public void removeDiary(int diaryId, int memberId) {
         if(diaryRepository.checkDiaryId(diaryId) == 0) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
+        } else if(diaryRepository.checkIsDeleted(diaryId) == 1) {
+            throw new InvalidRequestException("삭제된 다이어리");
         } else if(diaryRepository.checkDiaryMemberId(diaryId, memberId) == 0) {
             throw new InvalidRequestException("작성자와 삭제자 불일치");
         } else {
@@ -147,8 +148,11 @@ public class DiaryService {
 
     @Transactional
     public void changeDiary(DiaryVO diary, MultipartFile[] file, List removedFileId) {
-
-        if (diaryRepository.checkAngryId(diary.getAngryPhaseId()) == 0) {
+        if(diaryRepository.checkDiaryId(diary.getId()) == 0) {
+            throw new InvalidRequestException("해당 다이어리 존재하지 않음");
+        } else if(diaryRepository.checkIsDeleted(diary.getId()) == 1) {
+            throw new InvalidRequestException("삭제된 다이어리");
+        } else if (diaryRepository.checkAngryId(diary.getAngryPhaseId()) == 0) {
             throw new InvalidRequestException("분노수치 잘못 들어옴");
         } else if(diaryRepository.checkDiaryMemberId(diary.getId(), diary.getMemberId()) == 0) {
             throw new InvalidRequestException("작성자와 수정자 불일치");
