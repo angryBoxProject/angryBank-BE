@@ -7,7 +7,7 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://3.38.88.242:3306/angrybox2?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://3.38.88.242:3306/angrybox2?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: mymysql
     hikari:
@@ -52,17 +52,7 @@ spring:
         max-idle: 10 #pool의 "idle" 커넥션 최대 수
         min-idle: 2 #pool에서 관리하는 idle 커넥션의 최소 수
 
-  mail:
-    host: smtp.gmail.com
-    prot: 587
-    username: hellobox0426@gmail.com
-    password: sqflcwbayltvvwuu
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+
 
 
 jwt:
@@ -72,7 +62,8 @@ jwt:
 app:
     auth:
       tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
-      tokenExpiry: 600000 # 10분
+      tokenExpiry: 7200000 # 10분으로 바꿔야 함
+      #tokenExpiry: 30000
       refreshTokenExpiry: 1209600000 # 2주
       #tokenExpiry: 120000
       #refreshTokenExpiry: 240000

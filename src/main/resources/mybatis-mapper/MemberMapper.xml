@@ -60,4 +60,10 @@
         FROM member
         WHERE id = #{id}
     </select>
+
+    <update id = "updateLastLogin">
+        UPDATE member
+        SET last_login = now()
+        WHERE id = #{id}
+    </update>
 </mapper>

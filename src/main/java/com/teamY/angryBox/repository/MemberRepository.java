@@ -72,4 +72,8 @@ public class MemberRepository {
     public int selectMemberCurBank(int id){
         return mapper.selectMemberCurBank(id);
     }
+
+    public void updateLastLogin(int id) {
+        mapper.updateLastLogin(id);
+    }
 }
