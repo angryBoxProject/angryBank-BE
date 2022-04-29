@@ -53,6 +53,8 @@ public class MemberService {
 
         Map<String, Object> data = addToken();
 
+        memberRepository.updateLastLogin((int)data.get("memberId"));
+
         return data;
     }
 

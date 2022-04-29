@@ -100,6 +100,7 @@ public class CoinBankService {
         data.put("reward", coinBankVO.getReward());
         data.put("canCrush", canCrush);
         data.put("remainingDiaryNum", remaingNum);
+        data.put("bankAccount", coinBankVO.getBankAccount());
 
         return data;
     }

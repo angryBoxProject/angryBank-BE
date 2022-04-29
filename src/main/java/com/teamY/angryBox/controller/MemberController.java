@@ -147,10 +147,10 @@ public class MemberController {
 
     }
 
-    @PutMapping("mail/{email}")
-    public ResponseEntity<ResponseMessage> sendMail(@PathVariable String email) throws AddressException {
+    @PutMapping("/user/pw")
+    public ResponseEntity<ResponseMessage> sendMail(@RequestParam String email) throws AddressException {
         mailService.sendMail(email);
-        return new ResponseEntity<ResponseMessage>(new ResponseMessage(true, "메일 전송 성공", ""), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseMessage(true, "메일 전송 성공", ""), HttpStatus.OK);
     }
 
 
