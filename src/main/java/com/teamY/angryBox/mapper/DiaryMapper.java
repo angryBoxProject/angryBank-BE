@@ -16,7 +16,7 @@ public interface DiaryMapper {
 
     int checkCoinBankExpired(int coinBankId, int memberId, int expired);
 
-    DiaryVO insertDiary(DiaryVO diary);
+    DiaryVO insertDiary(DiaryVO diaryVO);
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
@@ -62,12 +62,42 @@ public interface DiaryMapper {
 
     List<DiaryVO> bambooGrove(int lastDiaryId, int size);
 
-    //저금통 내 다이어리 개수
     int selectDiaryCountInCoinBank(int diaryId, int memberId);
 
-    //저금통 별 토댝 총 개수
     int selectTodackCountInCoinBank(int diaryId, int memberId);
 
 
     List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size);
+
+
+    //임시저장 관련
+    int checkFileInInterimDiary(int diaryId, int fileId);
+
+    int selectInterimLastId(int memberId);
+
+    int checkInterimDiaryId(int diaryId);
+
+    int checkInterimDiaryMemberId(int diaryId, int memberId);
+
+    int insertInterimDiary(DiaryVO diaryVO);
+
+    void insertInterimDiaryFile(int diaryId, int fileId, int fileNo);
+
+    List<DiaryFileVO> selectInterimDiaryDetail(int diaryId);
+
+    List<DiaryVO> selectInterimDiaryList(int memberId, int lastDiaryId, int size);
+
+    int countInterimDiary(int memberId);
+
+    List<Integer> selectFileInInterimDiary(int diaryId);
+
+    void deleteInterimDiary(int diaryId);
+
+    void deleteInterimFile(int fileId);
+
+    void updateInterimDiary(DiaryVO diaryVO);
+
+    void deleteFileInInterimDiary(int fileId);
+
+    int selectMaxInterimFileNo(int diaryId);
 }

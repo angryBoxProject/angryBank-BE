@@ -23,6 +23,12 @@ public class FileRepository {
         return fileVO;
     }
 
+    public FileVO uploadInterimFile(MultipartFile file) {
+        FileVO fileVO = fileManager.uploadFile(file);
+        mapper.insertInterimFile(fileVO);
+        return fileVO;
+    }
+
     public FileVO findById(int id) {
         return mapper.selectById(id);
     }

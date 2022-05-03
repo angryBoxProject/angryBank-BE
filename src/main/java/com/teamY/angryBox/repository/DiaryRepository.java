@@ -28,8 +28,8 @@ public class DiaryRepository {
         return diaryMapper.checkCoinBankExpired(coinBankId, memberId, 0);
     }
 
-    public DiaryVO insertDiary(DiaryVO diary) {
-        return diaryMapper.insertDiary(diary);
+    public DiaryVO insertDiary(DiaryVO diaryVO) {
+        return diaryMapper.insertDiary(diaryVO);
     }
 
     public void insertDiaryFile(int diaryId, int fileId, int fileNo) {
@@ -105,8 +105,8 @@ public class DiaryRepository {
         diaryMapper.deleteDiary(diaryId, memberId);
     }
 
-    public void updateDiary(DiaryVO diary) {
-        diaryMapper.updateDiary(diary);
+    public void updateDiary(DiaryVO diaryVO) {
+        diaryMapper.updateDiary(diaryVO);
     }
 
     public void deleteFileInDiary(int fileId){
@@ -132,6 +132,67 @@ public class DiaryRepository {
     public List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size) {
 
         return diaryMapper.searchDiary(searchKeyword, lastDiaryId, size);
+    }
+
+
+    public int checkFileInInterimDiary(int diaryId, int fileId) {
+        return diaryMapper.checkFileInInterimDiary(diaryId, fileId);
+    }
+
+    public int selectInterimLastId(int memberId) {
+        return diaryMapper.selectInterimLastId(memberId);
+    }
+
+    public int checkInterimDiaryId(int diaryId) {
+        return diaryMapper.checkInterimDiaryId(diaryId);
+    }
+
+    public int checkInterimDiaryMemberId(int diaryId, int memberId) {
+        return diaryMapper.checkInterimDiaryMemberId(diaryId, memberId);
+    }
+
+    public int insertInterimDiary(DiaryVO diaryVO) {
+        return diaryMapper.insertInterimDiary(diaryVO);
+    }
+
+    public void insertInterimDiaryFile(int diaryId, int file_id, int file_no) {
+        diaryMapper.insertInterimDiaryFile(diaryId, file_id, file_no);
+    }
+
+    public List<DiaryFileVO> selectInterimDiaryDetail(int diaryId){
+        return diaryMapper.selectInterimDiaryDetail(diaryId);
+    }
+
+    public List<DiaryVO> selectInterimDiaryList(int memberId, int lastDiaryId, int size) {
+        return diaryMapper.selectInterimDiaryList(memberId, lastDiaryId, size);
+    }
+
+    public int countInterimDiary(int memberId) {
+        return diaryMapper.countInterimDiary(memberId);
+    }
+
+    public List<Integer> selectFileInInterimDiary(int diaryId) {
+        return diaryMapper.selectFileInInterimDiary(diaryId);
+    }
+
+    public void deleteInterimDiary(int diaryId) {
+        diaryMapper.deleteInterimDiary(diaryId);
+    }
+
+    public void deleteInterimFile(int fileId) {
+        diaryMapper.deleteInterimFile(fileId);
+    }
+
+    public void updateInterimDiary(DiaryVO diaryVO) {
+        diaryMapper.updateInterimDiary(diaryVO);
+    }
+
+    public void deleteFileInInterimDiary(int fileId) {
+        diaryMapper.deleteFileInInterimDiary(fileId);
+    }
+
+    public int selectMaxInterimFileNo(int diaryId) {
+        return diaryMapper.selectMaxInterimFileNo(diaryId);
     }
 
 }

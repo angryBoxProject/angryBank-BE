@@ -36,13 +36,32 @@ public class DiaryController {
                                                        @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        DiaryVO diary = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
-        
-        diaryService.addDiary(diary, file);
+        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
+
+        diaryService.addDiary(diaryVO, file);
 
         return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
 
     }
+
+//    @PostMapping("diary")
+//    public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
+//                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
+//                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file,
+//                                                       @RequestParam int interimId) {
+//
+//        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+//        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
+//
+//        diaryService.addDiary(diaryVO, file);
+//
+//        if(interimId != 0) {
+//            diaryService.removeInterimDiary(interimId, memberId);
+//        }
+//
+//        return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
+//
+//    }
 
     @GetMapping("diaries/coinBank/{coinBankId}/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId, @PathVariable int lastDiaryId, @PathVariable int size) {
@@ -148,6 +167,83 @@ public class DiaryController {
         Map<String, Object> data = new HashMap<>();
         data.put("diaries", diaryService.bambooGrove(lastDiaryId, size));
         return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "대나무숲 조회 성공", "", data), HttpStatus.OK);
+    }
+
+    @PostMapping("/interim-diary")
+    public ResponseEntity<ResponseMessage> createInterimDiary(@RequestParam String title, @RequestParam String content,
+                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
+                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
+
+        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
+
+        diaryService.addInterimDiary(diaryVO, file);
+
+        return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 등록 성공", ""), HttpStatus.OK);
+    }
+
+    @GetMapping("interim-diaries/{diaryId}")
+    public ResponseEntity<ResponseMessage> inquriyInterimDiaryDetail(@PathVariable int diaryId) {
+        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+
+        Map<String, Object> data = diaryService.getInterimDiaryDetail(diaryId, memberId);
+        log.info("data : " + data);
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 상세조회 성공", "", data), HttpStatus.OK);
+    }
+
+    @GetMapping("interim-diary/{lastDiaryId}/{size}")
+    public ResponseEntity<ResponseMessage> inquryInterimDiaryList(@PathVariable int lastDiaryId, @PathVariable int size) {
+        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+
+        Map<String, Object> data = diaryService.getInterimDiaryList(memberId, lastDiaryId, size);
+
+        if(data.containsKey("null")) {
+            data.remove("null");
+            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 목록 조회 성공(작성한 임시 다이어리 없음)", "", data), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 목록 조회 성공", "", data), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("interim-diary-count")
+    public ResponseEntity<ResponseMessage> inquriyInterimDiaryCount() {
+        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+
+        Map<String, Object> data = new HashMap<>();
+        int count = diaryService.getInterimDiaryCount(memberId);
+        if(count == 0) {
+            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 개수 조회 성공(임시 작성한 다이어리 없음)", "", data), HttpStatus.OK);
+        } else {
+            data.put("count", count);
+            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 개수 조회 성공", "", data), HttpStatus.OK);
+        }
+
+
+    }
+
+    @DeleteMapping("interim-diaries/{diaryId}")
+    public ResponseEntity<ResponseMessage> removeInterimDiary(@PathVariable int diaryId) {
+        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+
+        diaryService.removeInterimDiary(diaryId, memberId);
+
+        return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 삭제 성공", ""), HttpStatus.OK);
+    }
+
+    @PutMapping("interim-diaries/{diaryId}")
+    public ResponseEntity<ResponseMessage> modifyInterimDiary(@PathVariable int diaryId,
+                                                       @RequestParam String title, @RequestParam String content,
+                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
+                                                       @RequestBody MultipartFile[] file, @RequestParam List removedFileId) {
+
+        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+
+        DiaryVO diaryVO = new DiaryVO(diaryId, memberId, title, content, isPublic, angryPhaseId);
+        diaryService.changeInterimDiary(diaryVO, file, removedFileId);
+
+        return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 수정 성공", ""), HttpStatus.OK);
+
     }
 
 }
