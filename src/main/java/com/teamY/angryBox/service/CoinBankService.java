@@ -5,6 +5,7 @@ import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.error.customException.SQLInquiryException;
 import com.teamY.angryBox.repository.CoinBankRepository;
 import com.teamY.angryBox.repository.MemberRepository;
+import com.teamY.angryBox.vo.BankStatCalenderVO;
 import com.teamY.angryBox.vo.CoinBankVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class CoinBankService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void createCoinBank(NewCoinBankDTO bank, int memberId){
+    public void createCoinBank(NewCoinBankDTO bank, int memberId) {
 
         // 멤버에게 이미 할당 된 저금통이 있는지 없는지 검사 추가해야됨
         CoinBankVO bankVO = new CoinBankVO(memberId, bank.getName(), bank.getMemo(), bank.getAngryLimit(), bank.getReward());
@@ -36,11 +37,11 @@ public class CoinBankService {
     public void modifyCoinBank(NewCoinBankDTO bank, int memberId) {
 
         CoinBankVO coinBankVO = coinBankRepository.selectBankExpired(bank.getId());
-        if(coinBankVO == null)
+        if (coinBankVO == null)
             throw new SQLInquiryException("해당 ID 적금 조회 실패");
-        else if(coinBankVO.isExpired())
+        else if (coinBankVO.isExpired())
             throw new InvalidRequestException("해당 적금은 이미 만료되었음");
-        else if(coinBankVO.getMemberId() != memberId)
+        else if (coinBankVO.getMemberId() != memberId)
             throw new InvalidRequestException("해당 사용자의 적금이 아님");
 
         CoinBankVO bankVO = new CoinBankVO(bank.getId(), memberId, bank.getName(), bank.getMemo(), bank.getAngryLimit(), bank.getReward());
@@ -50,14 +51,14 @@ public class CoinBankService {
 
     @Transactional
     public void expireCoinBank(int id, int memberId) {
-        if(id < 1)
+        if (id < 1)
             throw new InvalidRequestException("유효하지 않은 적금 ID");
 
         int curBankId = memberRepository.selectMemberCurBank(memberId);
-        if(curBankId == 0 || curBankId != id)
+        if (curBankId == 0 || curBankId != id)
             throw new InvalidRequestException("현재 사용 중인 적금이 아님");
 
-        if(coinBankRepository.expireCoinBank(id) == 0)
+        if (coinBankRepository.expireCoinBank(id) == 0)
             throw new SQLInquiryException("해당 ID 적금 조회 실패");
 
         memberRepository.updateCoinBankIdToNull(memberId);
@@ -68,12 +69,12 @@ public class CoinBankService {
         Map<String, Object> data = new HashMap<>();
         int curBankId = memberRepository.selectMemberCurBank(memberId);
 
-        if(curBankId == 0)
+        if (curBankId == 0)
             throw new InvalidRequestException("현재 사용 중인 적금 없음");
 
         CoinBankVO coinBankVO = coinBankRepository.selectById(curBankId);
 
-        if(coinBankVO == null)
+        if (coinBankVO == null)
             throw new InvalidRequestException("존재하지 않는 적금");
 
 
@@ -85,13 +86,12 @@ public class CoinBankService {
         int left = coinBankVO.getAngryLimit() - coinBankSum;
         boolean canCrush = false;
 
-        if(left <= 0)
+        if (left <= 0)
             canCrush = true;
         else {
             for (int phase : angryPhaseArr)
                 remaingNum.add(((left - 1) / phase) + 1);
         }
-
 
 
         data.put("id", coinBankVO.getId());
@@ -105,4 +105,42 @@ public class CoinBankService {
         return data;
     }
 
+    public Map<String, Object> inquiryBankStatProfile(int memberId) {
+        return coinBankRepository.selectBankStatProfile(memberId);
+    }
+
+    public Map<String, Object> inquiryBankStatCalender(String select) {
+        List<BankStatCalenderVO> list = coinBankRepository.selectBankStatCalenderByMonth(select);
+
+        Map<String, Object> data = new HashMap<>();
+        for (BankStatCalenderVO vo : list) {
+            List<Integer> ids = (List<Integer>) data.get(vo.getWriteDate());
+            if (ids == null) {
+                ids = new ArrayList<Integer>();
+                ids.add(vo.getDiaryId());
+                data.put(vo.getWriteDate(), ids);
+            } else {
+                ids.add(vo.getDiaryId());
+            }
+        }
+        return data;
+    }
+
+    public Map<String, Object> inquiryBankStatCalenderByMonthAndBank(String select, int coinBankId) {
+        List<BankStatCalenderVO> list = coinBankRepository.selectBankStatCalenderByMonthAndBank(select, coinBankId);
+
+        Map<String, Object> data = new HashMap<>();
+        for (BankStatCalenderVO vo : list) {
+            List<Integer> ids = (List<Integer>) data.get(vo.getWriteDate());
+            if (ids == null) {
+                ids = new ArrayList<Integer>();
+                ids.add(vo.getDiaryId());
+                data.put(vo.getWriteDate(), ids);
+            } else {
+                ids.add(vo.getDiaryId());
+            }
+        }
+
+        return data;
+    }
 }

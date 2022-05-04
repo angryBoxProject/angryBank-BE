@@ -133,12 +133,13 @@ class AngryBoxApplicationTests {
 	@Autowired
 	CoinBankService coinBankService;
 
-	@Disabled
+	//@Disabled
 	@Test
 	void profileTest(){
 		//MemberVO memberVO = new MemberVO((int) claims.get("id"), (String) claims.get("email"), (String)claims.get("nickname"));
 	//log.info(profileMapper.selectJoinedProfile(1).toString());
 
 		//coinBankService.createCoinBank( new NewCoinBankDTO( "이름", "메모", 111, "치킨이닭"), 1);
+		log.info(coinBankService.inquiryBankStatProfile(2).toString());
 	}
 }
