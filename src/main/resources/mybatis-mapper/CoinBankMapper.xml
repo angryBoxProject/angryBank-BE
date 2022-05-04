@@ -46,4 +46,23 @@
         SELECT phase
         FROM angry_phase;
     </select>
+
+    <select id = "selectBankStatProfile" resultType="java.util.HashMap">
+        SELECT c.bank_account as bankAccount, m.receive_todack_count as recieveTodackCount
+        FROM member AS m
+                 JOIN coin_bank AS c
+        WHERE m.id = #{memberId} AND c.id = m.coin_bank_id;
+    </select>
+
+    <select id = "selectBankStatCalenderByMonth" resultType="BankStatCalenderVO">
+        SELECT DATE_FORMAT(write_date, '%Y-%m-%d') as writeDate, id
+        FROM diary
+        WHERE DATE_FORMAT(write_date, '%Y-%m') = #{select};
+    </select>
+
+    <select id = "selectBankStatCalenderByMonthAndBank" resultType="BankStatCalenderVO">
+        SELECT DATE_FORMAT(write_date, '%Y-%m-%d') as writeDate, id as diaryId
+        FROM diary
+        WHERE DATE_FORMAT(write_date, '%Y-%m') = #{select} and coin_bank_id = #{coinBankId};
+    </select>
 </mapper>
