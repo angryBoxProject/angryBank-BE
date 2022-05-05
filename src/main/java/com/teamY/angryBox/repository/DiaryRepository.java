@@ -4,6 +4,8 @@ package com.teamY.angryBox.repository;
 import com.teamY.angryBox.mapper.DiaryMapper;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
+import com.teamY.angryBox.vo.InterimDiaryFileVO;
+import com.teamY.angryBox.vo.InterimDiaryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -97,7 +99,7 @@ public class DiaryRepository {
         return diaryMapper.selectDiaryDetail(diaryId);
     }
 
-    public int selectLastId(){
+    public int selectLastId() {
         return diaryMapper.selectLastId();
     }
 
@@ -109,11 +111,11 @@ public class DiaryRepository {
         diaryMapper.updateDiary(diaryVO);
     }
 
-    public void deleteFileInDiary(int fileId){
+    public void deleteFileInDiary(int fileId) {
         diaryMapper.deleteFileInDiary(fileId);
     }
 
-    public int selectMaxFileNo(int diaryId){
+    public int selectMaxFileNo(int diaryId) {
         return diaryMapper.selectMaxFileNo(diaryId);
     }
 
@@ -126,7 +128,7 @@ public class DiaryRepository {
     }
 
     public int selectTodackCountInCoinBank(int diaryId, int memberId) {
-        return diaryMapper.selectTodackCountInCoinBank( diaryId, memberId);
+        return diaryMapper.selectTodackCountInCoinBank(diaryId, memberId);
     }
 
     public List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size) {
@@ -151,19 +153,19 @@ public class DiaryRepository {
         return diaryMapper.checkInterimDiaryMemberId(diaryId, memberId);
     }
 
-    public int insertInterimDiary(DiaryVO diaryVO) {
-        return diaryMapper.insertInterimDiary(diaryVO);
+    public int insertInterimDiary(InterimDiaryVO interimDiaryVO) {
+        return diaryMapper.insertInterimDiary(interimDiaryVO);
     }
 
     public void insertInterimDiaryFile(int diaryId, int file_id, int file_no) {
         diaryMapper.insertInterimDiaryFile(diaryId, file_id, file_no);
     }
 
-    public List<DiaryFileVO> selectInterimDiaryDetail(int diaryId){
+    public List<InterimDiaryFileVO> selectInterimDiaryDetail(int diaryId) {
         return diaryMapper.selectInterimDiaryDetail(diaryId);
     }
 
-    public List<DiaryVO> selectInterimDiaryList(int memberId, int lastDiaryId, int size) {
+    public List<InterimDiaryVO> selectInterimDiaryList(int memberId, int lastDiaryId, int size) {
         return diaryMapper.selectInterimDiaryList(memberId, lastDiaryId, size);
     }
 
@@ -183,8 +185,8 @@ public class DiaryRepository {
         diaryMapper.deleteInterimFile(fileId);
     }
 
-    public void updateInterimDiary(DiaryVO diaryVO) {
-        diaryMapper.updateInterimDiary(diaryVO);
+    public void updateInterimDiary(InterimDiaryVO interimDiaryVO) {
+        diaryMapper.updateInterimDiary(interimDiaryVO);
     }
 
     public void deleteFileInInterimDiary(int fileId) {

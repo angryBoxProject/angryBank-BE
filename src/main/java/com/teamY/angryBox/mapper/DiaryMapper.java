@@ -3,6 +3,8 @@ package com.teamY.angryBox.mapper;
 
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
+import com.teamY.angryBox.vo.InterimDiaryFileVO;
+import com.teamY.angryBox.vo.InterimDiaryVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -79,13 +81,13 @@ public interface DiaryMapper {
 
     int checkInterimDiaryMemberId(int diaryId, int memberId);
 
-    int insertInterimDiary(DiaryVO diaryVO);
+    int insertInterimDiary(InterimDiaryVO interimDiaryVO);
 
     void insertInterimDiaryFile(int diaryId, int fileId, int fileNo);
 
-    List<DiaryFileVO> selectInterimDiaryDetail(int diaryId);
+    List<InterimDiaryFileVO> selectInterimDiaryDetail(int diaryId);
 
-    List<DiaryVO> selectInterimDiaryList(int memberId, int lastDiaryId, int size);
+    List<InterimDiaryVO> selectInterimDiaryList(int memberId, int lastDiaryId, int size);
 
     int countInterimDiary(int memberId);
 
@@ -95,7 +97,7 @@ public interface DiaryMapper {
 
     void deleteInterimFile(int fileId);
 
-    void updateInterimDiary(DiaryVO diaryVO);
+    void updateInterimDiary(InterimDiaryVO interimDiaryVO);
 
     void deleteFileInInterimDiary(int fileId);
 

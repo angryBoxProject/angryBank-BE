@@ -7,6 +7,7 @@ import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.service.DiaryService;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
+import com.teamY.angryBox.vo.InterimDiaryVO;
 import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -172,12 +173,13 @@ public class DiaryController {
     @PostMapping("/interim-diary")
     public ResponseEntity<ResponseMessage> createInterimDiary(@RequestParam String title, @RequestParam String content,
                                                        @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
+                                                       @RequestBody MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
 
-        diaryService.addInterimDiary(diaryVO, file);
+        InterimDiaryVO interimDiaryVO = new InterimDiaryVO(memberId, title, content, isPublic, angryPhaseId);
+
+        diaryService.addInterimDiary(interimDiaryVO, file);
 
         return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 등록 성공", ""), HttpStatus.OK);
     }
@@ -187,7 +189,6 @@ public class DiaryController {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
         Map<String, Object> data = diaryService.getInterimDiaryDetail(diaryId, memberId);
-        log.info("data : " + data);
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 상세조회 성공", "", data), HttpStatus.OK);
     }
@@ -239,8 +240,8 @@ public class DiaryController {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
-        DiaryVO diaryVO = new DiaryVO(diaryId, memberId, title, content, isPublic, angryPhaseId);
-        diaryService.changeInterimDiary(diaryVO, file, removedFileId);
+        InterimDiaryVO interimDiaryVO = new InterimDiaryVO(diaryId, memberId, title, content, isPublic, angryPhaseId);
+        diaryService.changeInterimDiary(interimDiaryVO, file, removedFileId);
 
         return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 수정 성공", ""), HttpStatus.OK);
 

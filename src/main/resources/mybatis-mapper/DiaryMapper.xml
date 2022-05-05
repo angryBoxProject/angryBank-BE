@@ -259,38 +259,37 @@
     </select>
 
 <!--    임시 다이어리 저장 및 id 조회 -->
-    <select id="insertInterimDiary" parameterType="DiaryVO" statementType="CALLABLE" resultType="int" >
-        { CALL INSERT_INTERIM_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId}, #{coinBankId} ) }
+    <select id="insertInterimDiary" parameterType="InterimDiaryVO" statementType="CALLABLE" resultType="int" >
+        { CALL INSERT_INTERIM_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId} ) }
     </select>
     <insert id="insertInterimDiaryFile">
         INSERT INTO interim_diary_file(diary_id, file_id, file_no) VALUES( #{diaryId}, #{fileId}, #{fileNo} )
     </insert>
 <!--    임시 다이어리 상세 조회-->
-    <resultMap id="interimDiaryDetail" type="diaryVO">
+    <resultMap id="interimDiaryDetail" type="interimDiaryVO">
         <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
         <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR" />
         <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
         <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
-        <result property="coinBankId" javaType="int" column="coin_bank_id" jdbcType="INTEGER" />
-        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
         <result property="isPublic" javaType="boolean" column="is_public" jdbcType="TINYINT" />
+        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
     </resultMap>
     <resultMap id="interimFileDetail" type="fileVO">
         <result property="id" javaType="int" column="file_id" jdbcType="INTEGER" />
         <result property="systemFileName" javaType="string" column="system_file_name" jdbcType="VARCHAR" />
         <result property="fileNo" javaType="int" column="file_no" jdbcType="INTEGER" />
     </resultMap>
-    <resultMap id="selectInterimDiaryDetailResultMap" type="DiaryFileVO">
-        <collection property="diaryVO" resultMap="interimDiaryDetail" />
+    <resultMap id="selectInterimDiaryDetailResultMap" type="InterimDiaryFileVO">
+        <collection property="interimDiaryVO" resultMap="interimDiaryDetail" />
         <collection property="fileVO" resultMap="interimFileDetail" />
     </resultMap>
-    <select id="selectInterimDiaryDetail" resultType="DiaryFileVO" resultMap="selectInterimDiaryDetailResultMap" >
+    <select id="selectInterimDiaryDetail" resultType="InterimDiaryFileVO" resultMap="selectInterimDiaryDetailResultMap" >
         { CALL SELECT_INTERIM_DIARY( #{diaryId} ) }
     </select>
 
 <!--    임시 다이어리 목록 조회 -->
-    <select id="selectInterimDiaryList" resultType="DiaryVO" >
+    <select id="selectInterimDiaryList" resultType="InterimDiaryVO" >
         SELECT id, member_id, title, content, DATE(write_date) AS dateTime, angry_phase_id, is_public
         FROM interim_diary
         WHERE member_id = #{memberId} AND id <![CDATA[<]]> #{lastDiaryId}
@@ -321,7 +320,7 @@
     </delete>
 
     <!--    임시 다이어리 수정 -->
-    <update id="updateInterimDiary" parameterType="DiaryVO">
+    <update id="updateInterimDiary" parameterType="InterimDiaryVO">
         UPDATE interim_diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}
         WHERE id = #{id}
     </update>

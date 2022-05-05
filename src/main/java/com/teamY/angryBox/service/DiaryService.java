@@ -6,6 +6,8 @@ import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.FileRepository;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
+import com.teamY.angryBox.vo.InterimDiaryFileVO;
+import com.teamY.angryBox.vo.InterimDiaryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -68,6 +70,8 @@ public class DiaryService {
             } else {
                 data.put("diaryListInCoinBank", diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size));
             }
+        } else {
+            data.put("diaryListInCoinBank", diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size));
         }
         return data;
     }
@@ -82,6 +86,8 @@ public class DiaryService {
             } else {
                 data.put("diaryListInMonth", diaryRepository.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size));
             }
+        } else {
+            data.put("diaryListInMonth", diaryRepository.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size));
         }
         return data;
     }
@@ -108,21 +114,21 @@ public class DiaryService {
         return data;
     }
 
-    public Map<String, Object> getDetail(List<DiaryFileVO> dfVO) {
-        Map<String, Object> data = new LinkedHashMap<>();
-
-        for (int i = 0; i < dfVO.size(); i++) {
-            data.put("diary", dfVO.get(i).getDiaryVO());
-            if (dfVO.get(i).getFileVO() != null) {
-                Map<String, Object> fileInfo = new HashMap<>();
-                fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
-                fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
-                fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
-                data.put("file" + (i + 1), fileInfo);
-            }
-        }
-        return data;
-    }
+//    public Map<String, Object> getDetail(List<DiaryFileVO> dfVO) {
+//        Map<String, Object> data = new LinkedHashMap<>();
+//
+//        for (int i = 0; i < dfVO.size(); i++) {
+//            data.put("diary", dfVO.get(i).getDiaryVO());
+//            if (dfVO.get(i).getFileVO() != null) {
+//                Map<String, Object> fileInfo = new HashMap<>();
+//                fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
+//                fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
+//                fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
+//                data.put("file" + (i + 1), fileInfo);
+//            }
+//        }
+//        return data;
+//    }
 
     public Map<String, Object> getDiaryDetail(int diaryId, int memberId) {
         List<DiaryFileVO> dfVO = diaryRepository.selectDiaryDetail(diaryId);
@@ -132,7 +138,19 @@ public class DiaryService {
                 && dfVO.get(0).getDiaryVO().getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
             throw new InvalidRequestException("비밀글 당사자 외 조회 불가");
         } else {
-            return getDetail(dfVO);
+            Map<String, Object> data = new LinkedHashMap<>();
+
+            for (int i = 0; i < dfVO.size(); i++) {
+                data.put("diary", dfVO.get(i).getDiaryVO());
+                if (dfVO.get(i).getFileVO() != null) {
+                    Map<String, Object> fileInfo = new HashMap<>();
+                    fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
+                    fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
+                    fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
+                    data.put("file" + (i + 1), fileInfo);
+                }
+            }
+            return data;
         }
     }
 
@@ -203,15 +221,13 @@ public class DiaryService {
     }
 
     @Transactional
-    public void addInterimDiary(DiaryVO diaryVO, MultipartFile[] file) {
+    public void addInterimDiary(InterimDiaryVO interimDiaryVO, MultipartFile[] file) {
 
-        if (diaryRepository.checkAngryId(diaryVO.getAngryPhaseId()) == 0) {
+        if (diaryRepository.checkAngryId(interimDiaryVO.getAngryPhaseId()) == 0) {
             throw new InvalidRequestException("분노수치 잘못 들어옴");
-        } else if (diaryRepository.checkCoinBankExpired(diaryVO.getCoinBankId(), diaryVO.getMemberId()) != 1) {
-            throw new InvalidRequestException("적금 번호 잘못 들어옴");
         } else {
 
-            int diaryId = diaryRepository.insertInterimDiary(diaryVO);
+            int diaryId = diaryRepository.insertInterimDiary(interimDiaryVO);
 
             List<Integer> fileIdList = new ArrayList<>();
             if (file != null) {
@@ -226,13 +242,25 @@ public class DiaryService {
     }
 
     public Map<String, Object> getInterimDiaryDetail(int diaryId, int memberId) {
-        List<DiaryFileVO> dfVO = diaryRepository.selectInterimDiaryDetail(diaryId);
+        List<InterimDiaryFileVO> dfVO = diaryRepository.selectInterimDiaryDetail(diaryId);
         if (dfVO.size() == 0) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
-        } else if (dfVO.get(0).getDiaryVO().getMemberId() != memberId) {
+        } else if (dfVO.get(0).getInterimDiaryVO().getMemberId() != memberId) {
             throw new InvalidRequestException("임시 다이어리 작성자와 조회자 불일치");
         } else {
-            return getDetail(dfVO);
+            Map<String, Object> data = new LinkedHashMap<>();
+
+            for (int i = 0; i < dfVO.size(); i++) {
+                data.put("diary", dfVO.get(i).getInterimDiaryVO());
+                if (dfVO.get(i).getFileVO() != null) {
+                    Map<String, Object> fileInfo = new HashMap<>();
+                    fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
+                    fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
+                    fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
+                    data.put("file" + (i + 1), fileInfo);
+                }
+            }
+            return data;
         }
     }
 
@@ -245,11 +273,14 @@ public class DiaryService {
 
         if (lastDiaryId == 0) {
             lastDiaryId = diaryRepository.selectInterimLastId(memberId) + 1;
+
             if (lastDiaryId == 0) {
                 data.put("null", null);
             } else {
                 data.put("diary", diaryRepository.selectInterimDiaryList(memberId, lastDiaryId, size));
             }
+        } else {
+            data.put("diary", diaryRepository.selectInterimDiaryList(memberId, lastDiaryId, size));
         }
 
         return data;
@@ -275,18 +306,18 @@ public class DiaryService {
     }
 
     @Transactional
-    public void changeInterimDiary(DiaryVO diaryVO, MultipartFile[] file, List removedFileId) {
-        if (diaryRepository.checkInterimDiaryId(diaryVO.getId()) == 0) {
+    public void changeInterimDiary(InterimDiaryVO interimDiaryVO, MultipartFile[] file, List removedFileId) {
+        if (diaryRepository.checkInterimDiaryId(interimDiaryVO.getId()) == 0) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
-        } else if (diaryRepository.checkAngryId(diaryVO.getAngryPhaseId()) == 0) {
+        } else if (diaryRepository.checkAngryId(interimDiaryVO.getAngryPhaseId()) == 0) {
             throw new InvalidRequestException("분노수치 잘못 들어옴");
-        } else if (diaryRepository.checkInterimDiaryMemberId(diaryVO.getId(), diaryVO.getMemberId()) == 0) {
+        } else if (diaryRepository.checkInterimDiaryMemberId(interimDiaryVO.getId(), interimDiaryVO.getMemberId()) == 0) {
             throw new InvalidRequestException("작성자와 수정자 불일치");
         }
 
         //다이어리 내용 변경
-        diaryRepository.updateInterimDiary(diaryVO);
-        int diaryId = diaryVO.getId();
+        diaryRepository.updateInterimDiary(interimDiaryVO);
+        int diaryId = interimDiaryVO.getId();
 
         //삭제된 파일 지우기
         if (removedFileId != null) {
