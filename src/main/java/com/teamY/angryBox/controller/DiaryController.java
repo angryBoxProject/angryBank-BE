@@ -31,38 +31,38 @@ public class DiaryController {
     private final DiaryService diaryService;
 
 
-    @PostMapping("diary")
-    public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
-                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
-
-        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
-
-        diaryService.addDiary(diaryVO, file);
-
-        return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
-
-    }
-
 //    @PostMapping("diary")
 //    public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
 //                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-//                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file,
-//                                                       @RequestParam int interimId) {
+//                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
 //
 //        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 //        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
 //
 //        diaryService.addDiary(diaryVO, file);
 //
-//        if(interimId != 0) {
-//            diaryService.removeInterimDiary(interimId, memberId);
-//        }
-//
 //        return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
 //
 //    }
+
+    @PostMapping("diary")
+    public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
+                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
+                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file,
+                                                       @RequestParam int interimId) {
+
+        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
+
+        diaryService.addDiary(diaryVO, file);
+
+        if(interimId != 0) {
+            diaryService.removeInterimDiary(interimId, memberId);
+        }
+
+        return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
+
+    }
 
     @GetMapping("diaries/coinBank/{coinBankId}/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId, @PathVariable int lastDiaryId, @PathVariable int size) {
