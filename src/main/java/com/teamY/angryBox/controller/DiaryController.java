@@ -65,7 +65,7 @@ public class DiaryController {
     }
 
     @GetMapping("diaries/coinBank/{coinBankId}/{lastDiaryId}/{size}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListCoinBank(@PathVariable int coinBankId, @PathVariable int lastDiaryId, @PathVariable int size) {
+    public ResponseEntity<ResponseDataMessage> inquiryDiaryListCoinBank(@PathVariable int coinBankId, @PathVariable int lastDiaryId, @PathVariable int size) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         Map<String, Object> data = diaryService.getDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
@@ -79,7 +79,7 @@ public class DiaryController {
     }
 
     @GetMapping("diaries/month/{date}/{lastDiaryId}/{size}")
-    public ResponseEntity<ResponseDataMessage> inquriyDiaryListInMonth(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
+    public ResponseEntity<ResponseDataMessage> inquiryDiaryListInMonth(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         Map<String, Object> data = diaryService.getDiaryListInMonth(memberId, date, lastDiaryId, size);
@@ -93,7 +93,7 @@ public class DiaryController {
     }
 
     @GetMapping("diaries/dailyTop/{date}/{lastDiaryId}/{size}")
-    public ResponseEntity<ResponseDataMessage> inquriyDailyTopDiary(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
+    public ResponseEntity<ResponseDataMessage> inquiryDailyTopDiary(@PathVariable String date, @PathVariable int lastDiaryId, @PathVariable int size) {
 
         Map<String, Object> data = diaryService.getDailyTop(date, lastDiaryId, size);
 
@@ -106,7 +106,7 @@ public class DiaryController {
     }
 
     @GetMapping("diaries/todayTop/{lastDiaryId}/{size}")
-    public ResponseEntity<ResponseDataMessage> inquriyTodayTopDiary(@PathVariable int lastDiaryId, @PathVariable int size) {
+    public ResponseEntity<ResponseDataMessage> inquiryTodayTopDiary(@PathVariable int lastDiaryId, @PathVariable int size) {
         Map<String, Object> data = diaryService.getTodayTop(lastDiaryId, size);
 
         if(data.containsKey("null")) {
@@ -119,7 +119,7 @@ public class DiaryController {
 
 
     @GetMapping("diaries/{diaryId}")
-    public ResponseEntity<ResponseMessage> inquriyDiaryDetail(@PathVariable int diaryId) {
+    public ResponseEntity<ResponseMessage> inquiryDiaryDetail(@PathVariable int diaryId) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
         Map<String, Object> data = diaryService.getDiaryDetail(diaryId, memberId);
@@ -185,7 +185,7 @@ public class DiaryController {
     }
 
     @GetMapping("interim-diaries/{diaryId}")
-    public ResponseEntity<ResponseMessage> inquriyInterimDiaryDetail(@PathVariable int diaryId) {
+    public ResponseEntity<ResponseMessage> inquiryInterimDiaryDetail(@PathVariable int diaryId) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
         Map<String, Object> data = diaryService.getInterimDiaryDetail(diaryId, memberId);
@@ -194,7 +194,7 @@ public class DiaryController {
     }
 
     @GetMapping("interim-diary/{lastDiaryId}/{size}")
-    public ResponseEntity<ResponseMessage> inquryInterimDiaryList(@PathVariable int lastDiaryId, @PathVariable int size) {
+    public ResponseEntity<ResponseMessage> inquiryInterimDiaryList(@PathVariable int lastDiaryId, @PathVariable int size) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
         Map<String, Object> data = diaryService.getInterimDiaryList(memberId, lastDiaryId, size);
@@ -208,7 +208,7 @@ public class DiaryController {
     }
 
     @GetMapping("interim-diary-count")
-    public ResponseEntity<ResponseMessage> inquriyInterimDiaryCount() {
+    public ResponseEntity<ResponseMessage> inquiryInterimDiaryCount() {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
         Map<String, Object> data = new HashMap<>();
