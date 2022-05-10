@@ -199,9 +199,15 @@
     <select id="bambooGrove" resultType="DiaryVO" >
         SELECT id, member_id, is_deleted, diary_no, title, write_date, angry_phase_id, todack_count, view_count
         FROM diary
-        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = 1
+        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = 1 AND ${filter}
         ORDER BY id DESC
         LIMIT #{size}
+    </select>
+
+    <select id="bambooTest" resultType = "DiaryVO">
+        SELECT id
+        FROM diary
+        WHERE ${test}
     </select>
 
 <!-- 다이어리 상세 조회 -->
