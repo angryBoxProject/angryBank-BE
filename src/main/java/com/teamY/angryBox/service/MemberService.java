@@ -180,4 +180,8 @@ public class MemberService {
     public MemberVO inquriyMember(int memberId) {
         return memberRepository.selectById(memberId);
     }
+
+    public void removeMember(int id) {
+        memberRepository.deleteMember(id);
+    }
 }

@@ -153,6 +153,13 @@ public class MemberController {
         return new ResponseEntity<>(new ResponseMessage(true, "메일 전송 성공", ""), HttpStatus.OK);
     }
 
+    @DeleteMapping("/users")
+    public ResponseEntity<ResponseMessage> removeMember() {
+        int id = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        memberService.removeMember(id);
+        return new ResponseEntity<>(new ResponseMessage(true, "회원 탈퇴 성공", ""), HttpStatus.OK);
+    }
+
 
 
 }
