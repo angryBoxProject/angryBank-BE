@@ -62,7 +62,9 @@ public interface DiaryMapper {
 
     int selectMaxFileNo(int diaryId);
 
-    List<DiaryVO> bambooGrove(int lastDiaryId, int size);
+    List<DiaryVO> bambooGrove(int lastDiaryId, int size, String filter);
+
+    List<DiaryVO> bambooTest(String test);
 
     int selectDiaryCountInCoinBank(int diaryId, int memberId);
 

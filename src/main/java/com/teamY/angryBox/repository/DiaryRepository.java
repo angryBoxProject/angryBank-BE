@@ -119,8 +119,8 @@ public class DiaryRepository {
         return diaryMapper.selectMaxFileNo(diaryId);
     }
 
-    public List<DiaryVO> bambooGrove(int diaryId, int size) {
-        return diaryMapper.bambooGrove(diaryId, size);
+    public List<DiaryVO> bambooGrove(int diaryId, int size, String filter) {
+        return diaryMapper.bambooGrove(diaryId, size, filter);
     }
 
     public int selectDiaryCountInCoinBank(int diaryId, int memberId) {

@@ -2,6 +2,7 @@ package com.teamY.angryBox;
 
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 
+import com.teamY.angryBox.dto.FilterDTO;
 import com.teamY.angryBox.dto.NewCoinBankDTO;
 import com.teamY.angryBox.mapper.*;
 import com.teamY.angryBox.repository.DiaryRepository;
@@ -133,6 +134,8 @@ class AngryBoxApplicationTests {
 	@Autowired
 	CoinBankService coinBankService;
 
+
+
 	//@Disabled
 	@Test
 	void profileTest(){
@@ -140,6 +143,13 @@ class AngryBoxApplicationTests {
 	//log.info(profileMapper.selectJoinedProfile(1).toString());
 
 		//coinBankService.createCoinBank( new NewCoinBankDTO( "이름", "메모", 111, "치킨이닭"), 1);
-		log.info(coinBankService.inquiryBankStatProfile(2).toString());
+		//log.info(coinBankService.inquiryBankStatProfile(2).toString());
+
+		//log.info("" + diaryMapper.bambooTest("member_id = 1 and diary_no > 320"));
+
+		int angry[] = {1,2};
+		FilterDTO filterDTO = new FilterDTO("2022-05-01", "2022-05-05", angry, 2);
+
+		log.info("" + diaryMapper.bambooGrove(1101, 100, filterDTO.getFilter().toString()));
 	}
 }

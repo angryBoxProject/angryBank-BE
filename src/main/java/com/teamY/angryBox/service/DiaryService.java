@@ -1,6 +1,7 @@
 package com.teamY.angryBox.service;
 
 
+import com.teamY.angryBox.dto.FilterDTO;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.FileRepository;
@@ -211,13 +212,23 @@ public class DiaryService {
         return diaryRepository.searchDiary(keyword, lastDiaryId, size);
     }
 
-    public List<DiaryVO> bambooGrove(int lastDiaryId, int size) {
+    public List<DiaryVO> bambooGrove(int lastDiaryId, int size, FilterDTO filter) {
         if (lastDiaryId == 0)
             lastDiaryId = diaryRepository.selectLastId() + 1;
 //        else if(lastDiaryId < 0)
 //            throw new
 
-        return diaryRepository.bambooGrove(lastDiaryId, size);
+        StringBuilder filterStr;
+
+        if(filter == null) {
+            filterStr = new StringBuilder();
+            filterStr.append("1");
+        }
+        else {
+            filterStr = filter.getFilter();
+        }
+
+        return diaryRepository.bambooGrove(lastDiaryId, size, filter.toString());
     }
 
     @Transactional

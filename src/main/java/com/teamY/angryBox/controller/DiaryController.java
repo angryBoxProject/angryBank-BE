@@ -1,6 +1,7 @@
 package com.teamY.angryBox.controller;
 
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
+import com.teamY.angryBox.dto.FilterDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
 
@@ -163,10 +164,11 @@ public class DiaryController {
     }
 
     @GetMapping("diaries")
-    public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size) {
+    public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size, @RequestBody FilterDTO filter) {
 
+        log.info("filter : " + filter.toString());
         Map<String, Object> data = new HashMap<>();
-        data.put("diaries", diaryService.bambooGrove(lastDiaryId, size));
+        data.put("diaries", diaryService.bambooGrove(lastDiaryId, size, filter));
         return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "대나무숲 조회 성공", "", data), HttpStatus.OK);
     }
 
