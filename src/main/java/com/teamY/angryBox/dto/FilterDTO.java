@@ -29,8 +29,7 @@ public class FilterDTO {
 
 
         if(angry != null && angry.length > 0) {
-            stringBuilder.append(" AND ");
-            stringBuilder.append("(");
+            stringBuilder.append(" AND (");
             for(int i : angry) {
                 stringBuilder.append("angry_phase_id = " + i + " OR ");
             }
@@ -41,7 +40,9 @@ public class FilterDTO {
         if(imageFilter != 2) {
             stringBuilder.append(" AND ");
             if(imageFilter == 1)
-                stringBuilder.append("");//어케해야대지? 조인해도 여러개자나..? sql 천재 다예한테 물어보자
+                stringBuilder.append("id IN (SELECT DISTINCT diary_id FROM diary_file)");
+            else if(imageFilter == 0)
+                stringBuilder.append("not id IN (SELECT DISTINCT diary_id FROM diary_file)");
         }
 
         return stringBuilder;
