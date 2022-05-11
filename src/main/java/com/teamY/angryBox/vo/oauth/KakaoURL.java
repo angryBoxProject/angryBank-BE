@@ -1,11 +1,14 @@
 package com.teamY.angryBox.vo.oauth;
 
+import com.teamY.angryBox.service.OAuthService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import static com.teamY.angryBox.utils.HeaderUtil.TOKEN_PREFIX;
 
 
 @Configuration
@@ -28,6 +31,9 @@ public class KakaoURL implements OAuthURL{
     @Value("${spring.security.oauth2.client.registration.kakao.redirectUri}")
     private String redirectUri;
 
+    @Value("${spring.security.oauth2.client.provider.kakao.unLinkUri}")
+    private String unLinkUri;
+
     private final String grantType = "authorization_code";
 
     @Override
@@ -46,4 +52,14 @@ public class KakaoURL implements OAuthURL{
     public String getContentType() {
         return contentType;
     }
+
+    @Override
+    public String sendUnLinkURL(String accessToken) {
+        return unLinkUri +
+                "&Content-Type: application/x-www-form-urlencoded"
+                + "&Authorization: " + TOKEN_PREFIX + accessToken;
+    }
+    //curl -v -X POST "https://kapi.kakao.com/v1/user/unlink" \
+    //  -H "Content-Type: application/x-www-form-urlencoded" \
+    //  -H "Authorization: Bearer ${ACCESS_TOKEN}"
 }

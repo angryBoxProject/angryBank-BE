@@ -42,4 +42,9 @@ public class GoogleURL implements OAuthURL {
     public String getContentType() {
         return contentType;
     }
+
+    @Override
+    public String sendUnLinkURL(String accessToken) {
+        return null;
+    }
 }

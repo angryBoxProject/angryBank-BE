@@ -13,7 +13,7 @@
         <result property = "password" javaType="string" column ="password" jdbcType="VARCHAR"/>
     </resultMap>
 
-
+<!--  없는 email 주입 시 null 반환하여 에러 발생(IFNULL 사용 시 row 안 뜸)  -->
     <select id="selectByEmail" parameterType="String" resultMap="memberMap" resultType="MemberVO">
         SELECT id, email, nickname, member.password, register_type
         FROM member
