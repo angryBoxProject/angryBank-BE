@@ -34,6 +34,9 @@ public class KakaoURL implements OAuthURL{
     @Value("${spring.security.oauth2.client.provider.kakao.unLinkUri}")
     private String unLinkUri;
 
+    @Value("${spring.security.oauth2.client.registration.kakao.adminKey}")
+    private String adminKey;
+
     private final String grantType = "authorization_code";
 
     @Override
@@ -54,12 +57,17 @@ public class KakaoURL implements OAuthURL{
     }
 
     @Override
-    public String sendUnLinkURL(String accessToken) {
+    public String sendUnLinkURL(String oauthId) {
         return unLinkUri +
-                "&Content-Type: application/x-www-form-urlencoded"
-                + "&Authorization: " + TOKEN_PREFIX + accessToken;
+                "&Content-Type: application/x-www-form-urlencoded" +
+                "&Authorization: KakaoAK " + adminKey +
+                "&target_id_type=user_id" +
+                "&target_id=" + oauthId;
     }
+
     //curl -v -X POST "https://kapi.kakao.com/v1/user/unlink" \
     //  -H "Content-Type: application/x-www-form-urlencoded" \
-    //  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+    //  -H "Authorization: KakaoAK ${APP_ADMIN_KEY}" \
+    //  -d "target_id_type=user_id" \
+    //  -d "target_id=123456789"
 }

@@ -146,12 +146,11 @@ public class OAuthService {
     }
 
 
-    public void removeOAuthMember(OAuthProviderEnum providerEnum, String code) { //, String accessToken
+    public void removeOAuthMember(OAuthProviderEnum providerEnum) {
 
         //code를 OAuthController.kakaoLogin처럼 controller에서 받아오든가 해야 할듯
-        OAuthURL url = getURL(providerEnum);
-        String accessToken = getAccessToken(url.getTokenURL(code));
-        url.sendUnLinkURL(accessToken);
+        //OAuthURL url = getURL(providerEnum);
+        //url.sendUnLinkURL(accessToken);
     }
 
 }
