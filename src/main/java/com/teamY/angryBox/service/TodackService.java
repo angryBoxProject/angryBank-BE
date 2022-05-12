@@ -5,6 +5,7 @@ import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.NotificationRepository;
 import com.teamY.angryBox.repository.TodackRepository;
+import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.TodackVO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,18 +36,32 @@ public class TodackService {
     }
 
     public void checkSendTodack(int memberId, int diaryId, int todack) {
-        if (diaryRepository.checkDiaryId(diaryId) == 0) {
+        DiaryVO diaryVO = diaryRepository.checkDiary(diaryId);
+
+        if (diaryVO == null) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
-        } else if(diaryRepository.checkIsDeleted(diaryId) == 1) {
+        } else if(diaryVO.getId() == 1) {
             throw new InvalidRequestException("삭제된 다이어리");
         } else if (todack == 0 && todackRepository.checkSendTodack(memberId, diaryId) != 0) { //todack 0 : 토닥 보내기
             throw new InvalidRequestException("해당 게시글에 이미 토닥 보냈음");
         } else if (todack == 1 && todackRepository.checkSendTodack(memberId, diaryId) == 0) { //todack 1 : 토닥 취소하기
             throw new InvalidRequestException("토닥 보낸 적 없거나 이미 취소함");
-        } else if (diaryRepository.checkIsPublic(diaryId) == 0 &&
-                    diaryRepository.checkDiaryMemberId(diaryId, memberId) == 0) {
+        } else if (!diaryVO.isPublic() && diaryVO.getMemberId() != memberId) {
             throw new InvalidRequestException("비밀 글이므로 토닥 보내기 불가");
         }
+
+//        if (diaryRepository.checkDiaryId(diaryId) == 0) {
+//            throw new InvalidRequestException("해당 다이어리 존재하지 않음");
+//        } else if(diaryRepository.checkIsDeleted(diaryId) == 1) {
+//            throw new InvalidRequestException("삭제된 다이어리");
+//        } else if (todack == 0 && todackRepository.checkSendTodack(memberId, diaryId) != 0) { //todack 0 : 토닥 보내기
+//            throw new InvalidRequestException("해당 게시글에 이미 토닥 보냈음");
+//        } else if (todack == 1 && todackRepository.checkSendTodack(memberId, diaryId) == 0) { //todack 1 : 토닥 취소하기
+//            throw new InvalidRequestException("토닥 보낸 적 없거나 이미 취소함");
+//        } else if (diaryRepository.checkIsPublic(diaryId) == 0 &&
+//                    diaryRepository.checkDiaryMemberId(diaryId, memberId) == 0) {
+//            throw new InvalidRequestException("비밀 글이므로 토닥 보내기 불가");
+//        }
 
     }
 

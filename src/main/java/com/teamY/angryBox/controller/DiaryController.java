@@ -5,7 +5,9 @@ import com.teamY.angryBox.dto.FilterDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
 
+import com.teamY.angryBox.service.CoinBankService;
 import com.teamY.angryBox.service.DiaryService;
+import com.teamY.angryBox.service.MemberService;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.InterimDiaryVO;
@@ -31,29 +33,14 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
-
-//    @PostMapping("diary")
-//    public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
-//                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-//                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file) {
-//
-//        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-//        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
-//
-//        diaryService.addDiary(diaryVO, file);
-//
-//        return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
-//
-//    }
-
     @PostMapping("diary")
     public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
                                                        @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-                                                       @RequestParam int coinBankId, @RequestBody MultipartFile[] file,
+                                                       @RequestBody MultipartFile[] file,
                                                        @RequestParam int interimId) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
+        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId);
 
         diaryService.addDiary(diaryVO, file);
 

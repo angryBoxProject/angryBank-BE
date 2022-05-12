@@ -56,4 +56,8 @@ public class CoinBankRepository {
     public List<BankStatCalenderVO> selectBankStatCalenderByMonthAndBank(String select, int coinBankId) {
         return mapper.selectBankStatCalenderByMonthAndBank(select, coinBankId);
     }
+
+    public int selectUnExpiredCoinBank(int memberId) {
+        return mapper.selectUnExpiredCoinBank(memberId);
+    }
 }

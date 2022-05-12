@@ -65,4 +65,12 @@
         FROM diary
         WHERE DATE_FORMAT(write_date, '%Y-%m') = #{select} and coin_bank_id = #{coinBankId};
     </select>
+
+    <select id="selectUnExpiredCoinBank" resultType="int">
+        SELECT COUNT(*)
+        FROM coin_bank
+        WHERE member_id = #{memberId} AND expired = 0
+    </select>
+
+
 </mapper>

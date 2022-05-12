@@ -14,27 +14,13 @@ public interface DiaryMapper {
 
     int checkAngryId(int angryPhaseId);
 
-    int checkCoinBankMemberId(int coinBankId, int memberId);
-
-    int checkCoinBankExpired(int coinBankId, int memberId, int expired);
-
     DiaryVO insertDiary(DiaryVO diaryVO);
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
-    int checkDiaryId(int diaryId);
-
-    int checkDiaryMemberId(int diaryId, int memberId);
-
     int selectDiaryMemberId(int diaryId);
 
     int checkFileInDiary(int diaryId, int fileId);
-
-    int checkIsPublic(int diaryId);
-
-    int checkIsDeleted(int diaryId);
-
-    //int checkDailyTopDiary(String writeDate);
 
     List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size);
 
@@ -67,10 +53,6 @@ public interface DiaryMapper {
     List<DiaryVO> bambooGrove(int lastDiaryId, int size, String filter);
 
     List<DiaryVO> bambooTest(String test);
-
-    int selectDiaryCountInCoinBank(int diaryId, int memberId);
-
-    int selectTodackCountInCoinBank(int diaryId, int memberId);
 
 
     List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size);
@@ -106,4 +88,21 @@ public interface DiaryMapper {
     void deleteFileInInterimDiary(int fileId);
 
     int selectMaxInterimFileNo(int diaryId);
+
+    DiaryVO checkDiary(int diaryId);
+
+    // ************8
+    int selectDiaryCountInCoinBank(int diaryId, int memberId);
+    int selectTodackCountInCoinBank(int diaryId, int memberId);
+
+
+
+
+    int checkCoinBankExpired(int coinBankId, int memberId, int expired);
+    int checkDiaryId(int diaryId);
+    int checkDiaryMemberId(int diaryId, int memberId);
+    int checkIsPublic(int diaryId);
+    int checkIsDeleted(int diaryId);
+    int checkCoinBankMemberId(int coinBankId, int memberId);
+    int checkDailyTopDiary(String writeDate);
 }

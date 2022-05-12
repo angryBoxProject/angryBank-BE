@@ -22,40 +22,12 @@ public class DiaryRepository {
         return diaryMapper.checkAngryId(angryPhaseId);
     }
 
-    public int checkCoinBankMemberId(int coinBankId, int memberId) {
-        return diaryMapper.checkCoinBankMemberId(coinBankId, memberId);
-    }
-
-    public int checkCoinBankExpired(int coinBankId, int memberId) {
-        return diaryMapper.checkCoinBankExpired(coinBankId, memberId, 0);
-    }
-
     public DiaryVO insertDiary(DiaryVO diaryVO) {
         return diaryMapper.insertDiary(diaryVO);
     }
 
     public void insertDiaryFile(int diaryId, int fileId, int fileNo) {
         diaryMapper.insertDiaryFile(diaryId, fileId, fileNo);
-    }
-
-    public int checkIsPublic(int diaryId) {
-        return diaryMapper.checkIsPublic(diaryId);
-    }
-
-    public int checkIsDeleted(int diaryId) {
-        return diaryMapper.checkIsDeleted(diaryId);
-    }
-
-//    public int checkDailyTopDiary(String writeDate) {
-//        return diaryMapper.checkDailyTopDiary(writeDate);
-//    }
-
-    public int checkDiaryId(int diaryId) {
-        return diaryMapper.checkDiaryId(diaryId);
-    }
-
-    public int checkDiaryMemberId(int diaryId, int memberId) {
-        return diaryMapper.checkDiaryMemberId(diaryId, memberId);
     }
 
     public int selectDiaryMemberId(int diaryId) {
@@ -71,7 +43,6 @@ public class DiaryRepository {
     }
 
     public List<DiaryVO> selectDiaryListInMonth(int memberId, String writeDate, int lastDiaryId, int size) {
-
         return diaryMapper.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size);
     }
 
@@ -127,19 +98,10 @@ public class DiaryRepository {
         return diaryMapper.bambooGrove(diaryId, size, filter);
     }
 
-    public int selectDiaryCountInCoinBank(int diaryId, int memberId) {
-        return diaryMapper.selectDiaryCountInCoinBank(diaryId, memberId);
-    }
-
-    public int selectTodackCountInCoinBank(int diaryId, int memberId) {
-        return diaryMapper.selectTodackCountInCoinBank(diaryId, memberId);
-    }
-
     public List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size) {
 
         return diaryMapper.searchDiary(searchKeyword, lastDiaryId, size);
     }
-
 
     public int checkFileInInterimDiary(int diaryId, int fileId) {
         return diaryMapper.checkFileInInterimDiary(diaryId, fileId);
@@ -200,5 +162,39 @@ public class DiaryRepository {
     public int selectMaxInterimFileNo(int diaryId) {
         return diaryMapper.selectMaxInterimFileNo(diaryId);
     }
+
+    public DiaryVO checkDiary(int diaryId) {
+        return diaryMapper.checkDiary(diaryId);
+    }
+
+    public int selectDiaryCountInCoinBank(int diaryId, int memberId) {
+        return diaryMapper.selectDiaryCountInCoinBank(diaryId, memberId);
+    }
+    public int selectTodackCountInCoinBank(int diaryId, int memberId) {
+        return diaryMapper.selectTodackCountInCoinBank(diaryId, memberId);
+    }
+
+
+
+
+
+//    public int checkCoinBankExpired(int coinBankId, int memberId) {
+//        return diaryMapper.checkCoinBankExpired(coinBankId, memberId, 0);
+//    }
+//    public int checkIsPublic(int diaryId) {
+//        return diaryMapper.checkIsPublic(diaryId);
+//    }
+//    public int checkIsDeleted(int diaryId) {
+//        return diaryMapper.checkIsDeleted(diaryId);
+//    }
+//    public int checkDiaryId(int diaryId) {
+//        return diaryMapper.checkDiaryId(diaryId);
+//    }
+//    public int checkDiaryMemberId(int diaryId, int memberId) {
+//        return diaryMapper.checkDiaryMemberId(diaryId, memberId);
+//    }
+//    public int checkCoinBankMemberId(int coinBankId, int memberId) {
+//        return diaryMapper.checkCoinBankMemberId(coinBankId, memberId);
+//    }
 
 }
