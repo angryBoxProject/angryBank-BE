@@ -1,6 +1,7 @@
 package com.teamY.angryBox.controller;
 
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
+import com.teamY.angryBox.dto.FilterDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
 
@@ -162,11 +163,21 @@ public class DiaryController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "검색 성공", "", data), HttpStatus.OK);
     }
 
-    @GetMapping("diaries")
-    public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size) {
+    /*
+    String startDate = "1";
+    String endDate = "1";
+    int angry[];
+    int imageFilter = 2; // 0 : 이미지 없는거만, 1: 이미지 있는거만, 2 : 이미지 있/없 둘다,
 
+* */
+    @GetMapping("diaries")
+    public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size
+            , @RequestParam String startDate, @RequestParam String endDate, @RequestParam int angry[], @RequestParam int imageFilter) {
+
+        FilterDTO filter = new FilterDTO(startDate, endDate, angry, imageFilter);
+        log.info("filter : " + filter.toString());
         Map<String, Object> data = new HashMap<>();
-        data.put("diaries", diaryService.bambooGrove(lastDiaryId, size));
+        data.put("diaries", diaryService.bambooGrove(lastDiaryId, size, filter));
         return new ResponseEntity<ResponseDataMessage>(new ResponseDataMessage(true, "대나무숲 조회 성공", "", data), HttpStatus.OK);
     }
 
