@@ -24,6 +24,9 @@ public class GoogleURL implements OAuthURL {
     @Value("${spring.security.oauth2.client.registration.google.redirectUri}")
     private String redirectUri;
 
+    @Value("${spring.security.oauth2.client.provider.google.unLinkUri}")
+    private String unLinkUri;
+
     private final String grantType = "authorization_code";
 
     @Override
@@ -44,7 +47,8 @@ public class GoogleURL implements OAuthURL {
     }
 
     @Override
-    public String sendUnLinkURL(String accessToken) {
-        return null;
+    public String sendUnLinkURL() {
+        return unLinkUri +
+                "?token=";
     }
 }
