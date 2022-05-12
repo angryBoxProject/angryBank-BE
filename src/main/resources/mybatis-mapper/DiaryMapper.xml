@@ -35,6 +35,13 @@
         FROM diary
         WHERE id = #{diaryId} AND member_id = #{memberId}
     </select>
+    <!--    다이어리 작성자 확인 -->
+    <select id="selectDiaryMemberId" resultType="int">
+        SELECT member_id
+        FROM diary
+        WHERE id = #{diaryId}
+    </select>
+
     <!--    다이어리에 해당 파일 있는지 확인-->
     <select id="checkFileInDiary" resultType="int">
         SELECT COUNT(*)
@@ -112,13 +119,13 @@
     </select>
 
     <!--  해당 날짜에 TOP 다이어리 여부 확인  -->
-    <select id="checkDailyTopDiary" resultType="int">
-        SELECT COUNT(*)
-        FROM top_diary_daily AS tdd
-                 LEFT JOIN diary AS d
-                           ON tdd.diary_id = d.id
-        WHERE DATE_FORMAT(tdd.write_date, '%Y-%m-%d') = DATE_FORMAT(#{writeDate}, '%Y-%m-%d') AND is_public = 1;
-    </select>
+<!--    <select id="checkDailyTopDiary" resultType="int">-->
+<!--        SELECT COUNT(*)-->
+<!--        FROM top_diary_daily AS tdd-->
+<!--                 LEFT JOIN diary AS d-->
+<!--                           ON tdd.diary_id = d.id-->
+<!--        WHERE DATE_FORMAT(tdd.write_date, '%Y-%m-%d') = DATE_FORMAT(#{writeDate}, '%Y-%m-%d') AND is_public = 1;-->
+<!--    </select>-->
 
     <!-- 다이어리 저장 및 id 값 조회-->
     <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="DiaryVO" resultMap="DiaryDetail">

@@ -26,13 +26,15 @@ public interface DiaryMapper {
 
     int checkDiaryMemberId(int diaryId, int memberId);
 
+    int selectDiaryMemberId(int diaryId);
+
     int checkFileInDiary(int diaryId, int fileId);
 
     int checkIsPublic(int diaryId);
 
     int checkIsDeleted(int diaryId);
 
-    int checkDailyTopDiary(String writeDate);
+    //int checkDailyTopDiary(String writeDate);
 
     List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size);
 

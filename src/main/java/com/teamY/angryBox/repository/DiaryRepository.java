@@ -46,9 +46,9 @@ public class DiaryRepository {
         return diaryMapper.checkIsDeleted(diaryId);
     }
 
-    public int checkDailyTopDiary(String writeDate) {
-        return diaryMapper.checkDailyTopDiary(writeDate);
-    }
+//    public int checkDailyTopDiary(String writeDate) {
+//        return diaryMapper.checkDailyTopDiary(writeDate);
+//    }
 
     public int checkDiaryId(int diaryId) {
         return diaryMapper.checkDiaryId(diaryId);
@@ -56,6 +56,10 @@ public class DiaryRepository {
 
     public int checkDiaryMemberId(int diaryId, int memberId) {
         return diaryMapper.checkDiaryMemberId(diaryId, memberId);
+    }
+
+    public int selectDiaryMemberId(int diaryId) {
+        return diaryMapper.selectDiaryMemberId(diaryId);
     }
 
     public int checkFileInDiary(int diaryId, int fileId) {
