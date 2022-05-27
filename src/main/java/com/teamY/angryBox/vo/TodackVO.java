@@ -15,7 +15,7 @@ public class TodackVO {
     private int sendMemberId;
     private int receiveMemberId;
     private int diaryId;
-    private int sendReceive;
+    private int sendReceive; //send = 0, receive = 1
 
     public TodackVO() {
     }

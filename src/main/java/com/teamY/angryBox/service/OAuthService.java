@@ -1,13 +1,7 @@
 package com.teamY.angryBox.service;
 
-import com.teamY.angryBox.config.properties.AppProperties;
-import com.teamY.angryBox.config.security.oauth.AuthToken;
-import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
-import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
-import com.teamY.angryBox.controller.MemberController;
-import com.teamY.angryBox.dto.ResponseDataMessage;
-import com.teamY.angryBox.dto.ResponseMessage;
 import com.teamY.angryBox.enums.OAuthProviderEnum;
+import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
@@ -16,19 +10,15 @@ import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.*;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +29,7 @@ public class OAuthService {
     private final GoogleURL googleURL;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final StringRedisTemplate stringRedisTemplate;
 
     // 나중에 리턴 타입 바꾸기. 지금은 테스트용으로 String
     public String OAuthLogin(OAuthProviderEnum providerEnum, String code) {
@@ -46,25 +37,19 @@ public class OAuthService {
         OAuthURL url = getURL(providerEnum);
 
         String accessToken = getAccessToken(url.getTokenURL(code));
-        log.info("accessToken : " + accessToken);
+        log.info("OAuth accessToken : " + accessToken);
 
         Map<String, Object> userInfoMap = getUserInfo(url.getUserInfoUri(), accessToken, url.getContentType(), providerEnum);
 
         log.info("userInfoMap : " + userInfoMap.toString());
 
-        String userEmail = (String) userInfoMap.get("email");
         String userNickname = (String) userInfoMap.get("nickname");
-
-        if(userEmail == null) {
-            userEmail = userInfoMap.get("oauthId") + "@angrybox.link";
-        }
+        String userEmail = userInfoMap.get("oauthId") + "@angrybox.link";
 
         if(memberRepository.findByEmail(userEmail) == null) {
 
             log.info("회원 가입 해야됨");
 
-            //UUID uuidPassword = UUID.randomUUID();
-            //String password = "!" + providerEnum.getProviderName() + uuidPassword;
             String password = bCryptPasswordEncoder.encode("password");
 
             MemberVO member = new MemberVO(userEmail, userNickname, password, providerEnum.getProviderName());
@@ -72,6 +57,9 @@ public class OAuthService {
 
             memberRepository.insertMember(member);
         }
+
+        String key = String.valueOf(memberRepository.findByEmail(userEmail).getId());
+        stringRedisTemplate.opsForValue().set(key, accessToken);
 
         return userEmail;
     }
@@ -143,6 +131,30 @@ public class OAuthService {
         }
 
         return null;
+    }
+
+    @Transactional
+    public void removeOAuthMember(int id, String registerType) {
+        String key = String.valueOf(id);
+        String accessToken = stringRedisTemplate.opsForValue().get(key);
+
+        if(registerType.equals("kakao")) {
+            HttpHeaders header = new HttpHeaders();
+            header.add("Authorization", HeaderUtil.TOKEN_PREFIX + accessToken );
+            HttpEntity<?> entity = new HttpEntity<>(header);
+
+            restTemplate.postForObject(kakaoURL.sendUnLinkURL(), entity, Map.class);
+        } else if(registerType.equals("google")) {
+            HttpHeaders header = new HttpHeaders();
+            header.add("Content-type", "application/x-www-form-urlencoded");
+            HttpEntity<?> entity = new HttpEntity<>(header);
+
+            restTemplate.postForObject(googleURL.sendUnLinkURL() + accessToken, entity, Map.class);
+        }
+
+        stringRedisTemplate.delete(key);
+        memberRepository.deleteMember(id);
+
     }
 
 }

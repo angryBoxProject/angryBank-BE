@@ -31,8 +31,6 @@ public class DiaryVO {
 
 
     //다이어리 작성 시 사용할 생성자
-
-    //                                      DiaryVO(memberId, title, content, isPublic, angryPhaseId, coinBankId);
     public DiaryVO(int memberId, String title, String content, boolean isPublic, int angryPhaseId, int coinBankId) {
         this.memberId = memberId;
         this.title = title;
@@ -40,6 +38,14 @@ public class DiaryVO {
         this.isPublic = isPublic;
         this.angryPhaseId = angryPhaseId;
         this.coinBankId = coinBankId;
+    }
+
+    public DiaryVO(int memberId, String title, String content, boolean isPublic, int angryPhaseId) {
+        this.memberId = memberId;
+        this.title = title;
+        this.content = content;
+        this.isPublic = isPublic;
+        this.angryPhaseId = angryPhaseId;
     }
 
     //다이어리 수정 시 사용할 생성자

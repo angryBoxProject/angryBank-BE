@@ -11,47 +11,18 @@
         FROM angry_phase
         WHERE id = #{angryPhaseId}
     </select>
-    <!--    저금통 member_id 확인 -->
-    <select id="checkCoinBankMemberId" resultType="int">
-        SELECT COUNT(*)
-        FROM coin_bank
-        WHERE id = #{coinBankId} AND member_id = #{memberId}
-    </select>
-    <!--    저금통 만료 여부 확인-->
-    <select id="checkCoinBankExpired" resultType="int">
-        SELECT COUNT(*)
-        FROM coin_bank
-        WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = #{expired};
-    </select>
-    <!--    다이어리 존재 여부 확인 -->
-    <select id="checkDiaryId" resultType="int">
-        SELECT COUNT(*)
-        FROM diary
-        WHERE id = #{diaryId};
-    </select>
     <!--    다이어리 작성자 확인 -->
-    <select id="checkDiaryMemberId" resultType="int">
-        SELECT COUNT(*)
+    <select id="selectDiaryMemberId" resultType="int">
+        SELECT member_id
         FROM diary
-        WHERE id = #{diaryId} AND member_id = #{memberId}
+        WHERE id = #{diaryId}
     </select>
+
     <!--    다이어리에 해당 파일 있는지 확인-->
     <select id="checkFileInDiary" resultType="int">
         SELECT COUNT(*)
         FROM diary_file
         WHERE diary_id = #{diaryId} AND file_id = #{fileId}
-    </select>
-    <!--    다이어리 공개 여부 확인-->
-    <select id="checkIsPublic" resultType="int">
-        SELECT is_public
-        FROM diary
-        WHERE id = #{diaryId}
-    </select>
-    <!--    다이어리 삭제 여부 확인-->
-    <select id="checkIsDeleted" resultType="int">
-        SELECT is_deleted
-        FROM diary
-        WHERE id = #{diaryId};
     </select>
     <!--    전체 게시글 마지막 id 조회 -->
     <select id="selectLastId" resultType="int">
@@ -86,14 +57,31 @@
         FROM top_diary_today
     </select>
 
-    <!--  해당 날짜에 TOP 다이어리 여부 확인  -->
-    <select id="checkDailyTopDiary" resultType="int">
-        SELECT COUNT(*)
-        FROM top_diary_daily AS tdd
-                 LEFT JOIN diary AS d
-                           ON tdd.diary_id = d.id
-        WHERE DATE_FORMAT(tdd.write_date, '%Y-%m-%d') = DATE_FORMAT(#{writeDate}, '%Y-%m-%d') AND is_public = 1;
+    <!--    임시 다이어리 마지막 id 조회 -->
+    <select id="selectInterimLastId" resultType="int">
+        SELECT IFNULL(MAX(id), -1)
+        FROM interim_diary
+        WHERE member_id = #{memberId};
     </select>
+    <!--    임시 다이어리에 해당 파일 있는지 확인-->
+    <select id="checkFileInInterimDiary" resultType="int">
+        SELECT COUNT(*)
+        FROM interim_diary_file
+        WHERE diary_id = #{diaryId} AND file_id = #{fileId}
+    </select>
+    <!--    임시 다이어리 존재 여부 확인 -->
+    <select id="checkInterimDiaryId" resultType="int">
+        SELECT COUNT(*)
+        FROM interim_diary
+        WHERE id = #{diaryId};
+    </select>
+    <!--    임시 다이어리 작성자 확인 -->
+    <select id="checkInterimDiaryMemberId" resultType="int">
+        SELECT COUNT(*)
+        FROM interim_diary
+        WHERE id = #{diaryId} AND member_id = #{memberId}
+    </select>
+
 
     <!-- 다이어리 저장 및 id 값 조회-->
     <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="DiaryVO" resultMap="DiaryDetail">
@@ -174,9 +162,15 @@
     <select id="bambooGrove" resultType="DiaryVO" >
         SELECT id, member_id, is_deleted, diary_no, title, write_date, angry_phase_id, todack_count, view_count
         FROM diary
-        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = 1
+        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = 1 AND ${filter}
         ORDER BY id DESC
         LIMIT #{size}
+    </select>
+
+    <select id="bambooTest" resultType = "DiaryVO">
+        SELECT id
+        FROM diary
+        WHERE ${test}
     </select>
 
 <!-- 다이어리 상세 조회 -->
@@ -233,13 +227,86 @@
         WHERE d.id = #{diaryId};
     </select>
 
-<!--    임시 다이어리 저장 -->
-<!--    임시 다이어리 수정 -->
+<!--    임시 다이어리 저장 및 id 조회 -->
+    <select id="insertInterimDiary" parameterType="InterimDiaryVO" statementType="CALLABLE" resultType="int" >
+        { CALL INSERT_INTERIM_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId} ) }
+    </select>
+    <insert id="insertInterimDiaryFile">
+        INSERT INTO interim_diary_file(diary_id, file_id, file_no) VALUES( #{diaryId}, #{fileId}, #{fileNo} )
+    </insert>
+<!--    임시 다이어리 상세 조회-->
+    <resultMap id="interimDiaryDetail" type="interimDiaryVO">
+        <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
+        <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
+        <result property="title" javaType="string" column="title" jdbcType="VARCHAR" />
+        <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
+        <result property="dateTime" javaType="string" column="write_date" jdbcType="TIMESTAMP" />
+        <result property="isPublic" javaType="boolean" column="is_public" jdbcType="TINYINT" />
+        <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="interimFileDetail" type="fileVO">
+        <result property="id" javaType="int" column="file_id" jdbcType="INTEGER" />
+        <result property="systemFileName" javaType="string" column="system_file_name" jdbcType="VARCHAR" />
+        <result property="fileNo" javaType="int" column="file_no" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="selectInterimDiaryDetailResultMap" type="InterimDiaryFileVO">
+        <collection property="interimDiaryVO" resultMap="interimDiaryDetail" />
+        <collection property="fileVO" resultMap="interimFileDetail" />
+    </resultMap>
+    <select id="selectInterimDiaryDetail" resultType="InterimDiaryFileVO" resultMap="selectInterimDiaryDetailResultMap" >
+        { CALL SELECT_INTERIM_DIARY( #{diaryId} ) }
+    </select>
+
 <!--    임시 다이어리 목록 조회 -->
+    <select id="selectInterimDiaryList" resultType="InterimDiaryVO" >
+        SELECT id, member_id, title, content, DATE(write_date) AS dateTime, angry_phase_id, is_public
+        FROM interim_diary
+        WHERE member_id = #{memberId} AND id <![CDATA[<]]> #{lastDiaryId}
+        ORDER BY id DESC
+        LIMIT #{size};
+    </select>
+
 <!--    임시 다이어리 개수 조회-->
+    <select id="countInterimDiary" resultType="int" >
+        SELECT COUNT(*) FROM interim_diary WHERE member_id = #{memberId}
+    </select>
 
+<!--    임시 다이어리 삭제-->
+    <select id="selectFileInInterimDiary" resultType="int">
+        SELECT IFNULL(file_id, 0) AS file_id
+        FROM interim_diary AS d
+                 LEFT OUTER JOIN(
+            SELECT diary_id, file_id
+            FROM interim_diary_file
+            WHERE diary_id = #{diaryId}
+        ) AS df ON (d.id = df.diary_id)
+    </select>
+    <delete id="deleteInterimDiary" statementType="CALLABLE">
+        { CALL DELETE_INTERIM_DIARY( #{diaryId} ) }
+    </delete>
+    <delete id="deleteInterimFile" >
+        DELETE FROM interim_file WHERE id = #{fileId}
+    </delete>
 
-<!--    저금통 별 다이어리 개수 -->
+    <!--    임시 다이어리 수정 -->
+    <update id="updateInterimDiary" parameterType="InterimDiaryVO">
+        UPDATE interim_diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteFileInInterimDiary" >
+        { CALL DELETE_FILE_IN_INTERIM_DIARY( #{fileId} )  }
+    </delete>
+    <select id="selectMaxInterimFileNo" resultType="int">
+        SELECT IFNULL(MAX(df.file_no), 0)
+        FROM interim_diary AS d
+                 RIGHT JOIN interim_diary_file AS df
+                            ON d.id = df.diary_id
+                 LEFT JOIN interim_file AS f
+                           ON df.file_id = f.id
+        WHERE d.id = #{diaryId};
+    </select>
+
+    <!--    저금통 별 다이어리 개수 -->
     <select id="selectDiaryCountInCoinBank" resultType="int">
         SELECT COUNT(*)
         FROM diary
@@ -261,5 +328,56 @@
         ORDER BY id desc
         LIMIT #{size}
     </select>
+
+    <select id="checkDiary" resultMap="DiaryDetail">
+        SELECT id AS diary_id, member_id, is_deleted, is_public
+        FROM diary
+        WHERE id = #{diaryId}
+    </select>
+
+    <!--    다이어리 공개 여부 확인-->
+    <!--    <select id="checkIsPublic" resultType="int">-->
+    <!--        SELECT is_public-->
+    <!--        FROM diary-->
+    <!--        WHERE id = #{diaryId}-->
+    <!--    </select>-->
+    <!--    다이어리 삭제 여부 확인-->
+    <!--    <select id="checkIsDeleted" resultType="int">-->
+    <!--        SELECT is_deleted-->
+    <!--        FROM diary-->
+    <!--        WHERE id = #{diaryId};-->
+    <!--    </select>-->
+    <!--    저금통 만료 여부 확인-->
+    <!--    <select id="checkCoinBankExpired" resultType="int">-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM coin_bank-->
+    <!--        WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = #{expired};-->
+    <!--    </select>-->
+    <!--    다이어리 존재 여부 확인 -->
+    <!--    <select id="checkDiaryId" resultType="int">-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM diary-->
+    <!--        WHERE id = #{diaryId};-->
+    <!--    </select>-->
+    <!--    다이어리 작성자 확인 -->
+    <!--    <select id="checkDiaryMemberId" resultType="int">-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM diary-->
+    <!--        WHERE id = #{diaryId} AND member_id = #{memberId}-->
+    <!--    </select>-->
+    <!--  해당 날짜에 TOP 다이어리 여부 확인  -->
+    <!--    <select id="checkDailyTopDiary" resultType="int">-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM top_diary_daily AS tdd-->
+    <!--                 LEFT JOIN diary AS d-->
+    <!--                           ON tdd.diary_id = d.id-->
+    <!--        WHERE DATE_FORMAT(tdd.write_date, '%Y-%m-%d') = DATE_FORMAT(#{writeDate}, '%Y-%m-%d') AND is_public = 1;-->
+    <!--    </select>-->
+    <!--    저금통 member_id 확인 -->
+    <!--    <select id="checkCoinBankMemberId" resultType="int">-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM coin_bank-->
+    <!--        WHERE id = #{coinBankId} AND member_id = #{memberId}-->
+    <!--    </select>-->
 
 </mapper>

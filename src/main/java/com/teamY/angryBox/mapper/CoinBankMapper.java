@@ -29,4 +29,6 @@ public interface CoinBankMapper {
     List<BankStatCalenderVO> selectBankStatCalenderByMonthAndBank(String select, int coinBankId);
 
     List<Map<String, Object>> selectAllBank(int memberId);
+    int selectUnExpiredCoinBank(int memberId);
+
 }

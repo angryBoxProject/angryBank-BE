@@ -16,6 +16,11 @@
         VALUES (#{originalFileName}, #{systemFileName}, #{fileSize}, #{fileType});
     </insert>
 
+    <insert id = "insertInterimFile" parameterType="FileVO" useGeneratedKeys="true" keyProperty="id">  <!--  -->
+        INSERT INTO interim_file(original_file_name, system_file_name, file_size, file_type)
+        VALUES (#{originalFileName}, #{systemFileName}, #{fileSize}, #{fileType});
+    </insert>
+
     <delete id="deleteFile">
         DELETE FROM file WHERE id = #{id}
     </delete>

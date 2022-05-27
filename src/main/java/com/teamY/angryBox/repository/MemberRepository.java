@@ -76,4 +76,12 @@ public class MemberRepository {
     public void updateLastLogin(int id) {
         mapper.updateLastLogin(id);
     }
+
+    public void deleteMember(int id) {
+        mapper.deleteMember(id);
+    }
+
+    public int checkDeleted(int id) {
+        return mapper.checkDeleted(id);
+    }
 }

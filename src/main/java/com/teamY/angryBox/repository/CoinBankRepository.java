@@ -60,4 +60,7 @@ public class CoinBankRepository {
     public List<Map<String, Object>> selectAllBank(int memberId) {
         return mapper.selectAllBank(memberId);
     }
+    public int selectUnExpiredCoinBank(int memberId) {
+        return mapper.selectUnExpiredCoinBank(memberId);
+    }
 }
