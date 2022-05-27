@@ -9,6 +9,7 @@ import com.teamY.angryBox.vo.CoinBankVO;
 import com.teamY.angryBox.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.ognl.ObjectArrayPool;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,5 +63,13 @@ public class CoinBankController {
         coinBankService.expireCoinBank(bank.getId(), memberVO.getId());
 
         return new ResponseEntity<>(new ResponseMessage(true, "적금 깨기 성공", ""), HttpStatus.OK);
+    }
+
+    @GetMapping("banks")
+    public ResponseEntity<ResponseDataMessage> getAllBanks() {
+        MemberVO memberVO = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "모든 저금통 조회 성공", "", coinBankService.selectAllBank(memberVO.getId())), HttpStatus.OK);
     }
 }

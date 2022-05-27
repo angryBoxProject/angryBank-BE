@@ -143,4 +143,11 @@ public class CoinBankService {
 
         return data;
     }
+
+    public Map<String, Object> selectAllBank(int memberId) {
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("coinBankList", coinBankRepository.selectAllBank(memberId));
+        return data;
+    }
 }
