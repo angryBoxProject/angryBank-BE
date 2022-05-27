@@ -66,11 +66,19 @@
         WHERE DATE_FORMAT(write_date, '%Y-%m') = #{select} and coin_bank_id = #{coinBankId};
     </select>
 
+
+    <select id ="selectAllBank" resultType="java.util.HashMap">
+        SELECT d.coin_bank_id as coinBankId, c.name as coinBankName, count(d.id) as diaryCount, sum(d.todack_count) as todackCount
+        FROM diary AS d INNER JOIN coin_bank AS c
+                                   ON d.coin_bank_id = c.id
+        WHERE d.coin_bank_id IN (SELECT id FROM angrybox4.coin_bank WHERE member_id = #{memberId})
+        GROUP BY d.coin_bank_id;
+    </select>
+
     <select id="selectUnExpiredCoinBank" resultType="int">
         SELECT COUNT(*)
         FROM coin_bank
         WHERE member_id = #{memberId} AND expired = 0
     </select>
-
 
 </mapper>
