@@ -1,6 +1,8 @@
 package com.teamY.angryBox.mapper;
 
 
+import com.teamY.angryBox.dto.DiaryDTO;
+//import com.teamY.angryBox.dto.DiaryFileDTO;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.InterimDiaryFileVO;
@@ -14,7 +16,7 @@ public interface DiaryMapper {
 
     int checkAngryId(int angryPhaseId);
 
-    DiaryVO insertDiary(DiaryVO diaryVO);
+    DiaryVO insertDiary(DiaryDTO diaryDTO);
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
@@ -44,7 +46,7 @@ public interface DiaryMapper {
 
     void deleteDiary(int diaryId, int memberId);
 
-    void updateDiary(DiaryVO diaryVO);
+    void updateDiary(DiaryDTO diaryDTO);
 
     void deleteFileInDiary(int fileId);
 
@@ -105,4 +107,5 @@ public interface DiaryMapper {
     int checkIsDeleted(int diaryId);
     int checkCoinBankMemberId(int coinBankId, int memberId);
     int checkDailyTopDiary(String writeDate);
+
 }

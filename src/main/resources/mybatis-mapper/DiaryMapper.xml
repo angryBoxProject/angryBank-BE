@@ -84,12 +84,19 @@
 
 
     <!-- 다이어리 저장 및 id 값 조회-->
-    <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="DiaryVO" resultMap="DiaryDetail">
+<!--    <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="DiaryVO" resultMap="DiaryDetail">-->
+<!--        { CALL INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId}, #{coinBankId} ) }-->
+<!--    </select>-->
+<!--    <insert id="insertDiaryFile">-->
+<!--        INSERT INTO diary_file(diary_id, file_id, file_no) VALUES( #{diaryId}, #{fileId}, #{fileNo} )-->
+<!--    </insert>-->
+    <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryDTO" resultType="DiaryVO" resultMap="DiaryDetail">
         { CALL INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId}, #{coinBankId} ) }
     </select>
     <insert id="insertDiaryFile">
         INSERT INTO diary_file(diary_id, file_id, file_no) VALUES( #{diaryId}, #{fileId}, #{fileNo} )
     </insert>
+
 
 
     <!-- 다이어리 목록 조회 (저금통별) -->
@@ -210,7 +217,11 @@
 
 
 <!--    다이어리 수정 -->
-    <update id="updateDiary" parameterType="DiaryVO">
+<!--    <update id="updateDiary" parameterType="DiaryVO">-->
+<!--        UPDATE diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}-->
+<!--        WHERE id = #{id}-->
+<!--    </update>-->
+    <update id="updateDiary" parameterType="DiaryDTO">
         UPDATE diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}
         WHERE id = #{id}
     </update>

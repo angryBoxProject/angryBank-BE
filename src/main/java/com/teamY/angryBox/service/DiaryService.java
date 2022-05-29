@@ -1,6 +1,8 @@
 package com.teamY.angryBox.service;
 
 
+import com.teamY.angryBox.dto.DiaryDTO;
+//import com.teamY.angryBox.dto.DiaryFileDTO;
 import com.teamY.angryBox.dto.FilterDTO;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.CoinBankRepository;
@@ -31,14 +33,18 @@ public class DiaryService {
 
 
     @Transactional
-    public void addDiary(DiaryVO diary, MultipartFile[] file) {
-        checkAngryPhaseId(diary.getAngryPhaseId());
-        int coinBankId = memberRepository.selectMemberCurBank(diary.getMemberId());
-        checkCoinBank(coinBankId, diary.getMemberId());
+    public Map<String, Object> addDiary(DiaryDTO diaryDTO, MultipartFile[] file, boolean isPublic, int memberId) {
 
-        DiaryVO diaryVO = new DiaryVO(diary.getMemberId(), diary.getTitle(), diary.getContent(), diary.isPublic(), diary.getAngryPhaseId(), coinBankId);
+        checkAngryPhaseId(diaryDTO.getAngryPhaseId());
+        int coinBankId = memberRepository.selectMemberCurBank(memberId);
+        checkCoinBank(coinBankId, memberId);
+        if(diaryDTO.getTitle().length() == 0) {
+            throw new InvalidRequestException("title은 빈 문자열 불가");
+        }
 
-        DiaryVO insertedDiary = diaryRepository.insertDiary(diaryVO);
+        DiaryDTO diary = new DiaryDTO(memberId, diaryDTO.getTitle(), diaryDTO.getContent(), diaryDTO.getAngryPhaseId(), isPublic, coinBankId);
+
+        DiaryVO insertedDiary = diaryRepository.insertDiary(diary);
         log.info("inserted diary : " + insertedDiary);
         int diaryId = insertedDiary.getId();
         log.info("방금 작성된 다이어리 id : " + diaryId);
@@ -53,11 +59,17 @@ public class DiaryService {
             }
         }
 
-        if (diaryVO.isPublic() == true) {
+        if (diary.isPublic() == true) {
             log.info(insertedDiary.toString());
             template.convertAndSend("/sub/topic/bamboo", insertedDiary);
         }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("diaryId", diaryId);
+
+        return data;
     }
+
 
     public Map<String, Object> getDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size) {
         checkCoinBank(coinBankId, memberId);
@@ -141,20 +153,25 @@ public class DiaryService {
         diaryRepository.deleteDiary(diaryId, memberId);
     }
 
+
     @Transactional
-    public void changeDiary(DiaryVO diaryVO, MultipartFile[] file, List removedFileId) {
-        checkDiary(diaryVO.getId(), diaryVO.getMemberId());
-        checkAngryPhaseId(diaryVO.getAngryPhaseId());
+    public Map<String, Object> changeDiary(DiaryDTO diaryDTO, MultipartFile[] file) {
+        int diaryId = diaryDTO.getId();
+        //checkDiary(diaryDTO.getId(), diaryDTO.getMemberId());
+        checkDiary(diaryId, diaryDTO.getMemberId());
+        checkAngryPhaseId(diaryDTO.getAngryPhaseId());
 
         //다이어리 내용 변경
-        diaryRepository.updateDiary(diaryVO);
+        diaryRepository.updateDiary(diaryDTO);
 
         //삭제된 파일 지우기
+        List<Integer> removedFileId = diaryDTO.getRemovedFileId();
         if (removedFileId != null) {
             for (int i = 0; i < removedFileId.size(); i++) {
                 int fileId = Integer.parseInt(removedFileId.get(i).toString());
-                if (diaryRepository.checkFileInDiary(diaryVO.getId(), fileId) == 0) {
-                    throw new InvalidRequestException("삭제된 파일 번호 확인 필요");
+                //if (diaryRepository.checkFileInDiary(diaryDTO.getId(), fileId) == 0) {
+                if (diaryRepository.checkFileInDiary(diaryId, fileId) == 0) {
+                    throw new InvalidRequestException("삭제된 파일id 확인 필요");
                 }
                 diaryRepository.deleteFileInDiary(fileId);
             }
@@ -163,15 +180,19 @@ public class DiaryService {
         //file 추가된 파일 업로드
         if (file != null) {
             List<Integer> fileIdList = new ArrayList<>();
-            int diaryId = diaryVO.getId();
+            //int diaryId = diaryDTO.getId();
             int fileNo = diaryRepository.selectMaxFileNo(diaryId);
             for (MultipartFile f : file) {
                 fileIdList.add(fileRepository.uploadFile(f).getId());
             }
             for (int i = 0; i < fileIdList.size(); i++) {
-                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), fileNo + 1);
+                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), fileNo + i + 1);
             }
         }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("diaryId", diaryId);
+        return data;
     }
 
 
@@ -339,3 +360,104 @@ public class DiaryService {
     }
 
 }
+
+
+
+
+//    기존 ----------------------------------------------
+//    @Transactional
+//    public void addDiary(DiaryVO diary, MultipartFile[] file) {
+//        checkAngryPhaseId(diary.getAngryPhaseId());
+//        int coinBankId = memberRepository.selectMemberCurBank(diary.getMemberId());
+//        checkCoinBank(coinBankId, diary.getMemberId());
+//
+//        DiaryVO diaryVO = new DiaryVO(diary.getMemberId(), diary.getTitle(), diary.getContent(), diary.isPublic(), diary.getAngryPhaseId(), coinBankId);
+//
+//        DiaryVO insertedDiary = diaryRepository.insertDiary(diaryVO);
+//        log.info("inserted diary : " + insertedDiary);
+//        int diaryId = insertedDiary.getId();
+//        log.info("방금 작성된 다이어리 id : " + diaryId);
+//
+//        List<Integer> fileIdList = new ArrayList<>();
+//        if (file != null) {
+//            for (MultipartFile f : file) {
+//                fileIdList.add(fileRepository.uploadFile(f).getId());
+//            }
+//            for (int i = 0; i < fileIdList.size(); i++) {
+//                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), i + 1);
+//            }
+//        }
+//
+//        if (diaryVO.isPublic() == true) {
+//            log.info(insertedDiary.toString());
+//            template.convertAndSend("/sub/topic/bamboo", insertedDiary);
+//        }
+//    }
+
+
+//    ModelAttribute ------------------------------------------
+//    @Transactional
+//    public void addDiary(DiaryFileDTO diaryFileDTO, int memberId) {
+//
+//        checkAngryPhaseId(diaryFileDTO.getDiaryDTO().getAngryPhaseId());
+//        int coinBankId = memberRepository.selectMemberCurBank(memberId);
+//        checkCoinBank(coinBankId, memberId);
+//
+//        DiaryDTO diaryDTO = new DiaryDTO(memberId, diaryFileDTO.getDiaryDTO().getTitle(), diaryFileDTO.getDiaryDTO().getContent(), diaryFileDTO.getDiaryDTO().getAngryPhaseId(), diaryFileDTO.getDiaryDTO().isPublic(), coinBankId);
+//
+//        log.info("service DiaryDTO" + diaryDTO);
+//
+//        DiaryVO insertedDiary = diaryRepository.insertDiary(diaryDTO);
+//        log.info("inserted diary : " + insertedDiary);
+//        int diaryId = insertedDiary.getId();
+//        log.info("방금 작성된 다이어리 id : " + diaryId);
+//
+//        List<Integer> fileIdList = new ArrayList<>();
+//        if (diaryFileDTO.getFile() != null) {
+//            for (MultipartFile f : diaryFileDTO.getFile()) {
+//                fileIdList.add(fileRepository.uploadFile(f).getId());
+//            }
+//            for (int i = 0; i < fileIdList.size(); i++) {
+//                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), i + 1);
+//            }
+//        }
+//
+//        if (diaryDTO.isPublic() == true) {
+//            log.info(insertedDiary.toString());
+//            template.convertAndSend("/sub/topic/bamboo", insertedDiary);
+//        }
+//    }
+
+
+//    @Transactional
+//    public void changeDiary(DiaryVO diaryVO, MultipartFile[] file, List removedFileId) {
+//        checkDiary(diaryVO.getId(), diaryVO.getMemberId());
+//        checkAngryPhaseId(diaryVO.getAngryPhaseId());
+//
+//        //다이어리 내용 변경
+//        diaryRepository.updateDiary(diaryVO);
+//
+//        //삭제된 파일 지우기
+//        if (removedFileId != null) {
+//            for (int i = 0; i < removedFileId.size(); i++) {
+//                int fileId = Integer.parseInt(removedFileId.get(i).toString());
+//                if (diaryRepository.checkFileInDiary(diaryVO.getId(), fileId) == 0) {
+//                    throw new InvalidRequestException("삭제된 파일 번호 확인 필요");
+//                }
+//                diaryRepository.deleteFileInDiary(fileId);
+//            }
+//        }
+//
+//        //file 추가된 파일 업로드
+//        if (file != null) {
+//            List<Integer> fileIdList = new ArrayList<>();
+//            int diaryId = diaryVO.getId();
+//            int fileNo = diaryRepository.selectMaxFileNo(diaryId);
+//            for (MultipartFile f : file) {
+//                fileIdList.add(fileRepository.uploadFile(f).getId());
+//            }
+//            for (int i = 0; i < fileIdList.size(); i++) {
+//                diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), fileNo + 1);
+//            }
+//        }
+//    }

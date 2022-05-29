@@ -1,6 +1,7 @@
 package com.teamY.angryBox.repository;
 
 
+import com.teamY.angryBox.dto.DiaryDTO;
 import com.teamY.angryBox.mapper.DiaryMapper;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
@@ -22,8 +23,12 @@ public class DiaryRepository {
         return diaryMapper.checkAngryId(angryPhaseId);
     }
 
-    public DiaryVO insertDiary(DiaryVO diaryVO) {
-        return diaryMapper.insertDiary(diaryVO);
+//    public DiaryVO insertDiary(DiaryVO diaryVO) {
+//        return diaryMapper.insertDiary(diaryVO);
+//    }
+
+    public DiaryVO insertDiary(DiaryDTO diaryDTO) {
+        return diaryMapper.insertDiary(diaryDTO);
     }
 
     public void insertDiaryFile(int diaryId, int fileId, int fileNo) {
@@ -82,8 +87,12 @@ public class DiaryRepository {
         diaryMapper.deleteDiary(diaryId, memberId);
     }
 
-    public void updateDiary(DiaryVO diaryVO) {
-        diaryMapper.updateDiary(diaryVO);
+//    public void updateDiary(DiaryVO diaryVO) {
+//        diaryMapper.updateDiary(diaryVO);
+//    }
+
+    public void updateDiary(DiaryDTO diaryDTO) {
+        diaryMapper.updateDiary(diaryDTO);
     }
 
     public void deleteFileInDiary(int fileId) {
