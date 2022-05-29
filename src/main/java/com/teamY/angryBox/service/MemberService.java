@@ -38,6 +38,10 @@ public class MemberService {
 
     public Map<String, Object> login(LogInDTO loginDTO){
 
+        if(memberRepository.findByEmail(loginDTO.getEmail()) == null) {
+            throw new InvalidRequestException("이메일 조회 불가");
+        }
+
         String password = memberRepository.findPassword(loginDTO.getEmail());
 
         if(!bCryptPasswordEncoder.matches(loginDTO.getPassword(), password)) {
