@@ -10,12 +10,13 @@
 
 # 개발환경
 
-![musicat개발환경](https://user-images.githubusercontent.com/84134297/161516388-841fcc22-8869-4ea7-b480-2b7879810424.png)
+![musicat개발환경]()
 
 # 문서
 
 # 팀원
 - 총 6명(디자이너 2, 프론트엔드2, 백엔드 2)
+- 
 |**BackEnd 팀원**|**github**|
 |:------:|:---:|
 |박예나|https://github.com/Fidget278|
