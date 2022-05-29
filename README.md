@@ -13,6 +13,7 @@
 ![angryBox BackEnd 개발환경]()
 
 # 문서
+- 피그마 : https://www.figma.com/file/wWYnBgVIxk9IUoByTmfG9U/%EB%B6%84%EB%85%B8%EB%8B%A4%EC%9D%B4%EC%96%B4%EB%A6%AC?node-id=88%3A965
 
 # 팀원
 - 총 6명(디자이너 2, 프론트엔드2, 백엔드 2)
