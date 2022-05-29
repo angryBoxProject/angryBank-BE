@@ -39,4 +39,16 @@ public class DiaryDTO {
         this.isPublic = isPublic;
         this.coinBankId = coinBankId;
     }
+
+    public DiaryDTO(int id, int memberId, String title, String content, int angryPhaseId, boolean isPublic, List<Integer> removedFileId) {
+        this.id = id;
+        this.memberId = memberId;
+        this.title = title;
+        this.content = content;
+        this.angryPhaseId = angryPhaseId;
+        this.isPublic = isPublic;
+        this.removedFileId = removedFileId;
+    }
+
+
 }

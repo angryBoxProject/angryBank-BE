@@ -2,6 +2,7 @@ package com.teamY.angryBox.repository;
 
 
 import com.teamY.angryBox.dto.DiaryDTO;
+import com.teamY.angryBox.dto.InterimDiaryDTO;
 import com.teamY.angryBox.mapper.DiaryMapper;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
@@ -22,10 +23,6 @@ public class DiaryRepository {
     public int checkAngryId(int angryPhaseId) {
         return diaryMapper.checkAngryId(angryPhaseId);
     }
-
-//    public DiaryVO insertDiary(DiaryVO diaryVO) {
-//        return diaryMapper.insertDiary(diaryVO);
-//    }
 
     public DiaryVO insertDiary(DiaryDTO diaryDTO) {
         return diaryMapper.insertDiary(diaryDTO);
@@ -87,10 +84,6 @@ public class DiaryRepository {
         diaryMapper.deleteDiary(diaryId, memberId);
     }
 
-//    public void updateDiary(DiaryVO diaryVO) {
-//        diaryMapper.updateDiary(diaryVO);
-//    }
-
     public void updateDiary(DiaryDTO diaryDTO) {
         diaryMapper.updateDiary(diaryDTO);
     }
@@ -128,8 +121,8 @@ public class DiaryRepository {
         return diaryMapper.checkInterimDiaryMemberId(diaryId, memberId);
     }
 
-    public int insertInterimDiary(InterimDiaryVO interimDiaryVO) {
-        return diaryMapper.insertInterimDiary(interimDiaryVO);
+    public int insertInterimDiary(InterimDiaryDTO interimDiaryDTO) {
+        return diaryMapper.insertInterimDiary(interimDiaryDTO);
     }
 
     public void insertInterimDiaryFile(int diaryId, int file_id, int file_no) {
@@ -160,8 +153,8 @@ public class DiaryRepository {
         diaryMapper.deleteInterimFile(fileId);
     }
 
-    public void updateInterimDiary(InterimDiaryVO interimDiaryVO) {
-        diaryMapper.updateInterimDiary(interimDiaryVO);
+    public void updateInterimDiary(InterimDiaryDTO interimDiaryDTO) {
+        diaryMapper.updateInterimDiary(interimDiaryDTO);
     }
 
     public void deleteFileInInterimDiary(int fileId) {
@@ -183,27 +176,5 @@ public class DiaryRepository {
         return diaryMapper.selectTodackCountInCoinBank(diaryId, memberId);
     }
 
-
-
-
-
-//    public int checkCoinBankExpired(int coinBankId, int memberId) {
-//        return diaryMapper.checkCoinBankExpired(coinBankId, memberId, 0);
-//    }
-//    public int checkIsPublic(int diaryId) {
-//        return diaryMapper.checkIsPublic(diaryId);
-//    }
-//    public int checkIsDeleted(int diaryId) {
-//        return diaryMapper.checkIsDeleted(diaryId);
-//    }
-//    public int checkDiaryId(int diaryId) {
-//        return diaryMapper.checkDiaryId(diaryId);
-//    }
-//    public int checkDiaryMemberId(int diaryId, int memberId) {
-//        return diaryMapper.checkDiaryMemberId(diaryId, memberId);
-//    }
-//    public int checkCoinBankMemberId(int coinBankId, int memberId) {
-//        return diaryMapper.checkCoinBankMemberId(coinBankId, memberId);
-//    }
 
 }

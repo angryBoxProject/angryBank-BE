@@ -239,7 +239,7 @@
     </select>
 
 <!--    임시 다이어리 저장 및 id 조회 -->
-    <select id="insertInterimDiary" parameterType="InterimDiaryVO" statementType="CALLABLE" resultType="int" >
+    <select id="insertInterimDiary" parameterType="interimDiaryDTO" statementType="CALLABLE" resultType="int" >
         { CALL INSERT_INTERIM_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId} ) }
     </select>
     <insert id="insertInterimDiaryFile">
@@ -300,7 +300,7 @@
     </delete>
 
     <!--    임시 다이어리 수정 -->
-    <update id="updateInterimDiary" parameterType="InterimDiaryVO">
+    <update id="updateInterimDiary" parameterType="interimDiaryDTO">
         UPDATE interim_diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}
         WHERE id = #{id}
     </update>

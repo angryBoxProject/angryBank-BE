@@ -3,6 +3,7 @@ package com.teamY.angryBox.mapper;
 
 import com.teamY.angryBox.dto.DiaryDTO;
 //import com.teamY.angryBox.dto.DiaryFileDTO;
+import com.teamY.angryBox.dto.InterimDiaryDTO;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.InterimDiaryFileVO;
@@ -69,7 +70,7 @@ public interface DiaryMapper {
 
     int checkInterimDiaryMemberId(int diaryId, int memberId);
 
-    int insertInterimDiary(InterimDiaryVO interimDiaryVO);
+    int insertInterimDiary(InterimDiaryDTO interimDiaryDTO);
 
     void insertInterimDiaryFile(int diaryId, int fileId, int fileNo);
 
@@ -85,7 +86,7 @@ public interface DiaryMapper {
 
     void deleteInterimFile(int fileId);
 
-    void updateInterimDiary(InterimDiaryVO interimDiaryVO);
+    void updateInterimDiary(InterimDiaryDTO interimDiaryDTO);
 
     void deleteFileInInterimDiary(int fileId);
 

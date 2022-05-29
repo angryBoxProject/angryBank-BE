@@ -22,20 +22,4 @@ public class InterimDiaryVO {
     private boolean isPublic;
     private int angryPhaseId;
 
-    public InterimDiaryVO(int memberId, String title, String content, boolean isPublic, int angryPhaseId) {
-        this.memberId = memberId;
-        this.title = title;
-        this.content = content;
-        this.isPublic = isPublic;
-        this.angryPhaseId = angryPhaseId;
-    }
-
-    public InterimDiaryVO(int id, int memberId, String title, String content, boolean isPublic, int angryPhaseId) {
-        this.id = id;
-        this.memberId = memberId;
-        this.title = title;
-        this.content = content;
-        this.isPublic = isPublic;
-        this.angryPhaseId = angryPhaseId;
-    }
 }
