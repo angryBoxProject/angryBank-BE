@@ -10,20 +10,17 @@
 
 # 개발환경
 
-![musicat개발환경]()
+![angryBox BackEnd 개발환경]()
 
 # 문서
 
 # 팀원
 - 총 6명(디자이너 2, 프론트엔드2, 백엔드 2)
-- 
 |**BackEnd 팀원**|**github**|
 |:------:|:---:|
 |박예나|https://github.com/Fidget278|
 |양다예|https://github.com/da77777|
-
-# FrontEnd github
-FrontEnd github : https://github.com/angryBoxProject/angryBox-FE
+- FrontEnd github : https://github.com/angryBoxProject/angryBox-FE
 
 
 <div><br><br><br><br></div>
