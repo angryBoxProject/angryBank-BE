@@ -33,7 +33,7 @@ public class DiaryService {
 
 
     @Transactional
-    public Map<String, Object> addDiary(DiaryDTO diaryDTO, MultipartFile[] file, boolean isPublic, int memberId) {
+    public void addDiary(DiaryDTO diaryDTO, MultipartFile[] file, boolean isPublic, int memberId) {
 
         checkAngryPhaseId(diaryDTO.getAngryPhaseId());
         int coinBankId = memberRepository.selectMemberCurBank(memberId);
@@ -63,11 +63,6 @@ public class DiaryService {
             log.info(insertedDiary.toString());
             template.convertAndSend("/sub/topic/bamboo", insertedDiary);
         }
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("diaryId", diaryId);
-
-        return data;
     }
 
 
@@ -155,7 +150,7 @@ public class DiaryService {
 
 
     @Transactional
-    public Map<String, Object> changeDiary(DiaryDTO diaryDTO, MultipartFile[] file) {
+    public void changeDiary(DiaryDTO diaryDTO, MultipartFile[] file) {
         int diaryId = diaryDTO.getId();
         //checkDiary(diaryDTO.getId(), diaryDTO.getMemberId());
         checkDiary(diaryId, diaryDTO.getMemberId());
@@ -189,10 +184,6 @@ public class DiaryService {
                 diaryRepository.insertDiaryFile(diaryId, fileIdList.get(i), fileNo + i + 1);
             }
         }
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("diaryId", diaryId);
-        return data;
     }
 
 

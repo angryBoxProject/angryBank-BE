@@ -36,14 +36,14 @@ public class DiaryController {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
-        Map<String, Object> data = diaryService.addDiary(diaryDTO, file, isPublic, memberId);
+        diaryService.addDiary(diaryDTO, file, isPublic, memberId);
 
         int interimId = diaryDTO.getInterimId();
         if(interimId != 0) {
             diaryService.removeInterimDiary(interimId, memberId);
         }
 
-        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 등록 성공", "", data), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
     }
 
 
@@ -130,9 +130,9 @@ public class DiaryController {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
         DiaryDTO diary = new DiaryDTO(diaryId, memberId, diaryDTO.getTitle(), diaryDTO.getContent(), diaryDTO.getAngryPhaseId(), isPublic, diaryDTO.getCoinBankId(), diaryDTO.getRemovedFileId(), diaryDTO.getInterimId());
-        Map<String, Object> data = diaryService.changeDiary(diary, file);
+        diaryService.changeDiary(diary, file);
 
-        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 수정 성공", "", data), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseMessage(true, "다이어리 수정 성공", ""), HttpStatus.OK);
 
     }
 
