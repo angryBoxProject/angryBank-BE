@@ -343,14 +343,16 @@ public class DiaryService {
     public void checkCoinBank(int coinBankId, int memberId) {
         if(coinBankId == 0) {
             throw new InvalidRequestException("사용 가능한 적금 없음(적금 생성 필요)");
-        } else if (coinBankRepository.selectBankExpired(coinBankId).isExpired()) { //0 : 사용 가능인데 false / 1 : 만료인데 ture -> true이면 에러
-            throw new InvalidRequestException("만료된 적금");
         } else {
             CoinBankVO coinBankVO = coinBankRepository.selectById(coinBankId);
             if (coinBankVO == null || coinBankVO.getMemberId() != memberId) {
                 throw new InvalidRequestException("적금 번호 확인 필요");
             }
         }
+
+        //else if (coinBankRepository.selectBankExpired(coinBankId).isExpired()) { //0 : 사용 가능인데 false / 1 : 만료인데 ture -> true이면 에러
+        //            throw new InvalidRequestException("만료된 적금");
+        //        }
     }
 
 }
