@@ -2,9 +2,11 @@ package com.teamY.angryBox.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString
+@Setter
 //@Getter
 //@AllArgsConstructor
 public class FilterDTO {
@@ -23,8 +25,10 @@ public class FilterDTO {
     public StringBuilder getFilter() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        if(startDate != null && endDate != null){
+        if(startDate.equals("none") && endDate.equals("none")){
             stringBuilder.append("(DATE_FORMAT(write_date, '%Y-%m-%d') >= '" + startDate + "' and DATE_FORMAT(write_date, '%Y-%m-%d') <= '" + endDate + "')");
+        } else {
+            stringBuilder.append("1");
         }
 
 
@@ -35,6 +39,8 @@ public class FilterDTO {
             }
             stringBuilder.delete(stringBuilder.length()-4, stringBuilder.length());
             stringBuilder.append(")");
+        } else {
+            stringBuilder.append("1");
         }
 
         if(imageFilter != 2) {
@@ -43,6 +49,8 @@ public class FilterDTO {
                 stringBuilder.append("id IN (SELECT DISTINCT diary_id FROM diary_file)");
             else if(imageFilter == 0)
                 stringBuilder.append("not id IN (SELECT DISTINCT diary_id FROM diary_file)");
+        } else {
+            stringBuilder.append("1");
         }
 
         return stringBuilder;

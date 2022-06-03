@@ -2,10 +2,7 @@ package com.teamY.angryBox.repository;
 
 
 import com.teamY.angryBox.mapper.DiaryMapper;
-import com.teamY.angryBox.vo.DiaryFileVO;
-import com.teamY.angryBox.vo.DiaryVO;
-import com.teamY.angryBox.vo.InterimDiaryFileVO;
-import com.teamY.angryBox.vo.InterimDiaryVO;
+import com.teamY.angryBox.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -197,4 +194,7 @@ public class DiaryRepository {
         return diaryMapper.selectMaxInterimFileNo(diaryId);
     }
 
+    public List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size) {
+        return diaryMapper.selectGallery(lastDiaryId, size);
+    }
 }
