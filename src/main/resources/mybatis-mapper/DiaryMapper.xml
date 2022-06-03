@@ -84,12 +84,6 @@
 
 
     <!-- 다이어리 저장 및 id 값 조회-->
-<!--    <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryVO" resultType="DiaryVO" resultMap="DiaryDetail">-->
-<!--        { CALL INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId}, #{coinBankId} ) }-->
-<!--    </select>-->
-<!--    <insert id="insertDiaryFile">-->
-<!--        INSERT INTO diary_file(diary_id, file_id, file_no) VALUES( #{diaryId}, #{fileId}, #{fileNo} )-->
-<!--    </insert>-->
     <select id="insertDiary" statementType="CALLABLE" parameterType="DiaryDTO" resultType="DiaryVO" resultMap="DiaryDetail">
         { CALL INSERT_DIARY( #{memberId}, #{title}, #{content}, #{isPublic}, #{angryPhaseId}, #{coinBankId} ) }
     </select>
@@ -357,50 +351,5 @@
         FROM diary
         WHERE id = #{diaryId}
     </select>
-
-    <!--    다이어리 공개 여부 확인-->
-    <!--    <select id="checkIsPublic" resultType="int">-->
-    <!--        SELECT is_public-->
-    <!--        FROM diary-->
-    <!--        WHERE id = #{diaryId}-->
-    <!--    </select>-->
-    <!--    다이어리 삭제 여부 확인-->
-    <!--    <select id="checkIsDeleted" resultType="int">-->
-    <!--        SELECT is_deleted-->
-    <!--        FROM diary-->
-    <!--        WHERE id = #{diaryId};-->
-    <!--    </select>-->
-    <!--    저금통 만료 여부 확인-->
-    <!--    <select id="checkCoinBankExpired" resultType="int">-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM coin_bank-->
-    <!--        WHERE id = #{coinBankId} AND member_id = #{memberId} AND expired = #{expired};-->
-    <!--    </select>-->
-    <!--    다이어리 존재 여부 확인 -->
-    <!--    <select id="checkDiaryId" resultType="int">-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM diary-->
-    <!--        WHERE id = #{diaryId};-->
-    <!--    </select>-->
-    <!--    다이어리 작성자 확인 -->
-    <!--    <select id="checkDiaryMemberId" resultType="int">-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM diary-->
-    <!--        WHERE id = #{diaryId} AND member_id = #{memberId}-->
-    <!--    </select>-->
-    <!--  해당 날짜에 TOP 다이어리 여부 확인  -->
-    <!--    <select id="checkDailyTopDiary" resultType="int">-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM top_diary_daily AS tdd-->
-    <!--                 LEFT JOIN diary AS d-->
-    <!--                           ON tdd.diary_id = d.id-->
-    <!--        WHERE DATE_FORMAT(tdd.write_date, '%Y-%m-%d') = DATE_FORMAT(#{writeDate}, '%Y-%m-%d') AND is_public = 1;-->
-    <!--    </select>-->
-    <!--    저금통 member_id 확인 -->
-    <!--    <select id="checkCoinBankMemberId" resultType="int">-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM coin_bank-->
-    <!--        WHERE id = #{coinBankId} AND member_id = #{memberId}-->
-    <!--    </select>-->
 
 </mapper>
