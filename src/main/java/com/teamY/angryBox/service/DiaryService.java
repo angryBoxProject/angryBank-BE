@@ -8,11 +8,10 @@ import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.CoinBankRepository;
 import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.FileRepository;
+import com.teamY.angryBox.vo.*;
+
 import com.teamY.angryBox.repository.MemberRepository;
-import com.teamY.angryBox.vo.CoinBankVO;
-import com.teamY.angryBox.vo.DiaryFileVO;
-import com.teamY.angryBox.vo.DiaryVO;
-import com.teamY.angryBox.vo.InterimDiaryFileVO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -206,7 +205,7 @@ public class DiaryService {
             filterStr = filter.getFilter();
         }
 
-        return diaryRepository.bambooGrove(lastDiaryId, size, filter.toString());
+        return diaryRepository.bambooGrove(lastDiaryId, size, filterStr.toString());
     }
 
 
@@ -355,4 +354,8 @@ public class DiaryService {
         //        }
     }
 
+    public List<GalleryDiaryVO> getGallery(int lastDiaryId, int size) {
+
+        return diaryRepository.selectGallery(lastDiaryId, size);
+    }
 }

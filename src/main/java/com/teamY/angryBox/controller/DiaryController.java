@@ -11,8 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -148,9 +147,9 @@ public class DiaryController {
 * */
     @GetMapping("diaries")
     public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size
-            , @RequestParam String startDate, @RequestParam String endDate, @RequestParam int angry[], @RequestParam int imageFilter) {
+            , /*@RequestParam String startDate, @RequestParam String endDate, @RequestParam int angry[], @RequestParam int imageFilter*/ @RequestBody FilterDTO filter) {
 
-        FilterDTO filter = new FilterDTO(startDate, endDate, angry, imageFilter);
+        //FilterDTO filter = new FilterDTO(startDate, endDate, angry, imageFilter);
         log.info("filter : " + filter.toString());
         Map<String, Object> data = new HashMap<>();
         data.put("diaries", diaryService.bambooGrove(lastDiaryId, size, filter));
@@ -229,6 +228,16 @@ public class DiaryController {
 
         return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 수정 성공", ""), HttpStatus.OK);
 
+    }
+
+    @GetMapping("gallery")
+    public ResponseEntity<ResponseDataMessage> gallery(@RequestParam int lastDiaryId, @RequestParam int size) {
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("list", diaryService.getGallery(lastDiaryId, size));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "갤러리 조회", "", data), HttpStatus.OK);
     }
 
 }

@@ -1,13 +1,10 @@
 package com.teamY.angryBox.mapper;
 
 
+import com.teamY.angryBox.vo.*;
 import com.teamY.angryBox.dto.DiaryDTO;
 //import com.teamY.angryBox.dto.DiaryFileDTO;
 import com.teamY.angryBox.dto.InterimDiaryDTO;
-import com.teamY.angryBox.vo.DiaryFileVO;
-import com.teamY.angryBox.vo.DiaryVO;
-import com.teamY.angryBox.vo.InterimDiaryFileVO;
-import com.teamY.angryBox.vo.InterimDiaryVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -92,6 +89,7 @@ public interface DiaryMapper {
 
     int selectMaxInterimFileNo(int diaryId);
 
+    List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size);
     DiaryVO checkDiary(int diaryId);
 
     // ************8
