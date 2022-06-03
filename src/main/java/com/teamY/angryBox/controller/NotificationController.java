@@ -25,7 +25,7 @@ public class NotificationController {
     private final DiaryService diaryService;
 
     @GetMapping("notification/{notificationId}")
-    public ResponseEntity<ResponseMessage> inquryNotification(@PathVariable int notificationId) {
+    public ResponseEntity<ResponseMessage> inquiryNotification(@PathVariable int notificationId) {
         int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         notificationService.changeNtf(notificationId);
         Map<String, Object> data = null;
@@ -42,7 +42,7 @@ public class NotificationController {
     }
 
     @GetMapping("notification/{lastNotificationId}/{size}")
-    public ResponseEntity<ResponseMessage> inquryNotificationList(@PathVariable int lastNotificationId, @PathVariable int size) {
+    public ResponseEntity<ResponseMessage> inquiryNotificationList(@PathVariable int lastNotificationId, @PathVariable int size) {
         int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         Map<String, Object> data =  notificationService.getNtfList(memberId, lastNotificationId, size);
         if(data.containsKey("zero")) {

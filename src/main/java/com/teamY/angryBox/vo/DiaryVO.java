@@ -40,6 +40,14 @@ public class DiaryVO {
         this.coinBankId = coinBankId;
     }
 
+    public DiaryVO(int memberId, String title, String content, boolean isPublic, int angryPhaseId) {
+        this.memberId = memberId;
+        this.title = title;
+        this.content = content;
+        this.isPublic = isPublic;
+        this.angryPhaseId = angryPhaseId;
+    }
+
     //다이어리 수정 시 사용할 생성자
     public DiaryVO(int id, int memberId, String title, String content, boolean isPublic, int angryPhaseId) {
         this.id = id;

@@ -143,4 +143,19 @@ public class CoinBankService {
 
         return data;
     }
+
+    public Map<String, Object> selectAllBank(int memberId) {
+        Map<String, Object> data = new HashMap<>();
+        List<Map<String, Object>> banks = coinBankRepository.selectAllBank(memberId);
+
+        for(Map<String, Object> bank : banks) {
+            String parseDate = (String) bank.get("bankAccount");
+
+            String date = parseDate.substring(4, 6) + "/" + parseDate.substring(7, 9);
+            bank.put("bankAccount", date);
+        }
+        data.put("coinBankList", banks);
+
+        return data;
+    }
 }

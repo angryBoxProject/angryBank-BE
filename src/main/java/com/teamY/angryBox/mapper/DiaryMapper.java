@@ -2,6 +2,9 @@ package com.teamY.angryBox.mapper;
 
 
 import com.teamY.angryBox.vo.*;
+import com.teamY.angryBox.dto.DiaryDTO;
+//import com.teamY.angryBox.dto.DiaryFileDTO;
+import com.teamY.angryBox.dto.InterimDiaryDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,25 +14,13 @@ public interface DiaryMapper {
 
     int checkAngryId(int angryPhaseId);
 
-    int checkCoinBankMemberId(int coinBankId, int memberId);
-
-    int checkCoinBankExpired(int coinBankId, int memberId, int expired);
-
-    DiaryVO insertDiary(DiaryVO diaryVO);
+    DiaryVO insertDiary(DiaryDTO diaryDTO);
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
-    int checkDiaryId(int diaryId);
-
-    int checkDiaryMemberId(int diaryId, int memberId);
+    int selectDiaryMemberId(int diaryId);
 
     int checkFileInDiary(int diaryId, int fileId);
-
-    int checkIsPublic(int diaryId);
-
-    int checkIsDeleted(int diaryId);
-
-    int checkDailyTopDiary(String writeDate);
 
     List<DiaryVO> selectDiaryListInCoinBank(int memberId, int coinBankId, int lastDiaryId, int size);
 
@@ -53,7 +44,7 @@ public interface DiaryMapper {
 
     void deleteDiary(int diaryId, int memberId);
 
-    void updateDiary(DiaryVO diaryVO);
+    void updateDiary(DiaryDTO diaryDTO);
 
     void deleteFileInDiary(int fileId);
 
@@ -62,10 +53,6 @@ public interface DiaryMapper {
     List<DiaryVO> bambooGrove(int lastDiaryId, int size, String filter);
 
     List<DiaryVO> bambooTest(String test);
-
-    int selectDiaryCountInCoinBank(int diaryId, int memberId);
-
-    int selectTodackCountInCoinBank(int diaryId, int memberId);
 
 
     List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size);
@@ -80,7 +67,7 @@ public interface DiaryMapper {
 
     int checkInterimDiaryMemberId(int diaryId, int memberId);
 
-    int insertInterimDiary(InterimDiaryVO interimDiaryVO);
+    int insertInterimDiary(InterimDiaryDTO interimDiaryDTO);
 
     void insertInterimDiaryFile(int diaryId, int fileId, int fileNo);
 
@@ -96,11 +83,28 @@ public interface DiaryMapper {
 
     void deleteInterimFile(int fileId);
 
-    void updateInterimDiary(InterimDiaryVO interimDiaryVO);
+    void updateInterimDiary(InterimDiaryDTO interimDiaryDTO);
 
     void deleteFileInInterimDiary(int fileId);
 
     int selectMaxInterimFileNo(int diaryId);
 
     List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size);
+    DiaryVO checkDiary(int diaryId);
+
+    // ************8
+    int selectDiaryCountInCoinBank(int diaryId, int memberId);
+    int selectTodackCountInCoinBank(int diaryId, int memberId);
+
+
+
+
+    int checkCoinBankExpired(int coinBankId, int memberId, int expired);
+    int checkDiaryId(int diaryId);
+    int checkDiaryMemberId(int diaryId, int memberId);
+    int checkIsPublic(int diaryId);
+    int checkIsDeleted(int diaryId);
+    int checkCoinBankMemberId(int coinBankId, int memberId);
+    int checkDailyTopDiary(String writeDate);
+
 }

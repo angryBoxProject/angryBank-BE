@@ -1,6 +1,8 @@
 package com.teamY.angryBox.repository;
 
 
+import com.teamY.angryBox.dto.DiaryDTO;
+import com.teamY.angryBox.dto.InterimDiaryDTO;
 import com.teamY.angryBox.mapper.DiaryMapper;
 import com.teamY.angryBox.vo.*;
 import lombok.RequiredArgsConstructor;
@@ -19,40 +21,16 @@ public class DiaryRepository {
         return diaryMapper.checkAngryId(angryPhaseId);
     }
 
-    public int checkCoinBankMemberId(int coinBankId, int memberId) {
-        return diaryMapper.checkCoinBankMemberId(coinBankId, memberId);
-    }
-
-    public int checkCoinBankExpired(int coinBankId, int memberId) {
-        return diaryMapper.checkCoinBankExpired(coinBankId, memberId, 0);
-    }
-
-    public DiaryVO insertDiary(DiaryVO diaryVO) {
-        return diaryMapper.insertDiary(diaryVO);
+    public DiaryVO insertDiary(DiaryDTO diaryDTO) {
+        return diaryMapper.insertDiary(diaryDTO);
     }
 
     public void insertDiaryFile(int diaryId, int fileId, int fileNo) {
         diaryMapper.insertDiaryFile(diaryId, fileId, fileNo);
     }
 
-    public int checkIsPublic(int diaryId) {
-        return diaryMapper.checkIsPublic(diaryId);
-    }
-
-    public int checkIsDeleted(int diaryId) {
-        return diaryMapper.checkIsDeleted(diaryId);
-    }
-
-    public int checkDailyTopDiary(String writeDate) {
-        return diaryMapper.checkDailyTopDiary(writeDate);
-    }
-
-    public int checkDiaryId(int diaryId) {
-        return diaryMapper.checkDiaryId(diaryId);
-    }
-
-    public int checkDiaryMemberId(int diaryId, int memberId) {
-        return diaryMapper.checkDiaryMemberId(diaryId, memberId);
+    public int selectDiaryMemberId(int diaryId) {
+        return diaryMapper.selectDiaryMemberId(diaryId);
     }
 
     public int checkFileInDiary(int diaryId, int fileId) {
@@ -64,7 +42,6 @@ public class DiaryRepository {
     }
 
     public List<DiaryVO> selectDiaryListInMonth(int memberId, String writeDate, int lastDiaryId, int size) {
-
         return diaryMapper.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size);
     }
 
@@ -104,8 +81,8 @@ public class DiaryRepository {
         diaryMapper.deleteDiary(diaryId, memberId);
     }
 
-    public void updateDiary(DiaryVO diaryVO) {
-        diaryMapper.updateDiary(diaryVO);
+    public void updateDiary(DiaryDTO diaryDTO) {
+        diaryMapper.updateDiary(diaryDTO);
     }
 
     public void deleteFileInDiary(int fileId) {
@@ -120,19 +97,10 @@ public class DiaryRepository {
         return diaryMapper.bambooGrove(diaryId, size, filter);
     }
 
-    public int selectDiaryCountInCoinBank(int diaryId, int memberId) {
-        return diaryMapper.selectDiaryCountInCoinBank(diaryId, memberId);
-    }
-
-    public int selectTodackCountInCoinBank(int diaryId, int memberId) {
-        return diaryMapper.selectTodackCountInCoinBank(diaryId, memberId);
-    }
-
     public List<DiaryVO> searchDiary(String searchKeyword, int lastDiaryId, int size) {
 
         return diaryMapper.searchDiary(searchKeyword, lastDiaryId, size);
     }
-
 
     public int checkFileInInterimDiary(int diaryId, int fileId) {
         return diaryMapper.checkFileInInterimDiary(diaryId, fileId);
@@ -150,8 +118,8 @@ public class DiaryRepository {
         return diaryMapper.checkInterimDiaryMemberId(diaryId, memberId);
     }
 
-    public int insertInterimDiary(InterimDiaryVO interimDiaryVO) {
-        return diaryMapper.insertInterimDiary(interimDiaryVO);
+    public int insertInterimDiary(InterimDiaryDTO interimDiaryDTO) {
+        return diaryMapper.insertInterimDiary(interimDiaryDTO);
     }
 
     public void insertInterimDiaryFile(int diaryId, int file_id, int file_no) {
@@ -182,8 +150,8 @@ public class DiaryRepository {
         diaryMapper.deleteInterimFile(fileId);
     }
 
-    public void updateInterimDiary(InterimDiaryVO interimDiaryVO) {
-        diaryMapper.updateInterimDiary(interimDiaryVO);
+    public void updateInterimDiary(InterimDiaryDTO interimDiaryDTO) {
+        diaryMapper.updateInterimDiary(interimDiaryDTO);
     }
 
     public void deleteFileInInterimDiary(int fileId) {
@@ -197,4 +165,17 @@ public class DiaryRepository {
     public List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size) {
         return diaryMapper.selectGallery(lastDiaryId, size);
     }
+
+    public DiaryVO checkDiary(int diaryId) {
+        return diaryMapper.checkDiary(diaryId);
+    }
+
+    public int selectDiaryCountInCoinBank(int diaryId, int memberId) {
+        return diaryMapper.selectDiaryCountInCoinBank(diaryId, memberId);
+    }
+    public int selectTodackCountInCoinBank(int diaryId, int memberId) {
+        return diaryMapper.selectTodackCountInCoinBank(diaryId, memberId);
+    }
+
+
 }

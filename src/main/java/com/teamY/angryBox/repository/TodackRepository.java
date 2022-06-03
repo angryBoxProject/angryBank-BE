@@ -21,7 +21,7 @@ public class TodackRepository {
         todackMapper.downTodackCount(todack);
     }
 
-    public int checkSendTodack(int memberId, int diaryId, int send) {
-        return todackMapper.checkSendTodack(memberId, diaryId, send);
+    public int checkSendTodack(int memberId, int diaryId) {
+        return todackMapper.checkSendTodack(memberId, diaryId);
     }
 }

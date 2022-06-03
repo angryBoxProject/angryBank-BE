@@ -13,7 +13,7 @@
         <result property = "password" javaType="string" column ="password" jdbcType="VARCHAR"/>
     </resultMap>
 
-
+<!--  없는 email 주입 시 null 반환하여 에러 발생(IFNULL 사용 시 row 안 뜸)  -->
     <select id="selectByEmail" parameterType="String" resultMap="memberMap" resultType="MemberVO">
         SELECT id, email, nickname, member.password, register_type
         FROM member
@@ -66,4 +66,17 @@
         SET last_login = now()
         WHERE id = #{id}
     </update>
+
+    <update id="deleteMember">
+        UPDATE member
+        SET email = 0, nickname = 0, password = 0, register_type = 0, is_deleted = 1
+        WHERE id = #{id}
+    </update>
+
+<!--    0 : 탈퇴x / 1 : 탈퇴o-->
+    <select id="checkDeleted" >
+        SELECT is_deleted
+        FROM member
+        WHERE id = #{id}
+    </select>
 </mapper>

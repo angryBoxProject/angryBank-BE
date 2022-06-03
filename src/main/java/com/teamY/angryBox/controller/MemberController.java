@@ -8,8 +8,10 @@ import com.teamY.angryBox.dto.LogInDTO;
 import com.teamY.angryBox.dto.RegisterMemberDTO;
 import com.teamY.angryBox.dto.ResponseDataMessage;
 import com.teamY.angryBox.dto.ResponseMessage;
+import com.teamY.angryBox.enums.OAuthProviderEnum;
 import com.teamY.angryBox.service.MailService;
 import com.teamY.angryBox.service.MemberService;
+import com.teamY.angryBox.service.OAuthService;
 import com.teamY.angryBox.service.ProfileService;
 import com.teamY.angryBox.utils.CookieUtil;
 import com.teamY.angryBox.utils.HeaderUtil;
@@ -46,6 +48,7 @@ public class MemberController {
     private final AuthTokenProvider authTokenProvider;
     private final MailService mailService;
     private final ProfileService profileService;
+    private final OAuthService oAuthService;
 
 
 
@@ -153,6 +156,18 @@ public class MemberController {
         return new ResponseEntity<>(new ResponseMessage(true, "메일 전송 성공", ""), HttpStatus.OK);
     }
 
+    @DeleteMapping("/users")
+    public ResponseEntity<ResponseMessage> removeMember() {
+        int id = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+        String registerType = memberService.inquriyMember(id).getRegisterType();
 
+        if(registerType.equals("basic")) {
+            memberService.removeMember(id);
+        } else {
+            oAuthService.removeOAuthMember(id, registerType);
+        }
+
+        return new ResponseEntity<>(new ResponseMessage(true, "회원 탈퇴 성공", ""), HttpStatus.OK);
+    }
 
 }
