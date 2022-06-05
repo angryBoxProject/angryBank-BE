@@ -340,6 +340,13 @@
         LIMIT #{size}
     </select>
 
+    <select id = "selectGalleryLastId" resultType = "int">
+        SELECT diary_id
+        FROM diary_file
+        GROUP BY diary_id
+        ORDER BY diary_id DESC limit 1;
+    </select>
+
     <select id = "selectGallery" resultType="GalleryDiaryVO">
         SELECT d.id, title, todack_count, f.system_file_name
         FROM diary as d
@@ -347,8 +354,8 @@
                             ON d.id = df.diary_id
                  inner join file as f
                             ON df.file_id = f.id
-        WHERE id <![CDATA[<]]> #{lastDiaryId} AND is_public = 1
-        ORDER BY id DESC
+        WHERE d.id <![CDATA[<]]> #{lastDiaryId} AND is_public = 1
+        ORDER BY d.id DESC
         LIMIT #{size}
     </select>
 

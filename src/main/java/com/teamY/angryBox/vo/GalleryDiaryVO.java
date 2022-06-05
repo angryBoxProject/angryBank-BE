@@ -11,7 +11,7 @@ import org.apache.ibatis.type.Alias;
 @AllArgsConstructor
 public class GalleryDiaryVO {
     int id;
-    int title;
+    String title;
     int todack_count;
     String systemFileName;
 

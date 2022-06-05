@@ -356,6 +356,9 @@ public class DiaryService {
 
     public List<GalleryDiaryVO> getGallery(int lastDiaryId, int size) {
 
+        if(lastDiaryId == 0)
+            lastDiaryId = diaryRepository.selectGalleryLastId();
+
         return diaryRepository.selectGallery(lastDiaryId, size);
     }
 }
