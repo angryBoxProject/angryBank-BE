@@ -13,7 +13,7 @@ public class GalleryDiaryVO {
     int id;
     String title;
     int todack_count;
-    String systemFileName;
+    String file;
 
 
 }
