@@ -89,6 +89,7 @@ public interface DiaryMapper {
 
     int selectMaxInterimFileNo(int diaryId);
 
+    int selectGalleryLastId();
     List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size);
     DiaryVO checkDiary(int diaryId);
 

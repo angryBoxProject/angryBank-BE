@@ -162,6 +162,9 @@ public class DiaryRepository {
         return diaryMapper.selectMaxInterimFileNo(diaryId);
     }
 
+    public int selectGalleryLastId() {
+        return diaryMapper.selectGalleryLastId();
+    }
     public List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size) {
         return diaryMapper.selectGallery(lastDiaryId, size);
     }
