@@ -348,7 +348,7 @@
     </select>
 
     <select id = "selectGallery" resultType="GalleryDiaryVO">
-        SELECT d.id, title, todack_count, f.system_file_name
+        SELECT d.id, title, todack_count, CONCAT('/images/', f.system_file_name) as file
         FROM diary as d
                  inner join (SELECT diary_id, min(file_id) as file_id from diary_file group by diary_id) as df
                             ON d.id = df.diary_id
