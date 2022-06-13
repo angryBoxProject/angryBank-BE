@@ -4,6 +4,7 @@ import com.teamY.angryBox.dto.NewCoinBankDTO;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.error.customException.SQLInquiryException;
 import com.teamY.angryBox.repository.CoinBankRepository;
+import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.vo.BankStatCalenderVO;
 import com.teamY.angryBox.vo.CoinBankVO;
@@ -24,6 +25,7 @@ public class CoinBankService {
 
     private final CoinBankRepository coinBankRepository;
     private final MemberRepository memberRepository;
+    private final DiaryRepository diaryRepository;
 
     @Transactional
     public void createCoinBank(NewCoinBankDTO bank, int memberId) {
@@ -94,6 +96,21 @@ public class CoinBankService {
         }
 
 
+        int percent = (int)((double)coinBankSum / coinBankVO.getAngryLimit() * 100);
+        String creditStatus = "-";
+
+        if(percent >= 90)
+            creditStatus = "극대노";
+        else if(percent >= 75)
+            creditStatus = "대노";
+        else if(percent >= 50)
+            creditStatus = "중노";
+        else if(percent >= 25)
+            creditStatus = "소노";
+        else if(percent >= 10)
+            creditStatus = "극소노";
+
+
         data.put("id", coinBankVO.getId());
         data.put("name", coinBankVO.getName());
         data.put("angryLimit", coinBankVO.getAngryLimit());
@@ -101,6 +118,9 @@ public class CoinBankService {
         data.put("canCrush", canCrush);
         data.put("remainingDiaryNum", remaingNum);
         data.put("bankAccount", coinBankVO.getBankAccount());
+        data.put("diaryCount", diaryRepository.selectDiaryCountInCoinBank(curBankId, memberId));
+        data.put("todackCount", diaryRepository.selectTodackCountInCoinBank(curBankId, memberId));
+        data.put("creditStatus", creditStatus);
 
         return data;
     }

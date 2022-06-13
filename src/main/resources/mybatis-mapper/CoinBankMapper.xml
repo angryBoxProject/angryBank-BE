@@ -27,6 +27,9 @@
         WHERE id = #{id}
     </select>
 
+    <select id = "selectDiaryCount"
+
+
     <update id = "expireCoinBank" parameterType="int">
         UPDATE coin_bank
         SET expired = 1
