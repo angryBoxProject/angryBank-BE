@@ -1,10 +1,10 @@
 package com.teamY.angryBox.mapper;
 
 
-import com.teamY.angryBox.vo.DiaryFileVO;
-import com.teamY.angryBox.vo.DiaryVO;
-import com.teamY.angryBox.vo.InterimDiaryFileVO;
-import com.teamY.angryBox.vo.InterimDiaryVO;
+import com.teamY.angryBox.vo.*;
+import com.teamY.angryBox.dto.DiaryDTO;
+//import com.teamY.angryBox.dto.DiaryFileDTO;
+import com.teamY.angryBox.dto.InterimDiaryDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface DiaryMapper {
 
     int checkAngryId(int angryPhaseId);
 
-    DiaryVO insertDiary(DiaryVO diaryVO);
+    DiaryVO insertDiary(DiaryDTO diaryDTO);
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
@@ -44,7 +44,7 @@ public interface DiaryMapper {
 
     void deleteDiary(int diaryId, int memberId);
 
-    void updateDiary(DiaryVO diaryVO);
+    void updateDiary(DiaryDTO diaryDTO);
 
     void deleteFileInDiary(int fileId);
 
@@ -67,7 +67,7 @@ public interface DiaryMapper {
 
     int checkInterimDiaryMemberId(int diaryId, int memberId);
 
-    int insertInterimDiary(InterimDiaryVO interimDiaryVO);
+    int insertInterimDiary(InterimDiaryDTO interimDiaryDTO);
 
     void insertInterimDiaryFile(int diaryId, int fileId, int fileNo);
 
@@ -83,12 +83,14 @@ public interface DiaryMapper {
 
     void deleteInterimFile(int fileId);
 
-    void updateInterimDiary(InterimDiaryVO interimDiaryVO);
+    void updateInterimDiary(InterimDiaryDTO interimDiaryDTO);
 
     void deleteFileInInterimDiary(int fileId);
 
     int selectMaxInterimFileNo(int diaryId);
 
+    int selectGalleryLastId();
+    List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size);
     DiaryVO checkDiary(int diaryId);
 
     // ************8
@@ -105,4 +107,5 @@ public interface DiaryMapper {
     int checkIsDeleted(int diaryId);
     int checkCoinBankMemberId(int coinBankId, int memberId);
     int checkDailyTopDiary(String writeDate);
+
 }

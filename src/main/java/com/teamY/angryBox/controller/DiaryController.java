@@ -1,30 +1,17 @@
 package com.teamY.angryBox.controller;
 
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
-import com.teamY.angryBox.dto.FilterDTO;
-import com.teamY.angryBox.dto.ResponseDataMessage;
-import com.teamY.angryBox.dto.ResponseMessage;
-
-import com.teamY.angryBox.service.CoinBankService;
+import com.teamY.angryBox.dto.*;
 import com.teamY.angryBox.service.DiaryService;
-import com.teamY.angryBox.service.MemberService;
-import com.teamY.angryBox.vo.DiaryFileVO;
-import com.teamY.angryBox.vo.DiaryVO;
-import com.teamY.angryBox.vo.InterimDiaryVO;
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,24 +20,24 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
+
     @PostMapping("diary")
-    public ResponseEntity<ResponseMessage> createDiary(@RequestParam String title, @RequestParam String content,
-                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-                                                       @RequestBody MultipartFile[] file,
-                                                       @RequestParam int interimId) {
+    public ResponseEntity<ResponseMessage> createDiary(@RequestParam("public") boolean isPublic,
+                                                       @RequestPart(value = "diary") DiaryDTO diaryDTO,
+                                                       @RequestPart(value = "file", required = false) MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-        DiaryVO diaryVO = new DiaryVO(memberId, title, content, isPublic, angryPhaseId);
 
-        diaryService.addDiary(diaryVO, file);
+        diaryService.addDiary(diaryDTO, file, isPublic, memberId);
 
+        int interimId = diaryDTO.getInterimId();
         if(interimId != 0) {
             diaryService.removeInterimDiary(interimId, memberId);
         }
 
         return new ResponseEntity<>(new ResponseMessage(true, "다이어리 등록 성공", ""), HttpStatus.OK);
-
     }
+
 
     @GetMapping("diaries/coinBank/{coinBankId}/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquiryDiaryListCoinBank(@PathVariable int coinBankId, @PathVariable int lastDiaryId, @PathVariable int size) {
@@ -125,16 +112,17 @@ public class DiaryController {
         return new ResponseEntity<>(new ResponseMessage(true, "다이어리 삭제 성공", ""), HttpStatus.OK);
     }
 
+
     @PutMapping("diaries/{diaryId}")
     public ResponseEntity<ResponseMessage> modifyDiary(@PathVariable int diaryId,
-                                                       @RequestParam String title, @RequestParam String content,
-                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-                                                       @RequestBody MultipartFile[] file, @RequestParam List removedFileId) {
+                                                       @RequestParam("public") boolean isPublic,
+                                                       @RequestPart(value = "diary") DiaryDTO diaryDTO,
+                                                       @RequestPart(value = "file", required = false) MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
-        DiaryVO diaryVO = new DiaryVO(diaryId, memberId, title, content, isPublic, angryPhaseId);
-        diaryService.changeDiary(diaryVO, file, removedFileId);
+        DiaryDTO diary = new DiaryDTO(diaryId, memberId, diaryDTO.getTitle(), diaryDTO.getContent(), diaryDTO.getAngryPhaseId(), isPublic, diaryDTO.getRemovedFileId());
+        diaryService.changeDiary(diary, file);
 
         return new ResponseEntity<>(new ResponseMessage(true, "다이어리 수정 성공", ""), HttpStatus.OK);
 
@@ -159,9 +147,9 @@ public class DiaryController {
 * */
     @GetMapping("diaries")
     public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size
-            , @RequestParam String startDate, @RequestParam String endDate, @RequestParam int angry[], @RequestParam int imageFilter) {
+            , /*@RequestParam String startDate, @RequestParam String endDate, @RequestParam int angry[], @RequestParam int imageFilter*/ @RequestBody FilterDTO filter) {
 
-        FilterDTO filter = new FilterDTO(startDate, endDate, angry, imageFilter);
+        //FilterDTO filter = new FilterDTO(startDate, endDate, angry, imageFilter);
         log.info("filter : " + filter.toString());
         Map<String, Object> data = new HashMap<>();
         data.put("diaries", diaryService.bambooGrove(lastDiaryId, size, filter));
@@ -169,15 +157,14 @@ public class DiaryController {
     }
 
     @PostMapping("/interim-diary")
-    public ResponseEntity<ResponseMessage> createInterimDiary(@RequestParam String title, @RequestParam String content,
-                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-                                                       @RequestBody MultipartFile[] file) {
+    public ResponseEntity<ResponseMessage> createInterimDiary(@RequestParam("public") boolean isPublic,
+                                                              @RequestPart(value = "interimDiary")InterimDiaryDTO interimDiaryDTO,
+                                                              @RequestPart(value = "file") MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
-        InterimDiaryVO interimDiaryVO = new InterimDiaryVO(memberId, title, content, isPublic, angryPhaseId);
-
-        diaryService.addInterimDiary(interimDiaryVO, file);
+        InterimDiaryDTO interimDiary = new InterimDiaryDTO(memberId, interimDiaryDTO.getTitle(), interimDiaryDTO.getContent(), interimDiaryDTO.getAngryPhaseId(), isPublic);
+        diaryService.addInterimDiary(interimDiary, file);
 
         return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 등록 성공", ""), HttpStatus.OK);
     }
@@ -217,8 +204,6 @@ public class DiaryController {
             data.put("count", count);
             return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 개수 조회 성공", "", data), HttpStatus.OK);
         }
-
-
     }
 
     @DeleteMapping("interim-diaries/{diaryId}")
@@ -232,17 +217,27 @@ public class DiaryController {
 
     @PutMapping("interim-diaries/{diaryId}")
     public ResponseEntity<ResponseMessage> modifyInterimDiary(@PathVariable int diaryId,
-                                                       @RequestParam String title, @RequestParam String content,
-                                                       @RequestParam("public") boolean isPublic, @RequestParam int angryPhaseId,
-                                                       @RequestBody MultipartFile[] file, @RequestParam List removedFileId) {
+                                                       @RequestParam("public") boolean isPublic,
+                                                       @RequestPart(value = "interimDiary") InterimDiaryDTO interimDiaryDTO,
+                                                       @RequestBody MultipartFile[] file) {
 
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
 
-        InterimDiaryVO interimDiaryVO = new InterimDiaryVO(diaryId, memberId, title, content, isPublic, angryPhaseId);
-        diaryService.changeInterimDiary(interimDiaryVO, file, removedFileId);
+        InterimDiaryDTO interimDiary = new InterimDiaryDTO(diaryId, memberId, interimDiaryDTO.getTitle(), interimDiaryDTO.getContent(), interimDiaryDTO.getAngryPhaseId(), isPublic, interimDiaryDTO.getRemovedFileId());
+        diaryService.changeInterimDiary(interimDiary, file);
 
         return new ResponseEntity<>(new ResponseMessage(true, "임시 다이어리 수정 성공", ""), HttpStatus.OK);
 
+    }
+
+    @GetMapping("gallery")
+    public ResponseEntity<ResponseDataMessage> gallery(@RequestParam int lastDiaryId, @RequestParam int size) {
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("list", diaryService.getGallery(lastDiaryId, size));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "갤러리 조회", "", data), HttpStatus.OK);
     }
 
 }
