@@ -173,11 +173,11 @@ public class DiaryRepository {
         return diaryMapper.checkDiary(diaryId);
     }
 
-    public int selectDiaryCountInCoinBank(int diaryId, int memberId) {
-        return diaryMapper.selectDiaryCountInCoinBank(diaryId, memberId);
+    public int selectDiaryCountInCoinBank(int coinBankId, int memberId) {
+        return diaryMapper.selectDiaryCountInCoinBank(coinBankId, memberId);
     }
-    public int selectTodackCountInCoinBank(int diaryId, int memberId) {
-        return diaryMapper.selectTodackCountInCoinBank(diaryId, memberId);
+    public int selectTodackCountInCoinBank(int coinBankId, int memberId) {
+        return diaryMapper.selectTodackCountInCoinBank(coinBankId, memberId);
     }
 
 

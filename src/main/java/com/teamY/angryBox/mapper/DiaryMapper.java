@@ -94,8 +94,8 @@ public interface DiaryMapper {
     DiaryVO checkDiary(int diaryId);
 
     // ************8
-    int selectDiaryCountInCoinBank(int diaryId, int memberId);
-    int selectTodackCountInCoinBank(int diaryId, int memberId);
+    int selectDiaryCountInCoinBank(int coinBankId, int memberId);
+    int selectTodackCountInCoinBank(int coinBankId, int memberId);
 
 
 
