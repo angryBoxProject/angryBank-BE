@@ -313,14 +313,14 @@
 
     <!--    저금통 별 다이어리 개수 -->
     <select id="selectDiaryCountInCoinBank" resultType="int">
-        SELECT COUNT(*)
+        SELECT IFNULL(COUNT(*), 0)
         FROM diary
         WHERE coin_bank_id = #{coinBankId} AND member_id = #{memberId};
     </select>
 
 <!--    저금통 별 토댝 총 개수 -->
     <select id="selectTodackCountInCoinBank" resultType="int">
-        SELECT SUM(todack_count)
+        SELECT IFNULL(SUM(todack_count), 0)
         FROM diary
         WHERE coin_bank_id = #{coinBankId} AND member_id = #{memberId};
     </select>
