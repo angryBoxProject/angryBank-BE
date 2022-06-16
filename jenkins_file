@@ -9,7 +9,7 @@ pipeline {
         stage('git Pull') {
             steps {
 
-                git branch: 'main', changelog: false, poll: false, credentialsId:'jenkins_acccess_token', url: 'https://github.com/angryBoxProject/angryBox-BE.git'
+                git branch: 'main', changelog: false, poll: false, credentialsId:'jenkins_acccess_token', url: 'https://github.com/angryBoxProject/angryBank-BE.git'
 
             }
         }
