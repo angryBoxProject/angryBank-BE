@@ -1,4 +1,4 @@
-# angryBox-BE
+# angryBank-BE
 
 # 프로젝트 목적
 - 누구에게도 말할 수 없는 부정적인 감정을 다이어리를 작성하면서 풀어내고, 보상문구를 통해 스스로를 위로하거나 대나무숲을 통해 공유하면서 타인과 위로를 주고 받는다.
@@ -10,7 +10,7 @@
 
 # 개발환경
 
-![angryBox BackEnd 개발환경]()
+![angryBank BackEnd 개발환경]()
 
 # 문서
 - 와이어프레임 : https://www.figma.com/file/wWYnBgVIxk9IUoByTmfG9U/%EB%B6%84%EB%85%B8%EB%8B%A4%EC%9D%B4%EC%96%B4%EB%A6%AC?node-id=88%3A965
