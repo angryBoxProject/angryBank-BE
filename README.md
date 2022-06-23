@@ -10,11 +10,14 @@
 
 # 개발환경
 
-![angryBank BackEnd 개발환경]()
+![angryBank BackEnd 개발환경](https://user-images.githubusercontent.com/84134297/175297495-ca803f5c-c493-44a1-b7b3-ebea930e5f4c.png)
 
 # 문서
-- 와이어프레임 : https://www.figma.com/file/wWYnBgVIxk9IUoByTmfG9U/%EB%B6%84%EB%85%B8%EB%8B%A4%EC%9D%B4%EC%96%B4%EB%A6%AC?node-id=88%3A965
-- ERD : 
+- 와이어프레임 <br />https://www.figma.com/file/wWYnBgVIxk9IUoByTmfG9U/%EB%B6%84%EB%85%B8%EB%8B%A4%EC%9D%B4%EC%96%B4%EB%A6%AC?node-id=88%3A965
+- ERD
+<img src="https://user-images.githubusercontent.com/84134297/175297684-52a99bef-48ec-41b6-a1bd-be0d17dff1a0.JPG" width ="50%" height ="50%"/>
+
+
 
 # 팀원
 - 총 6명(디자이너 2, 프론트엔드2, 백엔드 2)
