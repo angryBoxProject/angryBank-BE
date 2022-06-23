@@ -9,7 +9,7 @@
 - 저금통을 깰 때마다 스스로 정한 보상문구를 보거나 실행함으로써 분노했던 상황들에 대한 보상을 받을 수 있다.
 
 # 개발환경
-![angryBank BackEnd 개발환경](https://user-images.githubusercontent.com/84134297/175298380-651a0cfe-de4c-4d01-99b0-a0950675c731.png)
+<img src="https://user-images.githubusercontent.com/84134297/175298380-651a0cfe-de4c-4d01-99b0-a0950675c731.png" width ="70%" height ="70%"/>
 
 # 문서
 - 와이어프레임 <br />https://www.figma.com/file/wWYnBgVIxk9IUoByTmfG9U/%EB%B6%84%EB%85%B8%EB%8B%A4%EC%9D%B4%EC%96%B4%EB%A6%AC?node-id=88%3A965
