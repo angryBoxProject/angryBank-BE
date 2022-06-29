@@ -22,15 +22,6 @@ public class TodackController {
     private final TodackService todackService;
     private final DiaryService diaryService;
 
-//    @PostMapping("todack")
-//    public ResponseEntity<ResponseMessage> upTodackCount(@RequestBody TodackVO todackVO) {
-//        int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-//        todackService.checkSendTodack(memberId, todackVO,0, 0);
-//        todackService.upTodackCount(todackVO);
-//
-//        return new ResponseEntity<>(new ResponseMessage(true, "토닥 보내기 성공", ""), HttpStatus.OK);
-//    }
-
     @PostMapping("todack/{diaryId}")
     public ResponseEntity<ResponseMessage> upTodackCount(@PathVariable int diaryId) {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
