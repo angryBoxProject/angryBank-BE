@@ -54,20 +54,12 @@ public class MemberController {
 
     //oauth 회원가입한 회원은 비번 변경 불가
 
-    //private final SimpMessagingTemplate template; // 특정 broker 로 메세지 전달
-
     @GetMapping("/")
-    public String helloworld(){
-        //template.convertAndSend("/sub/topic/bamboo", "hellooooo");
-        return "service!!!";
+    public String forHealthCheck(){
+        return "hello LB Health check";
     }
 
-    @GetMapping("hello")
-    public String helloDayea(){
-        //log.info("프린시폴 : " + ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
-        return "hello Yang Dayea";
-    }
-
+    // 프론트 없이 테스트할 때 사용
     //https://kauth.kakao.com/oauth/authorize?client_id=c23e69e54e1be94497eeed61a74f451e&redirect_uri=http://localhost:8080/login/oauth2/code/kakao&response_type=code
     //https://kauth.kakao.com/oauth/authorize?client_id=c23e69e54e1be94497eeed61a74f451e&redirect_uri=http://localhost:8080/login/code/kakao&response_type=code
     //@ResponseBody
@@ -78,7 +70,7 @@ public class MemberController {
 
     @GetMapping("test")
     public String test(@RequestHeader HttpHeaders headers){
-        log.info("있냐고" + headers.get(HeaderUtil.HEADER_AUTHORIZATION));
+        log.info("헤더 확인" + headers.get(HeaderUtil.HEADER_AUTHORIZATION));
         return "test";
     }
     @GetMapping("user")
@@ -95,7 +87,6 @@ public class MemberController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "회원 정보 조회 성공", "", data), HttpStatus.OK);
     }
     @PostMapping("users")
-    //public ResponseEntity<ResponseMessage> memberRegister(@RequestParam String email, @RequestParam String nickname, @RequestParam String password) {
     public ResponseEntity<ResponseMessage> memberRegister(@Valid @RequestBody RegisterMemberDTO newUser) {
         String encodedPassword = bCryptPasswordEncoder.encode(newUser.getPassword());
         MemberVO member = new MemberVO(newUser.getEmail(), newUser.getNickname(), encodedPassword, "basic");
