@@ -7,8 +7,6 @@ import lombok.ToString;
 
 @ToString
 @Setter
-//@Getter
-//@AllArgsConstructor
 public class FilterDTO {
     String startDate = "1";
     String endDate = "1";
