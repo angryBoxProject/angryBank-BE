@@ -130,25 +130,10 @@ public class CoinBankService {
     }
 
     public Map<String, Object> inquiryBankStatCalender(String select) {
-        List<BankStatCalenderVO> list = coinBankRepository.selectBankStatCalenderByMonth(select);
-
-        Map<String, Object> data = new HashMap<>();
-        for (BankStatCalenderVO vo : list) {
-            List<Integer> ids = (List<Integer>) data.get(vo.getWriteDate());
-            if (ids == null) {
-                ids = new ArrayList<Integer>();
-                ids.add(vo.getDiaryId());
-                data.put(vo.getWriteDate(), ids);
-            } else {
-                ids.add(vo.getDiaryId());
-            }
-        }
-        return data;
+        return makeBankStatCalenderData(coinBankRepository.selectBankStatCalenderByMonth(select));
     }
 
-    public Map<String, Object> inquiryBankStatCalenderByMonthAndBank(String select, int coinBankId) {
-        List<BankStatCalenderVO> list = coinBankRepository.selectBankStatCalenderByMonthAndBank(select, coinBankId);
-
+    private Map<String, Object> makeBankStatCalenderData(List<BankStatCalenderVO> list) {
         Map<String, Object> data = new HashMap<>();
         for (BankStatCalenderVO vo : list) {
             List<Integer> ids = (List<Integer>) data.get(vo.getWriteDate());
@@ -162,6 +147,9 @@ public class CoinBankService {
         }
 
         return data;
+    }
+    public Map<String, Object> inquiryBankStatCalenderByMonthAndBank(String select, int coinBankId) {
+        return makeBankStatCalenderData(coinBankRepository.selectBankStatCalenderByMonthAndBank(select, coinBankId));
     }
 
     public Map<String, Object> selectAllBank(int memberId) {
