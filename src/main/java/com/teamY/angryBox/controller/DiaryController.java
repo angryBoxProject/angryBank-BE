@@ -145,7 +145,7 @@ public class DiaryController {
     int imageFilter = 2; // 0 : 이미지 없는거만, 1: 이미지 있는거만, 2 : 이미지 있/없 둘다,
 
 * */
-    @GetMapping("diaries")
+    @PostMapping("diaries")
     public ResponseEntity<ResponseDataMessage> diaries(@RequestParam int lastDiaryId, @RequestParam int size
             , /*@RequestParam String startDate, @RequestParam String endDate, @RequestParam int angry[], @RequestParam int imageFilter*/ @RequestBody FilterDTO filter) {
 
