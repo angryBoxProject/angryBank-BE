@@ -121,6 +121,7 @@ public class DiaryService {
 
     public Map<String, Object> getDiaryDetail(int diaryId, int memberId) {
         List<DiaryFileVO> dfVO = diaryRepository.selectDiaryDetail(diaryId);
+        log.info("----- dfVO : " + dfVO);
         if (dfVO.size() == 0) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
         } else if (dfVO.get(0).getDiaryVO().isPublic() == false //비공개 상태이고
@@ -129,16 +130,19 @@ public class DiaryService {
         } else {
             Map<String, Object> data = new LinkedHashMap<>();
 
+            Map<String, Object> fileList = new HashMap<>();
             for (int i = 0; i < dfVO.size(); i++) {
                 data.put("diary", dfVO.get(i).getDiaryVO());
                 if (dfVO.get(i).getFileVO() != null) {
                     Map<String, Object> fileInfo = new HashMap<>();
                     fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
-                    fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
+                    // fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
                     fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
-                    data.put("file" + (i + 1), fileInfo);
+                    fileList.put(i + "", fileInfo);
                 }
             }
+
+            data.put("fileList", fileList);
             return data;
         }
     }
