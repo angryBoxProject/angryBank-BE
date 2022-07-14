@@ -120,26 +120,30 @@ public class DiaryService {
 
 
     public Map<String, Object> getDiaryDetail(int diaryId, int memberId) {
-        List<DiaryFileVO> dfVO = diaryRepository.selectDiaryDetail(diaryId);
-        if (dfVO.size() == 0) {
+        diaryRepository.updateViewCount(diaryId);
+
+        DiaryVO diaryVO = diaryRepository.selectDiaryDetail(diaryId);
+        List<DiaryFileVO> diaryFileVOList = diaryRepository.selectFileInDiary(diaryId);
+
+        if (diaryVO == null) {
             throw new InvalidRequestException("해당 다이어리 존재하지 않음");
-        } else if (dfVO.get(0).getDiaryVO().isPublic() == false //비공개 상태이고
-                && dfVO.get(0).getDiaryVO().getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
+        } else if (diaryVO.isPublic() == false //비공개 상태이고
+                && diaryVO.getMemberId() != memberId) {  //작성자와 조회자가 같지 않을 경우
             throw new InvalidRequestException("비밀글 당사자 외 조회 불가");
         } else {
             Map<String, Object> data = new LinkedHashMap<>();
-            List<Map<String, Object>> fileList = new ArrayList();
+            List<Map<String, Object>> fileList = new ArrayList<>();
 
-            for (int i = 0; i < dfVO.size(); i++) {
-                data.put("diary", dfVO.get(i).getDiaryVO());
-                if (dfVO.get(i).getFileVO() != null) {
+            if(diaryFileVOList != null) {
+                for(int i = 0; i < diaryFileVOList.size(); i++) {
                     Map<String, Object> fileInfo = new HashMap<>();
-                    fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
-                    // fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
-                    fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
+                    fileInfo.put("fileLink", "/images/" + diaryFileVOList.get(i).getSystemFileName());
+                    fileInfo.put("fileId", diaryFileVOList.get(i).getId());
                     fileList.add(fileInfo);
                 }
             }
+
+            data.put("diary", diaryVO);
             data.put("fileList", fileList);
 
             return data;
@@ -231,18 +235,38 @@ public class DiaryService {
     public Map<String, Object> getInterimDiaryDetail(int diaryId, int memberId) {
         checkInterimDiary(diaryId, memberId);
 
-        List<InterimDiaryFileVO> dfVO = diaryRepository.selectInterimDiaryDetail(diaryId);
+//        List<InterimDiaryFileVO> dfVO = diaryRepository.selectInterimDiaryDetail(diaryId);
+//        Map<String, Object> data = new LinkedHashMap<>();
+//        for (int i = 0; i < dfVO.size(); i++) {
+//            data.put("diary", dfVO.get(i).getInterimDiaryVO());
+//            if (dfVO.get(i).getFileVO() != null) {
+//                Map<String, Object> fileInfo = new HashMap<>();
+//                fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
+//                fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
+//                fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
+//                data.put("file" + (i + 1), fileInfo);
+//            }
+//        }
+//        return data;
+
+        InterimDiaryVO interimDiaryVO = diaryRepository.selectInterimDiaryDetail(diaryId);
+        List<DiaryFileVO> interimDiaryFileVOList = diaryRepository.selectFileInInterimDiary(diaryId);
+
         Map<String, Object> data = new LinkedHashMap<>();
-        for (int i = 0; i < dfVO.size(); i++) {
-            data.put("diary", dfVO.get(i).getInterimDiaryVO());
-            if (dfVO.get(i).getFileVO() != null) {
+        List<Map<String, Object>> fileList = new ArrayList<>();
+        if(interimDiaryFileVOList != null) {
+            for(int i = 0; i < interimDiaryFileVOList.size(); i++) {
                 Map<String, Object> fileInfo = new HashMap<>();
-                fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
-                fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
-                fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
-                data.put("file" + (i + 1), fileInfo);
+                fileInfo.put("fileLink", "images" + interimDiaryFileVOList.get(i).getSystemFileName());
+                fileInfo.put("fileId", interimDiaryFileVOList.get(i).getId());
+                fileList.add(fileInfo);
             }
         }
+
+        data.put("diary", interimDiaryVO);
+        data.put("fileList", fileList);
+
+
         return data;
     }
 
@@ -271,7 +295,7 @@ public class DiaryService {
     public void removeInterimDiary(int diaryId, int memberId) {
         checkInterimDiary(diaryId, memberId);
 
-        List<Integer> fileList = diaryRepository.selectFileInInterimDiary(diaryId);
+        List<Integer> fileList = diaryRepository.selectFileIdInInterimDiary(diaryId);
 
         diaryRepository.deleteInterimDiary(diaryId);
 

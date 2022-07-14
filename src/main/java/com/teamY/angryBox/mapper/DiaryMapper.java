@@ -30,7 +30,12 @@ public interface DiaryMapper {
 
     List<DiaryVO> selectTodayTop(int lastDiaryId, int size);
 
-    List<DiaryFileVO> selectDiaryDetail(int diaryId);
+    //List<DiaryFileVO> selectDiaryDetail(int diaryId);
+    DiaryVO selectDiaryDetail(int diaryId);
+
+    List<DiaryFileVO> selectFileInDiary(int diaryId);
+
+    void updateViewCount(int diaryId);
 
     int selectLastId();
 
@@ -71,13 +76,15 @@ public interface DiaryMapper {
 
     void insertInterimDiaryFile(int diaryId, int fileId, int fileNo);
 
-    List<InterimDiaryFileVO> selectInterimDiaryDetail(int diaryId);
+    InterimDiaryVO selectInterimDiaryDetail(int diaryId);
+
+    List<DiaryFileVO> selectFileInInterimDiary(int diaryId);
 
     List<InterimDiaryVO> selectInterimDiaryList(int memberId, int lastDiaryId, int size);
 
     int countInterimDiary(int memberId);
 
-    List<Integer> selectFileInInterimDiary(int diaryId);
+    List<Integer> selectFileIdInInterimDiary(int diaryId);
 
     void deleteInterimDiary(int diaryId);
 
@@ -93,19 +100,7 @@ public interface DiaryMapper {
     List<GalleryDiaryVO> selectGallery(int lastDiaryId, int size);
     DiaryVO checkDiary(int diaryId);
 
-    // ************8
     int selectDiaryCountInCoinBank(int coinBankId, int memberId);
     int selectTodackCountInCoinBank(int coinBankId, int memberId);
-
-
-
-
-    int checkCoinBankExpired(int coinBankId, int memberId, int expired);
-    int checkDiaryId(int diaryId);
-    int checkDiaryMemberId(int diaryId, int memberId);
-    int checkIsPublic(int diaryId);
-    int checkIsDeleted(int diaryId);
-    int checkCoinBankMemberId(int coinBankId, int memberId);
-    int checkDailyTopDiary(String writeDate);
 
 }

@@ -176,7 +176,7 @@
 
 <!-- 다이어리 상세 조회 -->
     <resultMap id="DiaryDetail" type="diaryVO">
-        <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
+        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
         <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
         <result property="isDeleted" javaType="boolean" column="is_deleted" jdbcType="TINYINT" />
         <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
@@ -190,31 +190,39 @@
         <result property="viewCount" javaType="int" column="view_count" jdbcType="INTEGER" />
     </resultMap>
 
-    <resultMap id="FileDetail" type="fileVO">
-        <result property="id" javaType="int" column="file_id" jdbcType="INTEGER" />
+    <resultMap id="DiaryFileDetail" type="DiaryFileVO">
+        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
         <result property="systemFileName" javaType="string" column="system_file_name" jdbcType="VARCHAR" />
         <result property="fileNo" javaType="int" column="file_no" jdbcType="INTEGER" />
     </resultMap>
 
-    <resultMap id="selectDiaryDetailResultMap" type="DiaryFileVO">
-        <collection property="diaryVO" resultMap="DiaryDetail" />
-        <collection property="fileVO" resultMap="FileDetail" />
-    </resultMap>
-    <select id="selectDiaryDetail" resultType="DiaryFileVO" resultMap="selectDiaryDetailResultMap" >
-        { CALL SELECT_DIARY( #{diaryId} ) }
+<!--    다이어리 내용 조회 -->
+    <select id="selectDiaryDetail" resultType="DiaryVO" resultMap="DiaryDetail">
+        SELECT id, member_id, is_deleted, diary_no, title, content, write_date, coin_bank_id, angry_phase_id, is_public, todack_count, view_count
+        FROM diary
+        WHERE id = #{diaryId}
     </select>
+
+<!--    다이어리 별 파일 조회-->
+    <select id="selectFileInDiary" resultType="DiaryFileVO" resultMap="DiaryFileDetail">
+        SELECT f.id, f.system_file_name, df.file_no
+        FROM diary_file AS df
+                 LEFT JOIN file AS f
+                           ON df.file_id = f.id
+        WHERE df.diary_id = #{diaryId}
+        ORDER BY df.file_no
+    </select>
+
+<!--    다이어리 조회 시 조회수 업데이트-->
+    <update id="updateViewCount" >
+        UPDATE diary SET view_count = view_count + 1 WHERE id = #{diaryId}
+    </update>
 
 <!--    다이어리 삭제 -->
     <delete id="deleteDiary">
         { CALL DELETE_DIARY( #{diaryId}, #{memberId} ) }
     </delete>
 
-
-<!--    다이어리 수정 -->
-<!--    <update id="updateDiary" parameterType="DiaryVO">-->
-<!--        UPDATE diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}-->
-<!--        WHERE id = #{id}-->
-<!--    </update>-->
     <update id="updateDiary" parameterType="DiaryDTO">
         UPDATE diary SET title = #{title}, content = #{content}, is_public = #{isPublic}, angry_phase_id = #{angryPhaseId}
         WHERE id = #{id}
@@ -241,7 +249,7 @@
     </insert>
 <!--    임시 다이어리 상세 조회-->
     <resultMap id="interimDiaryDetail" type="interimDiaryVO">
-        <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
+        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
         <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR" />
         <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
@@ -249,18 +257,25 @@
         <result property="isPublic" javaType="boolean" column="is_public" jdbcType="TINYINT" />
         <result property="angryPhaseId" javaType="int" column="angry_phase_id" jdbcType="INTEGER" />
     </resultMap>
-    <resultMap id="interimFileDetail" type="fileVO">
-        <result property="id" javaType="int" column="file_id" jdbcType="INTEGER" />
-        <result property="systemFileName" javaType="string" column="system_file_name" jdbcType="VARCHAR" />
-        <result property="fileNo" javaType="int" column="file_no" jdbcType="INTEGER" />
-    </resultMap>
-    <resultMap id="selectInterimDiaryDetailResultMap" type="InterimDiaryFileVO">
-        <collection property="interimDiaryVO" resultMap="interimDiaryDetail" />
-        <collection property="fileVO" resultMap="interimFileDetail" />
-    </resultMap>
-    <select id="selectInterimDiaryDetail" resultType="InterimDiaryFileVO" resultMap="selectInterimDiaryDetailResultMap" >
-        { CALL SELECT_INTERIM_DIARY( #{diaryId} ) }
+
+<!--    임시 다이어리 내용 조회 -->
+    <select id="selectInterimDiaryDetail" resultType="InterimDiaryVO" resultMap="interimDiaryDetail">
+        SELECT id, member_id, title, content, write_date, angry_phase_id, is_public
+        FROM interim_diary
+        WHERE id = #{diaryId};
     </select>
+
+<!--    임시 다이어리 내 파일 조회-->
+    <select id="selectFileInInterimDiary" resultType="DiaryFileVO" resultMap="DiaryFileDetail">
+        SELECT f.id, f.system_file_name, df.file_no
+        FROM interim_file AS f
+                 LEFT JOIN interim_diary_file AS df
+                           ON df.file_id = f.id
+        WHERE df.diary_id = #{diaryId}
+        ORDER BY df.file_no;
+    </select>
+
+
 
 <!--    임시 다이어리 목록 조회 -->
     <select id="selectInterimDiaryList" resultType="InterimDiaryVO" >
@@ -277,7 +292,7 @@
     </select>
 
 <!--    임시 다이어리 삭제-->
-    <select id="selectFileInInterimDiary" resultType="int">
+    <select id="selectFileIdInInterimDiary" resultType="int">
         SELECT IFNULL(file_id, 0) AS file_id
         FROM interim_diary AS d
                  LEFT OUTER JOIN(
