@@ -228,7 +228,7 @@
         WHERE id = #{id}
     </update>
     <delete id="deleteFileInDiary" >
-        { CALL DELETE_FILE_IN_DIARY( #{fileId} )  }
+        DELETE FROM diary_file WHERE file_id = #{fileId}
     </delete>
     <select id="selectMaxFileNo" resultType="int">
         SELECT IFNULL(MAX(df.file_no), 0)
