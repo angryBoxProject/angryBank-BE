@@ -150,7 +150,7 @@ public class DiaryService {
         }
     }
 
-
+    @Transactional
     public void removeDiary(int diaryId, int memberId) {
         checkDiary(diaryId, memberId);
         diaryRepository.deleteDiary(diaryId, memberId);
@@ -174,7 +174,9 @@ public class DiaryService {
                 if (diaryRepository.checkFileInDiary(diaryId, fileId) == 0) {
                     throw new InvalidRequestException("삭제된 파일id 확인 필요");
                 }
-                diaryRepository.deleteFileInDiary(fileId);
+                FileVO fileVO = fileRepository.findById(fileId);
+                diaryRepository.deleteFileInDiary(fileId); //DB diary_file 삭제
+                fileRepository.deleteFile(fileVO); //file 삭제
             }
         }
 
