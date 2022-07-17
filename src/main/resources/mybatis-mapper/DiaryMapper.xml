@@ -95,7 +95,7 @@
 
     <!-- 다이어리 목록 조회 (저금통별) -->
     <select id="selectDiaryListInCoinBank" resultType="DiaryVO" resultMap="DiaryDetail">
-        SELECT id AS diary_id, member_id, is_deleted, diary_no, title, content, DATE(write_date) AS write_date, angry_phase_id, is_public, todack_count, view_count
+        SELECT id AS diary_id, member_id, is_deleted, diary_no, title, content, DATE(write_date) AS write_date, coin_bank_id, angry_phase_id, is_public, todack_count, view_count
         FROM diary
         WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId} AND id <![CDATA[<]]> #{lastDiaryId}
         ORDER BY id DESC
@@ -176,7 +176,7 @@
 
 <!-- 다이어리 상세 조회 -->
     <resultMap id="DiaryDetail" type="diaryVO">
-        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
+        <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
         <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
         <result property="isDeleted" javaType="boolean" column="is_deleted" jdbcType="TINYINT" />
         <result property="diaryNo" javaType="int" column="diary_no" jdbcType="INTEGER" />
@@ -198,7 +198,7 @@
 
 <!--    다이어리 내용 조회 -->
     <select id="selectDiaryDetail" resultType="DiaryVO" resultMap="DiaryDetail">
-        SELECT id, member_id, is_deleted, diary_no, title, content, write_date, coin_bank_id, angry_phase_id, is_public, todack_count, view_count
+        SELECT id AS diary_id, member_id, is_deleted, diary_no, title, content, write_date, coin_bank_id, angry_phase_id, is_public, todack_count, view_count
         FROM diary
         WHERE id = #{diaryId}
     </select>
@@ -249,7 +249,7 @@
     </insert>
 <!--    임시 다이어리 상세 조회-->
     <resultMap id="interimDiaryDetail" type="interimDiaryVO">
-        <result property="id" javaType="int" column="id" jdbcType="INTEGER" />
+        <result property="id" javaType="int" column="diary_id" jdbcType="INTEGER" />
         <result property="memberId" javaType="int" column="member_id" jdbcType="INTEGER" />
         <result property="title" javaType="string" column="title" jdbcType="VARCHAR" />
         <result property="content" javaType="string" column="content" jdbcType="VARCHAR" />
@@ -260,7 +260,7 @@
 
 <!--    임시 다이어리 내용 조회 -->
     <select id="selectInterimDiaryDetail" resultType="InterimDiaryVO" resultMap="interimDiaryDetail">
-        SELECT id, member_id, title, content, write_date, angry_phase_id, is_public
+        SELECT id AS diary_id, member_id, title, content, write_date, angry_phase_id, is_public
         FROM interim_diary
         WHERE id = #{diaryId};
     </select>
@@ -279,7 +279,7 @@
 
 <!--    임시 다이어리 목록 조회 -->
     <select id="selectInterimDiaryList" resultType="InterimDiaryVO" >
-        SELECT id, member_id, title, content, DATE(write_date) AS dateTime, angry_phase_id, is_public
+        SELECT id AS diary_id, member_id, title, content, DATE(write_date) AS dateTime, angry_phase_id, is_public
         FROM interim_diary
         WHERE member_id = #{memberId} AND id <![CDATA[<]]> #{lastDiaryId}
         ORDER BY id DESC
