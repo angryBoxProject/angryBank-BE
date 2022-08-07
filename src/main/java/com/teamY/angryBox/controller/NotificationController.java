@@ -26,31 +26,22 @@ public class NotificationController {
 
     @GetMapping("notification/{notificationId}")
     public ResponseEntity<ResponseMessage> inquiryNotification(@PathVariable int notificationId) {
+        int diaryId = notificationService.getDiaryIdInNtf(notificationId);
         int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+
         notificationService.changeNtf(notificationId);
-        Map<String, Object> data = null;
+        notificationService.checkNtf(notificationId, memberId);
 
-        if(notificationService.checkNtf(notificationId, memberId) == 0) {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "알림을 통한 다이어리 상세조회 성공(해당 다이어리 삭제됨)", "", data), HttpStatus.OK);
-        } else {
+        Map<String, Object> data = diaryService.getDiaryDetail(diaryId, memberId);
 
-            int diaryId = notificationService.getDiaryIdInNtf(notificationId);
-            data = diaryService.getDiaryDetail(diaryId, memberId);
-
-            return new ResponseEntity<>(new ResponseDataMessage(true, "알림을 통한 다이어리 상세조회 성공", "", data), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseDataMessage(true, "알림을 통한 다이어리 상세조회 성공", "", data), HttpStatus.OK);
     }
 
     @GetMapping("notification/{lastNotificationId}/{size}")
     public ResponseEntity<ResponseMessage> inquiryNotificationList(@PathVariable int lastNotificationId, @PathVariable int size) {
         int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         Map<String, Object> data =  notificationService.getNtfList(memberId, lastNotificationId, size);
-        if(data.containsKey("zero")) {
-            data.remove("zero");
-            return new ResponseEntity<>(new ResponseDataMessage(true, "알림 목록 조회 성공(받은 알림 없음)", "", data), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "알림 목록 조회 성공", "", data), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseDataMessage(true, "알림 목록 조회 성공", "", data), HttpStatus.OK);
     }
 
 }

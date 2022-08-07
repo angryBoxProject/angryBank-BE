@@ -7,13 +7,14 @@ import com.teamY.angryBox.repository.StatRepository;
 import com.teamY.angryBox.vo.CoinBankVO;
 import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class StatService {
 
