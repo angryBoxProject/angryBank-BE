@@ -45,12 +45,7 @@ public class DiaryController {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         Map<String, Object> data = diaryService.getDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size);
 
-        if(data.containsKey("null")) {
-            data.remove("null");
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(적금별) 성공(해당 적금에 작성한 다이어리 없음)", "", data), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(적금별) 성공", "", data), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(적금별) 성공", "", data), HttpStatus.OK);
     }
 
     @GetMapping("diaries/month/{date}/{lastDiaryId}/{size}")
@@ -59,12 +54,7 @@ public class DiaryController {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         Map<String, Object> data = diaryService.getDiaryListInMonth(memberId, date, lastDiaryId, size);
 
-        if(data.containsKey("null")) {
-            data.remove("null");
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공(해당 월에 작성한 다이어리 없음)", "", data), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공", "", data), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(월별) 성공", "", data), HttpStatus.OK);
     }
 
     @GetMapping("diaries/dailyTop/{date}/{lastDiaryId}/{size}")
@@ -72,24 +62,15 @@ public class DiaryController {
 
         Map<String, Object> data = diaryService.getDailyTop(date, lastDiaryId, size);
 
-        if(data.containsKey("null")) {
-            data.remove("null");
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Daily TOP) 성공(해당 날짜에 TOP 다이어리 없음)", "", data), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Daily TOP) 성공", "", data), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Daily TOP) 성공", "", data), HttpStatus.OK);
     }
 
     @GetMapping("diaries/todayTop/{lastDiaryId}/{size}")
     public ResponseEntity<ResponseDataMessage> inquiryTodayTopDiary(@PathVariable int lastDiaryId, @PathVariable int size) {
+
         Map<String, Object> data = diaryService.getTodayTop(lastDiaryId, size);
 
-        if(data.containsKey("null")) {
-            data.remove("null");
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Today TOP) 성공(금일 TOP 다이어리 없음)", "", data), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Today TOP) 성공", "", data), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseDataMessage(true, "다이어리 조회(Today TOP) 성공", "", data), HttpStatus.OK);
     }
 
 
@@ -184,26 +165,16 @@ public class DiaryController {
 
         Map<String, Object> data = diaryService.getInterimDiaryList(memberId, lastDiaryId, size);
 
-        if(data.containsKey("null")) {
-            data.remove("null");
-            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 목록 조회 성공(작성한 임시 다이어리 없음)", "", data), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 목록 조회 성공", "", data), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 목록 조회 성공", "", data), HttpStatus.OK);
     }
 
     @GetMapping("interim-diary-count")
     public ResponseEntity<ResponseMessage> inquiryInterimDiaryCount() {
         int memberId = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
-
         Map<String, Object> data = new HashMap<>();
-        int count = diaryService.getInterimDiaryCount(memberId);
-        if(count == 0) {
-            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 개수 조회 성공(임시 작성한 다이어리 없음)", "", data), HttpStatus.OK);
-        } else {
-            data.put("count", count);
-            return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 개수 조회 성공", "", data), HttpStatus.OK);
-        }
+        data.put("count", diaryService.getInterimDiaryCount(memberId));
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "임시 다이어리 개수 조회 성공", "", data), HttpStatus.OK);
     }
 
     @DeleteMapping("interim-diaries/{diaryId}")
