@@ -72,49 +72,34 @@ public class DiaryService {
         Map<String, Object> data = new HashMap<>();
         if (lastDiaryId == 0) {
             lastDiaryId = diaryRepository.selectLastIdInCoinBank(memberId, coinBankId) + 1;
-            if (lastDiaryId == 0) {
-                data.put("null", null);
-            } else {
-                data.put("diaryListInCoinBank", diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size));
-            }
-        } else {
-            data.put("diaryListInCoinBank", diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size));
         }
+
+        data.put("diaryListInCoinBank", diaryRepository.selectDiaryListInCoinBank(memberId, coinBankId, lastDiaryId, size));
+
         return data;
     }
 
     public Map<String, Object> getDiaryListInMonth(int memberId, String writeDate, int lastDiaryId, int size) {
         Map<String, Object> data = new HashMap<>();
+
         if (lastDiaryId == 0) {
             lastDiaryId = diaryRepository.selectLastIdInMonth(memberId, writeDate) + 1;
-            if (lastDiaryId == 0) {
-                data.put("null", null);
-            } else {
-                data.put("diaryListInMonth", diaryRepository.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size));
-            }
-        } else {
-            data.put("diaryListInMonth", diaryRepository.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size));
         }
+
+        data.put("diaryListInMonth", diaryRepository.selectDiaryListInMonth(memberId, writeDate, lastDiaryId, size));
+
         return data;
     }
 
     public Map<String, Object> getDailyTop(String writeDate, int lastDiaryId, int size) {
         Map<String, Object> data = new HashMap<>();
-        if (diaryRepository.selectDailyLastId(writeDate) == -1) {
-            data.put("null", null);
-        } else {
-            data.put("dailyTopDiary", diaryRepository.selectDailyTop(writeDate, lastDiaryId, size));
-        }
+        data.put("dailyTopDiary", diaryRepository.selectDailyTop(writeDate, lastDiaryId, size));
         return data;
     }
 
     public Map<String, Object> getTodayTop(int lastDiaryId, int size) {
         Map<String, Object> data = new HashMap<>();
-        if (diaryRepository.selectTodayLastId() == -1) {
-            data.put("null", null);
-        } else {
-            data.put("todayTopDiary", diaryRepository.selectTodayTop(lastDiaryId, size));
-        }
+        data.put("todayTopDiary", diaryRepository.selectTodayTop(lastDiaryId, size));
         return data;
     }
 
@@ -237,20 +222,6 @@ public class DiaryService {
     public Map<String, Object> getInterimDiaryDetail(int diaryId, int memberId) {
         checkInterimDiary(diaryId, memberId);
 
-//        List<InterimDiaryFileVO> dfVO = diaryRepository.selectInterimDiaryDetail(diaryId);
-//        Map<String, Object> data = new LinkedHashMap<>();
-//        for (int i = 0; i < dfVO.size(); i++) {
-//            data.put("diary", dfVO.get(i).getInterimDiaryVO());
-//            if (dfVO.get(i).getFileVO() != null) {
-//                Map<String, Object> fileInfo = new HashMap<>();
-//                fileInfo.put("fileLink", "/images/" + dfVO.get(i).getFileVO().getSystemFileName());
-//                fileInfo.put("fileNo", dfVO.get(i).getFileVO().getFileNo());
-//                fileInfo.put("fileId", dfVO.get(i).getFileVO().getId());
-//                data.put("file" + (i + 1), fileInfo);
-//            }
-//        }
-//        return data;
-
         InterimDiaryVO interimDiaryVO = diaryRepository.selectInterimDiaryDetail(diaryId);
         List<DiaryFileVO> interimDiaryFileVOList = diaryRepository.selectFileInInterimDiary(diaryId);
 
@@ -268,7 +239,6 @@ public class DiaryService {
         data.put("diary", interimDiaryVO);
         data.put("fileList", fileList);
 
-
         return data;
     }
 
@@ -281,14 +251,8 @@ public class DiaryService {
         Map<String, Object> data = new HashMap<>();
         if (lastDiaryId == 0) {
             lastDiaryId = diaryRepository.selectInterimLastId(memberId) + 1;
-            if (lastDiaryId == 0) {
-                data.put("null", null);
-            } else {
-                data.put("diary", diaryRepository.selectInterimDiaryList(memberId, lastDiaryId, size));
-            }
-        } else {
-            data.put("diary", diaryRepository.selectInterimDiaryList(memberId, lastDiaryId, size));
         }
+        data.put("diary", diaryRepository.selectInterimDiaryList(memberId, lastDiaryId, size));
         return data;
     }
 
@@ -377,10 +341,6 @@ public class DiaryService {
                 throw new InvalidRequestException("적금 번호 확인 필요");
             }
         }
-
-        //else if (coinBankRepository.selectBankExpired(coinBankId).isExpired()) { //0 : 사용 가능인데 false / 1 : 만료인데 ture -> true이면 에러
-        //            throw new InvalidRequestException("만료된 적금");
-        //        }
     }
 
     public List<GalleryDiaryVO> getGallery(int lastDiaryId, int size) {
