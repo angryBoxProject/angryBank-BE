@@ -29,6 +29,10 @@ public class DiaryRepository {
         diaryMapper.insertDiaryFile(diaryId, fileId, fileNo);
     }
 
+    public String selectDiaryNoInNft(int diaryId) {
+        return diaryMapper.selectDiaryNoInNft(diaryId);
+    }
+
     public int selectDiaryMemberId(int diaryId) {
         return diaryMapper.selectDiaryMemberId(diaryId);
     }

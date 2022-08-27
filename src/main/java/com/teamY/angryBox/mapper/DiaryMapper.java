@@ -18,6 +18,8 @@ public interface DiaryMapper {
 
     void insertDiaryFile(int diaryId, int fileId, int fileNo);
 
+    String selectDiaryNoInNft(int diaryId);
+
     int selectDiaryMemberId(int diaryId);
 
     int checkFileInDiary(int diaryId, int fileId);
