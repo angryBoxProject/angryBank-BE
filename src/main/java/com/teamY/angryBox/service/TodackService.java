@@ -25,7 +25,8 @@ public class TodackService {
         TodackVO todackVO = new TodackVO(diaryId, memberId, receiveMemberId);
         todackRepository.upTodackCount(todackVO);
 
-        NotificationDTO ntfDTO = new NotificationDTO(diaryId, memberId, receiveMemberId);
+        String diaryTitle = diaryRepository.selectDiaryNoInNft(diaryId);
+        NotificationDTO ntfDTO = new NotificationDTO(diaryId, diaryTitle, memberId, receiveMemberId);
         notificationRepository.sendNtf(ntfDTO);
     }
 

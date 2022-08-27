@@ -17,7 +17,7 @@ public class NotificationRepository {
 
     public void sendNtf(NotificationDTO ntfDTO) {
         //게시글 이름이나 diary_no 에 토닥토닥을 받았습니다. 등으로 수정하면 좋을 듯
-        ntfDTO.setContent(ntfDTO.getDiaryId() + "번 다이어리가 토닥토닥을 받았습니다.");
+        ntfDTO.setContent("[" + ntfDTO.getDiaryTitle() + "] 가 토닥토닥을 받았습니다.");
         notificationMapper.sendNtf(ntfDTO);
     }
 
