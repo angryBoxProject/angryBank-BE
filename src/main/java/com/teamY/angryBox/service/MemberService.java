@@ -68,6 +68,7 @@ public class MemberService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         Map<String, Object> data = addToken();
+        memberRepository.updateLastLogin((int)data.get("memberId"));
 
         return data;
     }
