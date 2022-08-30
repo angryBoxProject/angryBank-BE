@@ -12,11 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@RequestMapping("notification/")
 @AllArgsConstructor
 @RestController
 public class NotificationController {
@@ -24,7 +27,7 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final DiaryService diaryService;
 
-    @GetMapping("notification/{notificationId}")
+    @GetMapping("{notificationId}")
     public ResponseEntity<ResponseMessage> inquiryNotification(@PathVariable int notificationId) {
         int diaryId = notificationService.getDiaryIdInNtf(notificationId);
         int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
@@ -37,7 +40,16 @@ public class NotificationController {
         return new ResponseEntity<>(new ResponseDataMessage(true, "알림을 통한 다이어리 상세조회 성공", "", data), HttpStatus.OK);
     }
 
-    @GetMapping("notification/{lastNotificationId}/{size}")
+    @GetMapping("un-checked")
+    public ResponseEntity<ResponseMessage> inquiryUnCheckedNotification() {
+        int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
+
+        Map<String, Object> data = notificationService.getCountUnCheckedNft(memberId, 0);
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "미확인 알람 개수 확인 성공", "", data), HttpStatus.OK);
+    }
+
+    @GetMapping("{lastNotificationId}/{size}")
     public ResponseEntity<ResponseMessage> inquiryNotificationList(@PathVariable int lastNotificationId, @PathVariable int size) {
         int memberId = ((MemberPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO().getId();
         Map<String, Object> data =  notificationService.getNtfList(memberId, lastNotificationId, size);

@@ -16,7 +16,7 @@ public class NotificationDTO {
     private int receiveMemberId;
     @Setter
     private String content;
-    private boolean checked;
+    private boolean checked; // 0 : 미확인, 1 : 확인
     private String dateTime;
 
     public NotificationDTO(int diaryId, String diaryTitle, int sendMemberId, int receiveMemberId) {
@@ -26,11 +26,11 @@ public class NotificationDTO {
         this.receiveMemberId = receiveMemberId;
     }
 
-    public NotificationDTO(int id, int diaryId, String content, String dateTime, boolean checked) {
-        this.id = id;
-        this.diaryId = diaryId;
-        this.content = content;
-        this.dateTime = dateTime;
-        this.checked = checked;
-    }
+//    public NotificationDTO(int id, int diaryId, String content, String dateTime, boolean checked) {
+//        this.id = id;
+//        this.diaryId = diaryId;
+//        this.content = content;
+//        this.dateTime = dateTime;
+//        this.checked = checked;
+//    }
 }

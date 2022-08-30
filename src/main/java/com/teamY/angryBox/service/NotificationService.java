@@ -1,9 +1,8 @@
 package com.teamY.angryBox.service;
 
-import com.teamY.angryBox.dto.NotificationDTO;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.NotificationRepository;
-import lombok.AllArgsConstructor;
+import com.teamY.angryBox.vo.NotificationListVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,13 +26,21 @@ public class NotificationService {
         notificationRepository.updateNtf(ntfId);
     }
 
+    public Map<String, Object> getCountUnCheckedNft(int memberId, int checked) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("unCheckedNftCount", notificationRepository.selectCountCheckedNtf(memberId, checked));
+
+        return data;
+    }
+
     public Map<String, Object> getNtfList(int memberId, int lastNtfId, int size) {
         if (lastNtfId == 0) {
             lastNtfId = notificationRepository.selectLastIdInNtf(memberId) + 1;
         }
 
         Map<String, Object> data = new HashMap<>();
-        List<NotificationDTO> ntfList = notificationRepository.selectNftList(memberId, lastNtfId, size);
+        List<NotificationListVO> ntfList = notificationRepository.selectNftList(memberId, lastNtfId, size);
         data.put("ntfList", ntfList);
 
         return data;
