@@ -3,8 +3,10 @@ package com.teamY.angryBox.service;
 import com.teamY.angryBox.enums.OAuthProviderEnum;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.MemberRepository;
+import com.teamY.angryBox.repository.ProfileRepository;
 import com.teamY.angryBox.utils.HeaderUtil;
 import com.teamY.angryBox.vo.MemberVO;
+import com.teamY.angryBox.vo.ProfileVO;
 import com.teamY.angryBox.vo.oauth.GoogleURL;
 import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
@@ -28,10 +30,12 @@ public class OAuthService {
     private final KakaoURL kakaoURL;
     private final GoogleURL googleURL;
     private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final StringRedisTemplate stringRedisTemplate;
 
     // 나중에 리턴 타입 바꾸기. 지금은 테스트용으로 String
+    @Transactional
     public String OAuthLogin(OAuthProviderEnum providerEnum, String code) {
 
         OAuthURL url = getURL(providerEnum);
@@ -56,6 +60,10 @@ public class OAuthService {
             log.info(member.toString());
 
             memberRepository.insertMember(member);
+
+            ProfileVO profileVO = new ProfileVO(member.getId(), 1);
+            profileRepository.insertProfile(profileVO);
+
         }
 
         String key = String.valueOf(memberRepository.findByEmail(userEmail).getId());
