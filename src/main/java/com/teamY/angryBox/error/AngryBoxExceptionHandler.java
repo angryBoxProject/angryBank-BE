@@ -20,22 +20,22 @@ public class AngryBoxExceptionHandler {
 
     @ExceptionHandler(SQLInquiryException.class)
     public ResponseEntity<ResponseMessage> handleSQLInquiryException(SQLInquiryException e) {
-        return new ResponseEntity<>(new ResponseMessage(false, "", e.getMessage()), e.getStatusCode());
+        return new ResponseEntity<>(new ResponseMessage(false, e.getError(), e.getMessage()), e.getStatusCode());
     }
 
     @ExceptionHandler(PasswordNotMatchesException.class)
     public ResponseEntity<ResponseMessage> handlePasswordNotMatchesException(PasswordNotMatchesException e) {
-        return new ResponseEntity<>(new ResponseMessage(false, "", e.getMessage()), e.getStatusCode());
+        return new ResponseEntity<>(new ResponseMessage(false, e.getError(), e.getMessage()), e.getStatusCode());
     }
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ResponseMessage> handleInvalidRequestException(InvalidRequestException e) {
-        return new ResponseEntity<>(new ResponseMessage(false, "", e.getMessage()), e.getStatusCode());
+        return new ResponseEntity<>(new ResponseMessage(false, e.getError(), e.getMessage()), e.getStatusCode());
     }
     
     @ExceptionHandler(InvalidRefreshTokenException.class)
     public ResponseEntity<ResponseMessage> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
-        return new ResponseEntity<>(new ResponseMessage(false, "", e.getMessage()), e.getStatusCode());
+        return new ResponseEntity<>(new ResponseMessage(false, e.getError(), e.getMessage()), e.getStatusCode());
     }
 
 
