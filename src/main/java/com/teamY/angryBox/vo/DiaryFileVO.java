@@ -13,8 +13,8 @@ import org.apache.ibatis.type.Alias;
 @Alias("DiaryFileVO")
 public class DiaryFileVO {
 
-    private DiaryVO diaryVO;
-    private FileVO fileVO;
-
+    private int id;
+    private String systemFileName;
+    private int fileNo;
 
 }

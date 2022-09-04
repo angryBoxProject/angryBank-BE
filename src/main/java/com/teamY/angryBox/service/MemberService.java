@@ -5,10 +5,13 @@ import com.teamY.angryBox.config.security.oauth.AuthToken;
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 import com.teamY.angryBox.config.security.oauth.MemberPrincipal;
 import com.teamY.angryBox.dto.LogInDTO;
+import com.teamY.angryBox.error.customException.CustomException;
+import com.teamY.angryBox.error.customException.InvalidRefreshTokenException;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.error.customException.PasswordNotMatchesException;
 import com.teamY.angryBox.repository.MemberRepository;
 import com.teamY.angryBox.vo.MemberVO;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +38,10 @@ public class MemberService {
 
     public Map<String, Object> login(LogInDTO loginDTO){
 
+        if(memberRepository.findByEmail(loginDTO.getEmail()) == null) {
+            throw new InvalidRequestException("이메일 조회 불가");
+        }
+
         String password = memberRepository.findPassword(loginDTO.getEmail());
 
         if(!bCryptPasswordEncoder.matches(loginDTO.getPassword(), password)) {
@@ -48,7 +55,11 @@ public class MemberService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return createToken(loginDTO);
+        Map<String, Object> data = addToken();
+
+        memberRepository.updateLastLogin((int)data.get("memberId"));
+
+        return data;
     }
 
     public Map<String, Object> OAuthLogin(LogInDTO loginDTO) {
@@ -56,10 +67,23 @@ public class MemberService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return createToken(loginDTO);
+        Map<String, Object> data = addToken();
+        memberRepository.updateLastLogin((int)data.get("memberId"));
+
+        return data;
     }
 
-    public Map<String, Object> createToken(LogInDTO loginDTO) {
+    public Map<String, Object> addToken() {
+        Map<String, Object> data = createToken();
+
+        String refreshToken = (String) data.get("refresh_token");
+        String accessToken = (String) data.get("access_token");
+        memberRepository.setRefreshToken(refreshToken, accessToken, authTokenProvider.getTokenExpire(refreshToken));
+
+        return data;
+    }
+
+    public Map<String, Object> createToken() {
         Map<String, Object> data = null;
 
         MemberVO member = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
@@ -69,15 +93,59 @@ public class MemberService {
         data.put("email", member.getEmail());
         data.put("memberId", member.getId());
 
-        AuthToken authToken = authTokenProvider.createAuthToken(member.getEmail(), new Date(new Date().getTime() + appProperties.getAuth().getTokenExpiry()), data);
+        //AuthToken accessToken = authTokenProvider.createAuthToken(member.getEmail(), new Date(new Date().getTime() + appProperties.getAuth().getTokenExpiry()), data);
 
-        data.put("jwt", authToken.getToken());
+        AuthToken accessToken = createAccessToken(member.getEmail(), data);
+        AuthToken refreshToken = authTokenProvider.createAuthToken(new Date(new Date().getTime() + appProperties.getAuth().getRefreshTokenExpiry()));
 
+        data.put("access_token", accessToken.getToken());
+        data.put("refresh_token", refreshToken.getToken());
 
         return data;
     }
 
+    public AuthToken createAccessToken(String email, Map<String, Object> data) {
+        return authTokenProvider.createAuthToken(email, new Date(new Date().getTime() + appProperties.getAuth().getTokenExpiry()), data);
+    }
 
+    public void logout(String accessToken, long expire, String refreshToken) {
+
+        // 로그아웃 access 토큰 레디스에 저장
+        memberRepository.setLogoutToken(accessToken, expire);
+
+
+        // 레디스의 refresh 토큰 삭제
+        memberRepository.deleteRefreshToken(refreshToken);
+
+    }
+
+    public Map<String, Object> refresh(String accessToken, String refreshToken) throws CustomException {
+
+        AuthToken authRefreshToken = authTokenProvider.convertAuthToken(refreshToken);
+        AuthToken authAccessToken = authTokenProvider.convertAuthToken(accessToken);
+
+        if(authRefreshToken.validateRefresh()) {
+            String dbAccessToken = memberRepository.getTokenSet(refreshToken);
+
+            if(accessToken.equals(dbAccessToken)) {
+                Map<String, Object> data = new HashMap<>();
+                Claims claims = authAccessToken.getExpireTokenClaims();
+
+                log.info("claims : " + claims.toString());
+                String newAccessToken = createAccessToken((String) claims.get("email"), claims).getToken();
+
+                data.put("access_token", newAccessToken);
+
+                memberRepository.setRefreshToken(refreshToken, newAccessToken, authTokenProvider.getTokenExpire(refreshToken));
+
+                return data;
+            }
+            throw new InvalidRefreshTokenException("Access token 불일치");
+        }
+
+        return null;
+
+    }
     public void registerMember(MemberVO member) {
 
         if( memberRepository.findByEmail(member.getEmail()) != null)
@@ -116,5 +184,9 @@ public class MemberService {
 
     public MemberVO inquriyMember(int memberId) {
         return memberRepository.selectById(memberId);
+    }
+
+    public void removeMember(int id) {
+        memberRepository.deleteMember(id);
     }
 }

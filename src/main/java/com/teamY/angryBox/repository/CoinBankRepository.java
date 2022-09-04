@@ -1,10 +1,14 @@
 package com.teamY.angryBox.repository;
 
 import com.teamY.angryBox.mapper.CoinBankMapper;
+import com.teamY.angryBox.vo.BankStatCalenderVO;
 import com.teamY.angryBox.vo.CoinBankVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,5 +43,24 @@ public class CoinBankRepository {
 
     public int[] selectAngryPhase(){
         return mapper.selectAngryPhase();
+    }
+
+    public Map<String, Object> selectBankStatProfile(int memberId) {
+        return mapper.selectBankStatProfile(memberId);
+    }
+
+    public List<BankStatCalenderVO> selectBankStatCalenderByMonth(String select) {
+        return mapper.selectBankStatCalenderByMonth(select);
+    }
+
+    public List<BankStatCalenderVO> selectBankStatCalenderByMonthAndBank(String select, int coinBankId) {
+        return mapper.selectBankStatCalenderByMonthAndBank(select, coinBankId);
+    }
+
+    public List<Map<String, Object>> selectAllBank(int memberId) {
+        return mapper.selectAllBank(memberId);
+    }
+    public int selectUnExpiredCoinBank(int memberId) {
+        return mapper.selectUnExpiredCoinBank(memberId);
     }
 }

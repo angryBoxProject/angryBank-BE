@@ -18,8 +18,9 @@ public class CoinBankVO {
     private int angryLimit;
     private String reward;
     private boolean expired;
+    private String bankAccount;
 
-    public CoinBankVO(int id, int memberId, String name, String memo, int angryLimit, String reward, boolean expired) {
+    public CoinBankVO(int id, int memberId, String name, String memo, int angryLimit, String reward, boolean expired, String bankAccount) {
         this.id = id;
         this.memberId = memberId;
         this.name = name;
@@ -27,6 +28,7 @@ public class CoinBankVO {
         this.angryLimit = angryLimit;
         this.reward = reward;
         this.expired = expired;
+        this.bankAccount = bankAccount;
     }
 
     public CoinBankVO(String name, String memo, int angryLimit, String reward) {

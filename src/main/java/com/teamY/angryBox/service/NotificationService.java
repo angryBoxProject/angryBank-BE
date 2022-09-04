@@ -1,23 +1,24 @@
 package com.teamY.angryBox.service;
 
-import com.teamY.angryBox.dto.NotificationDTO;
 import com.teamY.angryBox.error.customException.InvalidRequestException;
 import com.teamY.angryBox.repository.NotificationRepository;
-import lombok.AllArgsConstructor;
+import com.teamY.angryBox.vo.NotificationListVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final DiaryService diaryService;
 
-    public int getDiaryIdInNft(int ntfId) {
+    public int getDiaryIdInNtf(int ntfId) {
         return notificationRepository.selectDiaryIdInNtf(ntfId);
     }
 
@@ -25,13 +26,32 @@ public class NotificationService {
         notificationRepository.updateNtf(ntfId);
     }
 
-    public List<NotificationDTO> getNtfList(int memberId, int lastNtfId, int size) {
-        if(lastNtfId == -1) {
-            lastNtfId = notificationRepository.selectLastIdInNtf(memberId) + 1;
-            if(lastNtfId == -1) {
-                throw new InvalidRequestException("알림 목록 없음");
-            }
-        }
-        return notificationRepository.selectNftList(memberId, lastNtfId, size);
+    public Map<String, Object> getCountUnCheckedNft(int memberId, int checked) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("unCheckedNftCount", notificationRepository.selectCountCheckedNtf(memberId, checked));
+
+        return data;
     }
+
+    public Map<String, Object> getNtfList(int memberId, int lastNtfId, int size) {
+        if (lastNtfId == 0) {
+            lastNtfId = notificationRepository.selectLastIdInNtf(memberId) + 1;
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        List<NotificationListVO> ntfList = notificationRepository.selectNftList(memberId, lastNtfId, size);
+        data.put("ntfList", ntfList);
+
+        return data;
+    }
+
+    public void checkNtf(int ntfId, int memberId) {
+        if(notificationRepository.checkMemberIdInNtf(ntfId) == 0) {
+            throw new InvalidRequestException("알림 id 확인 필요");
+        } else if(notificationRepository.checkMemberIdInNtf(ntfId) != memberId) {
+            throw new InvalidRequestException("알림 받은 사용자와 로그인한 사용자 불일치");
+        }
+    }
+
 }

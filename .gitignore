@@ -32,5 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### oauth yml ###
-src/main/resources/application-oauth.yml
+### yml ###
+src/main/resources/application-login.yml
+src/main/resources/application.yml

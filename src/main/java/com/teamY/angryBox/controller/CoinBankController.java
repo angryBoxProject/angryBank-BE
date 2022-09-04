@@ -9,16 +9,15 @@ import com.teamY.angryBox.vo.CoinBankVO;
 import com.teamY.angryBox.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.ognl.ObjectArrayPool;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +29,6 @@ public class CoinBankController {
     @GetMapping("bank")
     public ResponseEntity<ResponseDataMessage> inquiryCoinBank() {
         MemberVO memberVO = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
-
 
         return new ResponseEntity<>(new ResponseDataMessage(true, "저금통 조회 성공", "", coinBankService.inquiryCoinBank(memberVO.getId())), HttpStatus.OK);
     }
@@ -55,12 +53,20 @@ public class CoinBankController {
     }
 
     @PutMapping("expired-bank")
-    public ResponseEntity<ResponseMessage> expireCoinBank(@Valid @RequestBody NewCoinBankDTO bank) {
+    public ResponseEntity<ResponseMessage> expireCoinBank(@RequestParam int id) {
 
         MemberVO memberVO = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
 
-        coinBankService.expireCoinBank(bank.getId(), memberVO.getId());
+        coinBankService.expireCoinBank(id, memberVO.getId());
 
         return new ResponseEntity<>(new ResponseMessage(true, "적금 깨기 성공", ""), HttpStatus.OK);
+    }
+
+    @GetMapping("banks")
+    public ResponseEntity<ResponseDataMessage> getAllBanks() {
+        MemberVO memberVO = ((MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getMemberVO();
+
+
+        return new ResponseEntity<>(new ResponseDataMessage(true, "모든 저금통 조회 성공", "", coinBankService.selectAllBank(memberVO.getId())), HttpStatus.OK);
     }
 }

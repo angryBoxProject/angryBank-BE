@@ -2,12 +2,15 @@ package com.teamY.angryBox;
 
 import com.teamY.angryBox.config.security.oauth.AuthTokenProvider;
 
+import com.teamY.angryBox.dto.FilterDTO;
 import com.teamY.angryBox.dto.NewCoinBankDTO;
 import com.teamY.angryBox.mapper.*;
+import com.teamY.angryBox.repository.DiaryRepository;
 import com.teamY.angryBox.repository.MemberRepository;
 
 import com.teamY.angryBox.service.CoinBankService;
 
+import com.teamY.angryBox.service.StatService;
 import com.teamY.angryBox.vo.DiaryFileVO;
 import com.teamY.angryBox.vo.DiaryVO;
 import com.teamY.angryBox.vo.FileVO;
@@ -16,6 +19,8 @@ import com.teamY.angryBox.vo.MemberVO;
 import com.teamY.angryBox.vo.oauth.KakaoURL;
 import com.teamY.angryBox.vo.oauth.OAuthURL;
 import io.swagger.annotations.Authorization;
+import io.swagger.models.auth.In;
+import jdk.jshell.StatementSnippet;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +32,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,6 +66,11 @@ class AngryBoxApplicationTests {
 	@Autowired
 	private NotificationMapper notificationMapper;
 
+	@Autowired
+	private DiaryRepository diaryRepository;
+
+	@Autowired
+	private StatService statService;
 
 
 	@Test
@@ -75,16 +84,15 @@ class AngryBoxApplicationTests {
 		//        ORDER BY todack_count DESC
 		//        Limit #{limit}
 
-//		List<DiaryVO> test = diaryMapper.diaryPagination(5, 7);
-//		log.info(test.toString());
-		//og.info(diaryMapper.selectDailyTop(2022, 4, 20, 1, 2, 2).toString());
-		//log.info(notificationMapper.selectNftList(1).toString());
+		//log.info("" + statService.getAngryPhaseInMonth(2, "2022-04-19"));
+		log.info("" + statService.getAngryPhaseInCoinBank(2, 3));
 
 
 	}
 
 	@Autowired
 	private KakaoURL kakaoURL;
+
 	@Disabled
 	@Test
 	void contextLoads() {
@@ -126,12 +134,22 @@ class AngryBoxApplicationTests {
 	@Autowired
 	CoinBankService coinBankService;
 
-	@Disabled
+
+
+	//@Disabled
 	@Test
 	void profileTest(){
 		//MemberVO memberVO = new MemberVO((int) claims.get("id"), (String) claims.get("email"), (String)claims.get("nickname"));
 	//log.info(profileMapper.selectJoinedProfile(1).toString());
 
 		//coinBankService.createCoinBank( new NewCoinBankDTO( "이름", "메모", 111, "치킨이닭"), 1);
+		//log.info(coinBankService.inquiryBankStatProfile(2).toString());
+
+		//log.info("" + diaryMapper.bambooTest("member_id = 1 and diary_no > 320"));
+
+		int angry[] = {1,2};
+		FilterDTO filterDTO = new FilterDTO("2022-05-01", "2022-05-05", angry, 2);
+
+		log.info("" + diaryMapper.bambooGrove(1101, 100, filterDTO.getFilter().toString()));
 	}
 }

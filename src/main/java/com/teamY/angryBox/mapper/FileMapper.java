@@ -8,4 +8,5 @@ public interface FileMapper {
     void insertFile(FileVO file);
     FileVO selectById(int id);
     void deleteFile(int id);
+    void insertInterimFile(FileVO file);
 }

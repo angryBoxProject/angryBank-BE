@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamY.angryBox.mapper.StatsMapper">
+
+
+<!--    저금통 분노 limit 조회 -->
+    <select id="selectCoinBankLimit" parameterType="int" resultType="int">
+        SELECT angry_limit
+        FROM coin_bank
+        WHERE member_id = #{memberId} AND id = #{coin_bank_id};
+    </select>
+<!--    월별 분노수치 통계(각 분노수치별 개수) -->
+    <select id="selectAngryPhaseInMonth" resultType="int">
+        SELECT IFNULL(angry_phase, 0) AS angry_phase
+        FROM angry_phase as ap
+                 LEFT OUTER JOIN (
+            SELECT angry_phase_id, COUNT(angry_phase_id) AS angry_phase
+            FROM diary
+            WHERE member_id = #{memberId} AND DATE_FORMAT(write_date, '%Y-%m') = DATE_FORMAT(#{writeDate}, '%Y-%m')
+            GROUP BY angry_phase_id
+        ) AS d on (ap.id = d.angry_phase_id)
+        GROUP BY ap.id
+        ORDER BY ap.id;
+    </select>
+<!--    월별 분노수치 합 -->
+    <select id="selectAngryPhaseSumInMonth" resultType="int">
+        SELECT IFNULL(SUM(ap.phase), 0)
+        FROM diary AS d
+             LEFT JOIN angry_phase AS ap
+                   ON d.angry_phase_id = ap.id
+        WHERE member_id = #{memberId} AND DATE_FORMAT(write_date, '%Y-%m') = DATE_FORMAT(#{writeDate}, '%Y-%m')
+        ORDER BY ap.id
+    </select>
+
+    <!--    저금통별 분노수치 통계(각 분노수치별 개수) -->
+    <select id="selectAngryPhaseInCoinBank" resultType="int">
+        SELECT IFNULL(angry_phase, 0) AS angry_phase
+        FROM angry_phase as ap
+                 LEFT OUTER JOIN (
+            SELECT angry_phase_id, COUNT(angry_phase_id) AS angry_phase
+            FROM diary
+            WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
+            GROUP BY angry_phase_id
+        ) AS d on (ap.id = d.angry_phase_id)
+        GROUP BY ap.id
+        ORDER BY ap.id;
+    </select>
+    <!--    저금통별 분노수치 합-->
+    <select id="selectAngryPhaseSumInCoinBank" resultType="int">
+        SELECT IFNULL(SUM(ap.phase), 0)
+        FROM diary AS d
+                 LEFT JOIN angry_phase AS ap
+                           ON d.angry_phase_id = ap.id
+        WHERE member_id = #{memberId} AND coin_bank_id = #{coinBankId}
+        ORDER BY ap.id
+    </select>
+
+<!--    월별 다이어리 작성 일자 조회 -->
+    <select id="selectWriteDay" parameterType="int" resultType="int">
+        SELECT DAY(write_date)
+        FROM diary
+        WHERE member_id = #{memberId} AND YEAR(write_date) = #{writeYear} AND MONTH(write_date) = #{writeMonth}
+        GROUP BY DAY(write_date);
+    </select>
+
+
+</mapper>

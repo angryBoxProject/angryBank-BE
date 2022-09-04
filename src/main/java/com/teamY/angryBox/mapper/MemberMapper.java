@@ -17,4 +17,9 @@ public interface MemberMapper {
     void updateCoinBankId(int id, int bankId);
     void updateCoinBankIdToNull(int id);
     int selectMemberCurBank(int id);
+
+    void updateLastLogin(int id);
+
+    void deleteMember(int id);
+    int checkDeleted(int id);
 }

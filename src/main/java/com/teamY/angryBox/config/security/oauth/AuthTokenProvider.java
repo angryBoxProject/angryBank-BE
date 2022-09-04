@@ -44,6 +44,9 @@ public class AuthTokenProvider {
         //this.memberService = memberService;
     }
 
+    public AuthToken createAuthToken(Date expiry) {
+        return new AuthToken(expiry, key);
+    }
     public AuthToken createAuthToken(String id, Date expiry, Map<String, Object> claims) {
         return new AuthToken(id, expiry, key, claims);
     }
