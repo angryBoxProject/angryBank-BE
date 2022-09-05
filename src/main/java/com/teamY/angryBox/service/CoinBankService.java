@@ -113,6 +113,7 @@ public class CoinBankService {
 
         data.put("id", coinBankVO.getId());
         data.put("name", coinBankVO.getName());
+        data.put("memo", coinBankVO.getMemo());
         data.put("angryLimit", coinBankVO.getAngryLimit());
         data.put("reward", coinBankVO.getReward());
         data.put("canCrush", canCrush);
