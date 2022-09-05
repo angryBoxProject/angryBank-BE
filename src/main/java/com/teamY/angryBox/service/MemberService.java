@@ -39,13 +39,13 @@ public class MemberService {
     public Map<String, Object> login(LogInDTO loginDTO){
 
         if(memberRepository.findByEmail(loginDTO.getEmail()) == null) {
-            throw new InvalidRequestException("이메일 조회 불가");
+            throw new InvalidRequestException("이메일을 찾을 수 없습니다.");
         }
 
         String password = memberRepository.findPassword(loginDTO.getEmail());
 
         if(!bCryptPasswordEncoder.matches(loginDTO.getPassword(), password)) {
-            throw new PasswordNotMatchesException("PasswordNotMatchesException");
+            throw new PasswordNotMatchesException("비밀번호가 틀립니다.");
         }
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
@@ -149,7 +149,7 @@ public class MemberService {
     public void registerMember(MemberVO member) {
 
         if( memberRepository.findByEmail(member.getEmail()) != null)
-            throw new InvalidRequestException("이미 가입 되어 있는 이메일");
+            throw new InvalidRequestException("이미 가입 되어 있는 이메일입니다.");
 
         memberRepository.insertMember(member);
     }
@@ -170,11 +170,11 @@ public class MemberService {
         String password = memberRepository.findPassword(email);
 
         if(!bCryptPasswordEncoder.matches(passwords.get("password"), password)) {
-            throw new PasswordNotMatchesException("현재 비밀번호가 일치하지 않음");
+            throw new PasswordNotMatchesException("현재 비밀번호가 일치하지 않습니다.");
         }
 
         if(!passwords.get("newPassword").equals(passwords.get("checkNewPassword"))) {
-            throw new PasswordNotMatchesException("새로운 비밀번호가 서로 일치하지 않음");
+            throw new PasswordNotMatchesException("새로운 비밀번호가 서로 일치하지 않습니다.");
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(passwords.get("newPassword"));
