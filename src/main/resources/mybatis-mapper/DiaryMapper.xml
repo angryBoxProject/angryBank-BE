@@ -234,13 +234,9 @@
         DELETE FROM diary_file WHERE file_id = #{fileId}
     </delete>
     <select id="selectMaxFileNo" resultType="int">
-        SELECT IFNULL(MAX(df.file_no), 0)
-        FROM diary AS d
-             RIGHT JOIN diary_file AS df
-                    ON d.id = df.diary_id
-             LEFT JOIN file AS f
-                   ON df.file_id = f.id
-        WHERE d.id = #{diaryId};
+        SELECT IFNULL(MAX(file_no), 0)
+        FROM diary_file
+        WHERE diary_id = #{diaryId};
     </select>
 
 <!--    임시 다이어리 저장 및 id 조회 -->
@@ -320,13 +316,9 @@
         { CALL DELETE_FILE_IN_INTERIM_DIARY( #{fileId} )  }
     </delete>
     <select id="selectMaxInterimFileNo" resultType="int">
-        SELECT IFNULL(MAX(df.file_no), 0)
-        FROM interim_diary AS d
-                 RIGHT JOIN interim_diary_file AS df
-                            ON d.id = df.diary_id
-                 LEFT JOIN interim_file AS f
-                           ON df.file_id = f.id
-        WHERE d.id = #{diaryId};
+        SELECT IFNULL(MAX(file_no), 0)
+        FROM interim_diary_file
+        WHERE diary_id = #{diaryId};
     </select>
 
     <!--    저금통 별 다이어리 개수 -->
