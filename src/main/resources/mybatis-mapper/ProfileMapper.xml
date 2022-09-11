@@ -18,7 +18,7 @@
     </insert>
 
     <select id = "selectProfileByMemberId" resultType="ProfileVO">
-        SELECT *
+        SELECT id, member_id, file_id
         FROM profile
         WHERE member_id = #{id}
     </select>

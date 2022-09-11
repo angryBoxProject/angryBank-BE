@@ -353,10 +353,8 @@
     </select>
 
     <select id = "selectGalleryLastId" resultType = "int">
-        SELECT diary_id
-        FROM diary_file
-        GROUP BY diary_id
-        ORDER BY diary_id DESC limit 1;
+        SELECT MAX(diary_id)
+        FROM diary_file;
     </select>
 
     <select id = "selectGallery" resultType="GalleryDiaryVO">
