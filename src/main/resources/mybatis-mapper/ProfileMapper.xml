@@ -6,9 +6,11 @@
 <mapper namespace="com.teamY.angryBox.mapper.ProfileMapper">
 
     <select id = "selectJoinedProfile" resultType="ProfileJoinVO">
-        SELECT profile.id, member.id as member_id, email, nickname, diary_count, send_todack_count, receive_todack_count, last_login, file.id as file_id, original_file_name, system_file_name
-        FROM profile, member, file
-        WHERE profile.member_id = #{id} and profile.member_id = member.id and file.id = profile.file_id;
+        SELECT p.id, m.id as member_id, email, nickname, diary_count, send_todack_count, receive_todack_count, last_login, f.id as file_id, original_file_name, system_file_name
+        FROM profile as p
+                 INNER JOIN member as m ON p.member_id = m.id
+                 INNER JOIN file as f ON p.file_id = f.id
+        WHERE p.member_id = #{id} and f.id = p.file_id;
     </select>
     <insert id = "insertProfile" parameterType="ProfileVO">
         INSERT INTO profile(member_id, file_id)
