@@ -6,7 +6,7 @@
 <mapper namespace="com.teamY.angryBox.mapper.FileMapper">
 
     <select id = "selectById" resultType="FileVO">
-        SELECT *
+        SELECT id, original_file_name, system_file_name, file_size, file_type, date_time
         FROM file
         WHERE id = #{id}
     </select>
